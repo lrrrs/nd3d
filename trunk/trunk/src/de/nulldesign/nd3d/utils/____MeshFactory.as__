@@ -1,0 +1,107 @@
+package de.nulldesign.nd3d.utils {
+
+	import de.nulldesign.nd3d.material.Material;
+	import de.nulldesign.nd3d.objects.Mesh;
+	import de.nulldesign.nd3d.geom.UV;
+	import de.nulldesign.nd3d.geom.Vertex;
+	import de.nulldesign.nd3d.objects.Object3D;
+	import de.nulldesign.nd3d.objects.Plane;
+	import flash.display.BitmapData;
+	import flash.geom.Point;
+
+	/*
+		create procedural cube (w mats per side)
+	*/
+	
+	public class MeshFactory {
+		
+		public function MeshFactory()	{
+			
+		}
+		
+		public static function createDebugCoords():Mesh {
+			var m:Mesh = new Mesh();
+			
+			var v1:Vertex = new Vertex(0, 0, 0);
+			var v2:Vertex = new Vertex(0, 0, 10);
+			var v22:Vertex = new Vertex(0, 10, 0);
+			
+			var v3:Vertex = new Vertex(500, 0, 0);
+			var v4:Vertex = new Vertex(0, 500, 0);
+			var v5:Vertex = new Vertex(0, 0, 500);
+			
+			var mat1:Material = new Material(0xFF0000, 1, null, false, true);
+			var mat2:Material = new Material(0x00FF00, 1, null, false, true);
+			var mat3:Material = new Material(0x0000FF, 1, null, false, true);
+			
+			m.addFace(v1, v2, v3, mat1);
+			m.addFace(v1, v2, v4, mat2);
+			m.addFace(v1, v22, v5, mat3);
+			
+			return m;
+		}
+	
+
+		public static function createCube(material:Material, size:uint = 50):Mesh {
+			
+			var v0:Vertex = new Vertex(-size, -size, -size);
+			var v1:Vertex = new Vertex(size, -size, -size);
+			var v2:Vertex = new Vertex(size, size, -size);
+			var v3:Vertex = new Vertex(-size, size, -size);
+			var v4:Vertex = new Vertex(-size, -size, size);
+			var v5:Vertex = new Vertex(size, -size, size);
+			var v6:Vertex = new Vertex(size, size, size);
+			var v7:Vertex = new Vertex(-size, size, size);
+
+			var mesh:Mesh = new Mesh();
+			
+			// front
+			mesh.addFace(v0, v2, v1, material, [new UV(0, 0), new UV(1, 1), new UV(1, 0)]);
+			mesh.addFace(v0, v3, v2, material, [new UV(0, 0), new UV(0, 1), new UV(1, 1)]);
+			// top
+			mesh.addFace(v0, v1, v5, material, [new UV(0, 0), new UV(1, 0), new UV(1, 1)]);
+			mesh.addFace(v0, v5, v4, material, [new UV(0, 0), new UV(1, 1), new UV(0, 1)]);
+			// back
+			mesh.addFace(v4, v5, v6, material, [new UV(0, 0), new UV(0, 1), new UV(1, 1)]);
+			mesh.addFace(v4, v6, v7, material, [new UV(0, 0), new UV(1, 1), new UV(1, 0)]);
+			// bottom
+			mesh.addFace(v3, v6, v2, material, [new UV(0, 0), new UV(1, 1), new UV(1, 0)]);
+			mesh.addFace(v3, v7, v6, material, [new UV(0, 0), new UV(0, 1), new UV(1, 1)]);
+			// right
+			mesh.addFace(v1, v6, v5, material, [new UV(0, 0), new UV(1, 1), new UV(0, 1)]);
+			mesh.addFace(v1, v2, v6, material, [new UV(0, 0), new UV(1, 0), new UV(1, 1)]);
+			// left
+			mesh.addFace(v4, v3, v0, material, [new UV(0, 0), new UV(1, 1), new UV(0, 1)]);
+			mesh.addFace(v4, v7, v3, material, [new UV(0, 0), new UV(1, 0), new UV(1, 1)]);
+
+			return mesh;
+		}
+		
+		public static function createCircle(segments:Number, outerRadius:Number, innerRadius:Number, material:Material):Mesh { // no uv coordinates yet!
+			
+			var m:Mesh = new Mesh();
+			
+			var step:Number = Math.PI*2 / segments;
+			var vOut:Vertex;
+			var vIn:Vertex;
+			var oldVOut:Vertex;
+			var oldVIn:Vertex;
+			
+			for(var i:Number=0; i<=Math.PI*2; i+=step) {
+
+				vOut = new Vertex(outerRadius * Math.sin(i), outerRadius * Math.cos(i), 0);
+				vIn = new Vertex(innerRadius * Math.sin(i), innerRadius * Math.cos(i), 0);
+				
+				if(i > 0) {
+					m.addFace(oldVOut, oldVIn, vIn, material);
+					m.addFace(oldVOut, vIn, vOut, material);
+				}
+				
+				oldVOut = vOut;
+				oldVIn = vIn;
+			}
+			
+			return m;
+		}
+	}
+}

@@ -67,6 +67,8 @@ package de.nulldesign.nd3d.objects {
 		
 		private function createRibbon():void {
 
+			vertexList = [];
+			
 			for(var i:Number=0; i<controlPoints.length; i++) {
 				
 				var controlVertex:Vertex = controlPoints[i];

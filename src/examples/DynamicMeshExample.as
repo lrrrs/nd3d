@@ -42,7 +42,7 @@ package examples {
 		
 		private var stageCopy:BitmapData;
 		
-		[Embed("./assets/cube_texture.png")]
+		[Embed("assets/cube_texture.png")]
 		private var CUBE_TEXTURE:Class;		
 		
 		public function DynamicMeshExample() {

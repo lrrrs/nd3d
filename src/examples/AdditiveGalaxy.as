@@ -19,10 +19,10 @@
 		private var renderer:Renderer;
 		private var renderList:Array;
 		
-		[Embed("./assets/particle2.png")]
+		[Embed("assets/particle2.png")]
 		private var ParticleTexture:Class;	
 		
-		[Embed("./assets/space4.jpg")]
+		[Embed("assets/space4.jpg")]
 		private var StarFieldTexture:Class;	
 		
 		private var numParticles:uint = 400;

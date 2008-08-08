@@ -26,7 +26,7 @@
 		private var renderer:Renderer;
 		private var renderList:Array;
 
-		[Embed("./assets/cube_texture.png")]
+		[Embed("assets/cube_texture.png")]
 		private var MyTexture:Class;	
 		
 		public function AdditiveCubes() {

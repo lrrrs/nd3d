@@ -51,15 +51,15 @@ package examples {
 			// minelayercorvette
 			var mat:Material = new Material(0x7b7b7b, 1, null, false, true, false, true);
 			var textures:Array = [];
-			textures.push("./textures/page3.jpg");
-			textures.push("./textures/page1.jpg");
-			textures.push("./textures/page4.jpg");
-			textures.push("./textures/page0.jpg");
-			textures.push("./textures/page2.jpg");
+			textures.push("textures/page3.jpg");
+			textures.push("textures/page1.jpg");
+			textures.push("textures/page4.jpg");
+			textures.push("textures/page0.jpg");
+			textures.push("textures/page2.jpg");
 
 			meshLoader = new MeshLoader();
 			meshLoader.addEventListener(MeshLoadEvent.TYPE, onMeshLoaded);
-			meshLoader.loadMesh("./models/fighter.ASE", textures, mat);
+			meshLoader.loadMesh("models/fighter.ASE", textures, mat);
 		}
 		
 		private function onMouseWheel(evt:MouseEvent):void {

@@ -55,13 +55,13 @@ package examples {
 		
 		private var myTimer:Number = 0;
 		
-		[Embed("./assets/space1.jpg")]
+		[Embed("assets/space1.jpg")]
 		private var Space1:Class;	
-		[Embed("./assets/space2.jpg")]
+		[Embed("assets/space2.jpg")]
 		private var Space2:Class;	
-		[Embed("./assets/space3.jpg")]
+		[Embed("assets/space3.jpg")]
 		private var Space3:Class;	
-		[Embed("./assets/space4.jpg")]
+		[Embed("assets/space4.jpg")]
 		private var Space4:Class;	
 		
 		function FollowExample() {
@@ -92,45 +92,45 @@ package examples {
 			// fighter test
 			var mat:Material = new Material(0xFF9900, 1);
 			var textures:Array = [];
-			textures.push("./textures/page3.jpg");
-			textures.push("./textures/page1.jpg");
-			textures.push("./textures/page4.jpg");
-			textures.push("./textures/page0.jpg");
-			textures.push("./textures/page2.jpg");
+			textures.push("textures/page3.jpg");
+			textures.push("textures/page1.jpg");
+			textures.push("textures/page4.jpg");
+			textures.push("textures/page0.jpg");
+			textures.push("textures/page2.jpg");
 
 			meshLoader = new MeshLoader();
 			meshLoader.addEventListener(MeshLoadEvent.TYPE, onMeshLoaded);
-			meshLoader.loadMesh("./models/fighter.ASE", textures, mat);
+			meshLoader.loadMesh("models/fighter.ASE", textures, mat);
 			
 			// minelayercorvette
 			var mat2:Material = new Material(0xFF9900, 1);
 			var textures2:Array = [];
 
-			textures2.push("./textures/minelayer_page0.jpg");
-			textures2.push("./textures/minelayer_top.jpg");
-			textures2.push("./textures/minelayer_page0.jpg");
+			textures2.push("textures/minelayer_page0.jpg");
+			textures2.push("textures/minelayer_top.jpg");
+			textures2.push("textures/minelayer_page0.jpg");
 
 			meshLoader2 = new MeshLoader();
 			meshLoader2.addEventListener(MeshLoadEvent.TYPE, onMeshLoaded2);
-			meshLoader2.loadMesh("./models/minelayercorvette.ASE", textures2, mat2);
+			meshLoader2.loadMesh("models/minelayercorvette.ASE", textures2, mat2);
 			
 			// swarmer test
 			var mat3:Material = new Material(0xFF9900, 1);
 			var textures3:Array = [];
 
-			textures3.push("./textures/swarmer_page0.jpg");
-			textures3.push("./textures/swarmer_page0.jpg");
-			textures3.push("./textures/swarmer_fronthatch.jpg");
-			textures3.push("./textures/swarmer_underhatch.jpg");
-			textures3.push("./textures/swarmer_toprear.jpg");
-			textures3.push("./textures/swarmer_page0.jpg");
-			textures3.push("./textures/swarmer_top.jpg");
-			textures3.push("./textures/swarmer_tailsidesrear.jpg");
-			textures3.push("./textures/swarmer_bottemtail.jpg");
+			textures3.push("textures/swarmer_page0.jpg");
+			textures3.push("textures/swarmer_page0.jpg");
+			textures3.push("textures/swarmer_fronthatch.jpg");
+			textures3.push("textures/swarmer_underhatch.jpg");
+			textures3.push("textures/swarmer_toprear.jpg");
+			textures3.push("textures/swarmer_page0.jpg");
+			textures3.push("textures/swarmer_top.jpg");
+			textures3.push("textures/swarmer_tailsidesrear.jpg");
+			textures3.push("textures/swarmer_bottemtail.jpg");
 
 			meshLoader3 = new MeshLoader();
 			meshLoader3.addEventListener(MeshLoadEvent.TYPE, onMeshLoaded3);
-			meshLoader3.loadMesh("./models/p2advanceswarmer.ASE", textures3, mat3);
+			meshLoader3.loadMesh("models/p2advanceswarmer.ASE", textures3, mat3);
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);

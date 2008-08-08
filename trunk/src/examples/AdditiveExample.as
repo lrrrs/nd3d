@@ -18,7 +18,7 @@
 		private var renderer:Renderer;
 		private var renderList:Array;
 
-		[Embed("./assets/cube_texture2.png")]
+		[Embed("assets/cube_texture2.png")]
 		private var MyTexture:Class;
 		
 		private var cube:Cube;

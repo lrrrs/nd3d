@@ -16,7 +16,7 @@
 		private var renderer:Renderer;
 		private var renderList:Array;
 
-		[Embed("./assets/doggy.jpg")]
+		[Embed("assets/doggy.jpg")]
 		private var MyTexture:Class;	
 		private var sphere:Sphere;
 		private var sphere2:Sphere;

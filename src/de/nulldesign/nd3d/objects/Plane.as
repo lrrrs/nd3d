@@ -1,22 +1,22 @@
-﻿package de.nulldesign.nd3d.objects 
+package de.nulldesign.nd3d.objects 
 {
 	import de.nulldesign.nd3d.geom.UV;
 	import de.nulldesign.nd3d.geom.Vertex;
-	import de.nulldesign.nd3d.material.Material;
-	
+	import de.nulldesign.nd3d.material.Material;	
+
 	/**
-	* ...
-	* @author DefaultUser (Tools -> Custom Arguments...)
-	*/
+	 * ...
+	 * @author DefaultUser (Tools -> Custom Arguments...)
+	 */
 	public class Plane extends Mesh 
 	{
-		
+
 		public function Plane(width:Number, height:Number, stepsX:Number, stepsY:Number, material:Material) 
 		{
 			super();
 			createPlane(width, height, stepsX, stepsY, material);
 		}
-		
+
 		private function createPlane(width:Number, height:Number, stepsX:Number, stepsY:Number, material:Material):void
 		{
 			var i:Number;
@@ -26,10 +26,10 @@
 			width *= 2;
 			height *= 2;
 			
-			for(i = 0; i <= stepsX; i++)
+			for(i = 0;i <= stepsX; i++)
 			{
 				ar.push([]);
-				for(j = 0; j <= stepsX; j++)
+				for(j = 0;j <= stepsX; j++)
 				{
 					var x:Number = i * (width / stepsX) - width / 2;
 					var y:Number = j * (height / stepsY) - height / 2;
@@ -40,9 +40,9 @@
 			var xscaling:Number = 1 / stepsX;
 			var yscaling:Number = 1 / stepsY;
 			
-			for(i = 0; i < ar.length; i++)
+			for(i = 0;i < ar.length; i++)
 			{
-				for(j = 0; j < ar[i].length; j++)
+				for(j = 0;j < ar[i].length; j++)
 				{
 					if(i > 0 && j > 0)
 					{
@@ -54,13 +54,11 @@
 										 new UV((i) * xscaling, (j) * yscaling),
 										 new UV((i) * xscaling, (j - 1) * yscaling)];
 										 
-						addFace(ar[i-1][j-1], ar[i-1][j], ar[i][j], material, uv1);
-						addFace(ar[i-1][j-1], ar[i][j], ar[i][j-1], material, uv2);
+						addFace(ar[i - 1][j - 1], ar[i - 1][j], ar[i][j], material, uv1);
+						addFace(ar[i - 1][j - 1], ar[i][j], ar[i][j - 1], material, uv2);
 					}
 				}
 			}
 		}
-		
 	}
-	
 }

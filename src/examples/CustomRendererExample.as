@@ -1,42 +1,43 @@
-﻿package examples 
+package examples 
 {
+	import flash.display.Sprite;
+	import flash.events.Event;
+
 	import de.nulldesign.nd3d.geom.CatmullRomCurve3D;
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.objects.Mesh;
 	import de.nulldesign.nd3d.objects.PointCamera;
-	import de.nulldesign.nd3d.renderer.Renderer;
-	import de.nulldesign.nd3d.utils.ColorUtil;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.media.Camera;
+	import de.nulldesign.nd3d.renderer.Renderer;	
 
-	public class CustomRendererExample extends Sprite {
-		
+	public class CustomRendererExample extends Sprite 
+	{
+
 		private var cam:PointCamera;
 		private var renderer:Renderer;
 		private var renderList:Array;
 		private var testCurve:CatmullRomCurve3D;
 		private var looper:Number = 0;
-		
-		public function CustomRendererExample() {
+
+		public function CustomRendererExample() 
+		{
 			
 			// simple linerenderer test
-			
+
 			renderer = new Renderer(this);
 			cam = new PointCamera(600, 400);
 			
 			testCurve = new CatmullRomCurve3D();
-			for(var i:uint = 0; i < 10; i++) {
-				testCurve.addCurveVertex( new Vertex(	(Math.random() + Math.random() * 500), 
-														(Math.random() + Math.random() * 500), 
-														(Math.random() + Math.random() * 500)) );
+			for(var i:uint = 0;i < 10; i++) 
+			{
+				testCurve.addCurveVertex(new Vertex((Math.random() + Math.random() * 500), (Math.random() + Math.random() * 500), (Math.random() + Math.random() * 500)));
 			}
 			testCurve.finalize(true);
 			
 			addEventListener(Event.ENTER_FRAME, onRenderScene);
 		}
-		
-		private function onRenderScene(e:Event):void {
+
+		private function onRenderScene(e:Event):void 
+		{
 			
 			looper += 0.01;
 			
@@ -52,7 +53,8 @@
 			
 			renderList = [m];
 			
-			for(var t:Number = 0; t <= tEnd; t += 0.001) {
+			for(var t:Number = 0;t <= tEnd; t += 0.001) 
+			{
 				v = testCurve.getCurveAt(t);
 				m.vertexList.push(v);
 			}
@@ -61,8 +63,9 @@
 			
 			graphics.clear();
 
-			for(var i:uint = 2; i < m.vertexList.length; i++) {
-				v = m.vertexList[i-1];
+			for(var i:uint = 2;i < m.vertexList.length; i++) 
+			{
+				v = m.vertexList[i - 1];
 				v2 = m.vertexList[i];
 
 				scaleFactor = v.scale * v2.scale;
@@ -77,7 +80,5 @@
 				graphics.lineTo(v2.screenX, v2.screenY);
 			}
 		}
-		
 	}
-	
 }

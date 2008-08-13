@@ -1,54 +1,45 @@
-﻿package examples {
-	
-	import de.nulldesign.nd3d.geom.Face;
-	import de.nulldesign.nd3d.geom.UV;
-	import de.nulldesign.nd3d.material.Material;
-	import de.nulldesign.nd3d.objects.Mesh;
-	import de.nulldesign.nd3d.objects.Sphere;
-	import de.nulldesign.nd3d.utils.ASEParser;
-	import de.nulldesign.nd3d.utils.MeshLoader;
-	import de.nulldesign.nd3d.events.MeshLoadEvent;
-	import de.nulldesign.nd3d.objects.PointCamera;
-	import de.nulldesign.nd3d.geom.Quaternion;
-	import de.nulldesign.nd3d.renderer.Renderer;
-	import de.nulldesign.nd3d.objects.Sprite3D;
-	import de.nulldesign.nd3d.geom.Vertex;
+package examples 
+{
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	import flash.display.BlendMode;
-	import flash.display.GradientType;
 	import flash.display.Sprite;
-	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.filters.BlurFilter;
-	import flash.geom.ColorTransform;
-	import flash.geom.Matrix;
-	import flash.geom.Point;
-	import flash.system.System;
-	import flash.utils.getTimer;
-	
-	public class ExtrudeEarth extends Sprite {
+
+	import de.nulldesign.nd3d.events.MeshLoadEvent;
+	import de.nulldesign.nd3d.geom.Face;
+	import de.nulldesign.nd3d.geom.UV;
+	import de.nulldesign.nd3d.geom.Vertex;
+	import de.nulldesign.nd3d.material.Material;
+	import de.nulldesign.nd3d.objects.Mesh;
+	import de.nulldesign.nd3d.objects.PointCamera;
+	import de.nulldesign.nd3d.objects.Sphere;
+	import de.nulldesign.nd3d.renderer.Renderer;
+	import de.nulldesign.nd3d.utils.MeshLoader;	
+
+	public class ExtrudeEarth extends Sprite 
+	{
 
 		private var cam:PointCamera;
 		private var renderer:Renderer;
 		private var renderList:Array;
 		private var renderStage:Sprite;
-		
+
 		[Embed(source = 'assets/starfield.jpg')]
 		private const STARFIELD_TEXTURE:Class;
-		
+
 		[Embed("assets/EarthMap_bump.jpg")]
 		private const EARTH_BUMP_TEXTURE:Class;
-		
+
 		private var earthBump:Bitmap;
 
 		private var planet:Mesh;
 		private var meshLoader:MeshLoader;
 		private var meshLoader2:MeshLoader;
-		
-		public function ExtrudeEarth() {
+
+		public function ExtrudeEarth() 
+		{
 			
 			//stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -94,16 +85,19 @@
 			addEventListener(Event.ENTER_FRAME, onLoop);
 		}
 
-		private function onMouseWheel(evt:MouseEvent):void {
+		private function onMouseWheel(evt:MouseEvent):void 
+		{
 			cam.zOffset -= evt.delta * 10;
 		}
-		
-		private function onMeshLoaded2(evt:MeshLoadEvent):void {
+
+		private function onMeshLoaded2(evt:MeshLoadEvent):void 
+		{
 			renderList.push(evt.mesh);
 			evt.mesh.scale(1.3, 1.3, 1.3);
 		}
-		
-		private function onMeshLoaded(evt:MeshLoadEvent):void {
+
+		private function onMeshLoaded(evt:MeshLoadEvent):void 
+		{
 			renderList.push(evt.mesh);
 			planet = evt.mesh;	
 			
@@ -112,13 +106,15 @@
 			var uv:UV;
 			var bmp:BitmapData;
 			
-			for (var i:uint = 0; i < planet.faceList.length; i++) {
+			for (var i:uint = 0;i < planet.faceList.length; i++) 
+			{
 				
 				f = planet.faceList[i];
 				//bmp = f.material.texture;
 				bmp = earthBump.bitmapData;
 				
-				for (var j:uint = 0; j < f.vertexList.length; j++) {
+				for (var j:uint = 0;j < f.vertexList.length; j++) 
+				{
 					
 					uv = f.uvMap[j];
 					v = f.vertexList[j];
@@ -136,13 +132,14 @@
 					var b:uint = pixelValue & 255;
 
 					var pixelBrightness:Number = (r + g + b);
-					*/
+					 */
 					v.length = v.length + pixelBrightness;
 				}
 			}
 		}
-		
-		private function onLoop(evt:Event):void {
+
+		private function onLoop(evt:Event):void 
+		{
 
 			renderer.render(renderList, cam);
 			
@@ -150,5 +147,4 @@
 			cam.angleY += (mouseX - cam.vpX) * .001;
 		}
 	}
-	
 }

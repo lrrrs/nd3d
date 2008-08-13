@@ -1,16 +1,16 @@
-﻿package de.nulldesign.nd3d.objects 
+package de.nulldesign.nd3d.objects 
 {
 	import de.nulldesign.nd3d.geom.UV;
 	import de.nulldesign.nd3d.geom.Vertex;
-	import de.nulldesign.nd3d.material.Material;
-	
+	import de.nulldesign.nd3d.material.Material;	
+
 	/**
-	* ...
-	* @author DefaultUser (Tools -> Custom Arguments...)
-	*/
+	 * ...
+	 * @author DefaultUser (Tools -> Custom Arguments...)
+	 */
 	public class SimpleCube extends Mesh
 	{
-		
+
 		public function SimpleCube(material:Material, size:uint = 50) 
 		{
 			var v0:Vertex = new Vertex(-size, -size, -size);
@@ -40,7 +40,5 @@
 			addFace(v4, v3, v0, material, [new UV(0, 0), new UV(1, 1), new UV(0, 1)]);
 			addFace(v4, v7, v3, material, [new UV(0, 0), new UV(1, 0), new UV(1, 1)]);
 		}
-		
 	}
-	
 }

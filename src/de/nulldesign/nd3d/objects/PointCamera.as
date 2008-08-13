@@ -1,9 +1,10 @@
-package de.nulldesign.nd3d.objects {
-
-	import de.nulldesign.nd3d.objects.Object3D;
+package de.nulldesign.nd3d.objects 
+{
 	import de.nulldesign.nd3d.geom.Quaternion;
-	
-	public class PointCamera {
+	import de.nulldesign.nd3d.objects.Object3D;	
+
+	public class PointCamera 
+	{
 
 		// 2d perspective values
 		public var fl:Number = 250;
@@ -15,67 +16,85 @@ package de.nulldesign.nd3d.objects {
 		public var x:Number = 0;
 		public var y:Number = 0;
 		public var z:Number = 0;
-		
+
 		private var _angleX:Number = 0;
-		public function set angleX(angle:Number):void {
+
+		public function set angleX(angle:Number):void 
+		{
 			deltaAngleX = angle - _angleX;
 			_angleX = angle;
 		}
-		public function get angleX():Number {
+
+		public function get angleX():Number 
+		{
 			return _angleX;
 		}
-		
+
 		private var _angleY:Number = 0;
-		public function set angleY(angle:Number):void {
+
+		public function set angleY(angle:Number):void 
+		{
 			deltaAngleY = angle - _angleY;
 			_angleY = angle;
 		}
-		public function get angleY():Number {
+
+		public function get angleY():Number 
+		{
 			return _angleY;
 		}
-		
+
 		private var _angleZ:Number = 0;
-		public function set angleZ(angle:Number):void {
+
+		public function set angleZ(angle:Number):void 
+		{
 			deltaAngleZ = angle - _angleZ;
 			_angleZ = angle;
 		}
-		public function get angleZ():Number {
+
+		public function get angleZ():Number 
+		{
 			return _angleZ;
 		}
 
 		public var deltaAngleX:Number = 0;
 		public var deltaAngleY:Number = 0;
 		public var deltaAngleZ:Number = 0;
-		
+
 		public var quaternion:Quaternion;
-		
-		public function PointCamera(screenW:Number, screenH:Number)	{
+
+		public function PointCamera(screenW:Number, screenH:Number)	
+		{
 			vpX = screenW / 2;
 			vpY = screenH / 2;
 			
 			quaternion = new Quaternion();
 		}
-		
-		private function maintainAngle(angle:Number):Number {
-			if(Math.abs(angle) >= Math.PI) {
-				if(angle < 0) {
+
+		private function maintainAngle(angle:Number):Number 
+		{
+			if(Math.abs(angle) >= Math.PI) 
+			{
+				if(angle < 0) 
+				{
 					angle += Math.PI * 2;
-				} else {
+				} else 
+				{
 					angle -= Math.PI * 2;
 				}
 			}
 			
 			return angle;
 		}
-		
-		public function follow(target:Object3D, speed:Number, turnSpeed:Number):void {
+
+		public function follow(target:Object3D, speed:Number, turnSpeed:Number):void 
+		{
 			
 			/*
-				// CAM FOLLOW... COORDS SWITCHED???!
-				cam.angleZ = spaceShip.angleX;
-				cam.angleY = -spaceShip.angleY + Object3D.deg2rad(90);
-				cam.angleX = spaceShip.angleZ;
-			*/
+			// CAM FOLLOW... COORDS SWITCHED???!
+			cam.angleZ = spaceShip.angleX;
+			cam.angleY = -spaceShip.angleY + Object3D.deg2rad(90);
+			cam.angleX = spaceShip.angleZ;
+			 */
 
 			var diffZ:Number = (target.angleX - angleZ);
 			var diffY:Number = (-target.angleY - angleY + Object3D.deg2rad(90));

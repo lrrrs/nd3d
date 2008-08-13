@@ -1,22 +1,24 @@
-package de.nulldesign.nd3d.renderer {
-
-	import de.nulldesign.nd3d.material.Material;
-	import de.nulldesign.nd3d.geom.Vertex;
+package de.nulldesign.nd3d.renderer 
+{
+	import flash.display.BitmapData;
 	import flash.display.Graphics;
-	import flash.geom.Point; 
-	import flash.geom.Matrix; 
-	import flash.display.BitmapData; 
 	import flash.display.Sprite;
-	
-	public class Texture {
-		
+	import flash.geom.Matrix;
+
+	import de.nulldesign.nd3d.geom.Vertex;
+	import de.nulldesign.nd3d.material.Material;	
+
+	public class Texture 
+	{
+
 		/**
 		 * Renders a bitmap to the screen
 		 * @param graphics object
 		 * @param bitmap object
 		 * @param transformed vertex
 		 */
-		public static function render2DSprite(stage:Sprite, textureBitmap:BitmapData, a:Vertex):void {
+		public static function render2DSprite(stage:Sprite, textureBitmap:BitmapData, a:Vertex):void 
+		{
 			
 			var scale:Number = a.scale;
 			var width:Number = (textureBitmap.width * scale) / 2;
@@ -30,7 +32,7 @@ package de.nulldesign.nd3d.renderer {
 			tMat.scale(scale, scale);
 			tMat.translate(x0, y0);
 			
-			var gfx:Graphics =  stage.graphics;
+			var gfx:Graphics = stage.graphics;
 			
 			gfx.beginBitmapFill(textureBitmap, tMat, false, true);
 			gfx.moveTo(a.screenX, a.screenY);
@@ -53,7 +55,8 @@ package de.nulldesign.nd3d.renderer {
 		 * @param between 0 and 1, defines the strength of the light
 		 * @param ambient color
 		 */
-		public static function renderUV(stage:Sprite, material:Material, a:Vertex, b:Vertex, c:Vertex, uvMap:Array, colorFactor:Number, ambientColor:uint):void {
+		public static function renderUV(stage:Sprite, material:Material, a:Vertex, b:Vertex, c:Vertex, uvMap:Array, colorFactor:Number, ambientColor:uint):void 
+		{
 			
 			var x0:Number = a.screenX;
 			var y0:Number = a.screenY;
@@ -99,18 +102,20 @@ package de.nulldesign.nd3d.renderer {
 			var smoothing:Boolean = material.smoothed;
 			// check if points are not to close to each other, disable smoothing
 			// beginBitmapFill draw bug?!
-			if(smoothing) { 
+			if(smoothing) 
+			{ 
 				var dx:Number = x1 - x0;
 				var dx2:Number = x2 - x1;
 				var dy:Number = y1 - y0;
 				var dy2:Number = y2 - y1;
 				
-				if(Math.abs(dx/dy - dx2/dy2) < 1) {
+				if(Math.abs(dx / dy - dx2 / dy2) < 1) 
+				{
 					smoothing = false;
 				}
 			}
 			
-			var gfx:Graphics =  stage.graphics;
+			var gfx:Graphics = stage.graphics;
 			
 			gfx.beginBitmapFill(texture, tMat, false, smoothing);
 			gfx.moveTo(x0, y0);
@@ -119,7 +124,8 @@ package de.nulldesign.nd3d.renderer {
 			gfx.lineTo(x0, y0);
 			gfx.endFill();
 			
-			if(material.calculateLights && colorFactor < 1) {
+			if(material.calculateLights && colorFactor < 1) 
+			{
 				gfx.beginFill(ambientColor, 1 - colorFactor);
 				gfx.moveTo(x0, y0);
 				gfx.lineTo(x1, y1);

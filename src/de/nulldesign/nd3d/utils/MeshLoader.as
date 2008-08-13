@@ -1,38 +1,39 @@
-package de.nulldesign.nd3d.utils {
-	
-	import de.nulldesign.nd3d.events.MeshLoadEvent;
+package de.nulldesign.nd3d.utils 
+{
 	import flash.display.BitmapData;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
-	import flash.display.Sprite;
-	import flash.events.EventDispatcher;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
-	
+
+	import de.nulldesign.nd3d.events.MeshLoadEvent;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.Mesh;
-	import de.nulldesign.nd3d.utils.ASEParser;
-	
-	public class MeshLoader extends EventDispatcher {
-		
+	import de.nulldesign.nd3d.utils.ASEParser;	
+
+	public class MeshLoader extends EventDispatcher 
+	{
+
 		private var mesh:Mesh;
-		
+
 		private var meshUrl:String;
 		private var textureUrlList:Array;
 		private var matList:Array;
 		private var defaultMaterial:Material;
-		
+
 		private var loader:URLLoader;
 		private var textureLoader:Loader;
 		private var textureLoadIndex:Number = 0;
-		
-		public function MeshLoader() {
-			
+
+		public function MeshLoader() 
+		{
 		}
-		
-		public function loadMesh(meshUrl:String, textureUrlList:Array, defaultMaterial:Material):void {
+
+		public function loadMesh(meshUrl:String, textureUrlList:Array, defaultMaterial:Material):void 
+		{
 			
 			this.meshUrl = meshUrl;
 			this.textureUrlList = textureUrlList;
@@ -45,21 +46,26 @@ package de.nulldesign.nd3d.utils {
 			loader.dataFormat = URLLoaderDataFormat.TEXT;
 			loader.load(new URLRequest(meshUrl));
 		}
-		
-		private function buildMesh():void {
+
+		private function buildMesh():void 
+		{
 			mesh = ASEParser.parseFile(loader.data, matList, defaultMaterial);
 			dispatchEvent(new MeshLoadEvent(mesh));
 		}
-		
-		private function onMeshLoaded(evt:Event):void {
-			if(textureUrlList.length) {
+
+		private function onMeshLoaded(evt:Event):void 
+		{
+			if(textureUrlList.length) 
+			{
 				loadNextTexture();
-			} else {
+			} else 
+			{
 				buildMesh();
 			}
 		}
-		
-		private function loadNextTexture():void {
+
+		private function loadNextTexture():void 
+		{
 			
 			textureLoader = new Loader();
 			textureLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onTextureLoaded);
@@ -67,17 +73,20 @@ package de.nulldesign.nd3d.utils {
 			var urlReq:URLRequest = new URLRequest(textureUrlList[textureLoadIndex]);
 			textureLoader.load(urlReq);
 		}
-		
-		private function onTextureLoaded(evt:Event):void {
+
+		private function onTextureLoaded(evt:Event):void 
+		{
 			
 			++textureLoadIndex;
 			
 			textureLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onTextureLoaded);
 			
 			var bmp:BitmapData;
-			if(textureLoader.contentLoaderInfo.contentType == "image/png") {
+			if(textureLoader.contentLoaderInfo.contentType == "image/png") 
+			{
 				bmp = new BitmapData(textureLoader.width, textureLoader.height, true, 0x00000000);
-			} else {
+			} else 
+			{
 				bmp = new BitmapData(textureLoader.width, textureLoader.height, false, 0x000000);
 			}
 
@@ -88,9 +97,11 @@ package de.nulldesign.nd3d.utils {
 			
 			matList.push(tmpMat);
 			
-			if(textureLoadIndex < textureUrlList.length) {
+			if(textureLoadIndex < textureUrlList.length) 
+			{
 				loadNextTexture();
-			} else {
+			} else 
+			{
 				buildMesh();
 			}
 		}

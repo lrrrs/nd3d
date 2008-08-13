@@ -1,34 +1,36 @@
-﻿package examples  {
-	
-	import de.nulldesign.nd3d.geom.Vertex;
-	import de.nulldesign.nd3d.material.Material;
-	import de.nulldesign.nd3d.objects.Cube;
-	import de.nulldesign.nd3d.objects.Mesh;
-	import de.nulldesign.nd3d.objects.PointCamera;
-	import de.nulldesign.nd3d.objects.Sphere;
-	import de.nulldesign.nd3d.objects.Sprite3D;
-	import de.nulldesign.nd3d.renderer.Renderer;
+package examples  
+{
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
 
-	public class AdditiveGalaxy extends Sprite {
-		
+	import de.nulldesign.nd3d.geom.Vertex;
+	import de.nulldesign.nd3d.material.Material;
+	import de.nulldesign.nd3d.objects.Mesh;
+	import de.nulldesign.nd3d.objects.PointCamera;
+	import de.nulldesign.nd3d.objects.Sphere;
+	import de.nulldesign.nd3d.objects.Sprite3D;
+	import de.nulldesign.nd3d.renderer.Renderer;	
+
+	public class AdditiveGalaxy extends Sprite 
+	{
+
 		private var cam:PointCamera;
 		private var renderer:Renderer;
 		private var renderList:Array;
-		
+
 		[Embed("assets/particle2.png")]
 		private var ParticleTexture:Class;	
-		
+
 		[Embed("assets/space4.jpg")]
 		private var StarFieldTexture:Class;	
-		
+
 		private var numParticles:uint = 400;
 		private var particleMat:Material;
 
-		public function AdditiveGalaxy() {
+		public function AdditiveGalaxy() 
+		{
 			
 			var drawStage:Sprite = new Sprite();
 			addChild(drawStage);
@@ -47,7 +49,8 @@
 			m.flipNormals();
 			renderList.push(m);
 			
-			for(var i:uint = 0; i < numParticles; i++) {
+			for(var i:uint = 0;i < numParticles; i++) 
+			{
 				tex = new ParticleTexture().bitmapData;
 				tex.colorTransform(tex.rect, new ColorTransform(Math.random(), Math.random(), 1, 1));
 				particleMat = new Material(0xFFFFFF, 1, tex, false, false, true, false);				
@@ -63,8 +66,9 @@
 			
 			addEventListener(Event.ENTER_FRAME, onRenderScene);
 		}
-		
-		private function onRenderScene(evt:Event):void {
+
+		private function onRenderScene(evt:Event):void 
+		{
 
 			cam.angleX += (mouseY - cam.vpY) * .0005;
 			cam.angleY += (mouseX - cam.vpX) * .0005;
@@ -77,9 +81,9 @@
 			var force:Number;
 			var dx:Number;
 			var dz:Number;
-			var tex:BitmapData;
 			
-			for(var i:uint = 1; i < renderList.length; i++) {
+			for(var i:uint = 1;i < renderList.length; i++) 
+			{
 
 				s = renderList[i];
 				
@@ -93,7 +97,8 @@
 				s.direction.x += force * dx / dist;
 				s.direction.z += force * dz / dist;
 				
-				if(s.direction.length > 20) {
+				if(s.direction.length > 20) 
+				{
 					s.direction.length = 20;
 				}
 				
@@ -110,5 +115,4 @@
 			}
 		}
 	}
-	
 }

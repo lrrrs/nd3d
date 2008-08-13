@@ -1,51 +1,42 @@
-package examples {
-	
-	import de.nulldesign.nd3d.material.Material;
-	import de.nulldesign.nd3d.objects.Mesh;
-	import de.nulldesign.nd3d.utils.MeshLoader;
-	import de.nulldesign.nd3d.events.MeshLoadEvent;
-	import de.nulldesign.nd3d.objects.PointCamera;
-	import de.nulldesign.nd3d.geom.Quaternion;
-	import de.nulldesign.nd3d.renderer.Renderer;
-	import de.nulldesign.nd3d.objects.Ribbon;
-	import de.nulldesign.nd3d.objects.Sprite3D;
-	import de.nulldesign.nd3d.geom.Vertex;
+package examples 
+{
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.BlendMode;
-	import flash.display.GradientType;
 	import flash.display.Sprite;
-	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
 	import flash.geom.ColorTransform;
-	import flash.geom.Matrix;
-	import flash.geom.Point;
-	import flash.system.System;
-	import flash.utils.getTimer;
-	import de.nulldesign.sound.SoundAnalyzer;
-	import de.nulldesign.sound.SoundEvent;
-	
-	public class DynamicMeshExample extends Sprite {
+
+	import de.nulldesign.nd3d.geom.Quaternion;
+	import de.nulldesign.nd3d.geom.Vertex;
+	import de.nulldesign.nd3d.material.Material;
+	import de.nulldesign.nd3d.objects.PointCamera;
+	import de.nulldesign.nd3d.objects.Ribbon;
+	import de.nulldesign.nd3d.renderer.Renderer;	
+
+	public class DynamicMeshExample extends Sprite 
+	{
 
 		private var cam:PointCamera;
 		private var renderer:Renderer;
 		private var renderList:Array;
 		private var ribbon:Ribbon;
 		private var ribbon2:Ribbon;
-		private var zValue:Number;
+		//private var zValue:Number;
 		private var renderStage:Sprite;
-		
+
 		private var modeChanger:Number = 0;
-		
+
 		private var stageCopy:BitmapData;
-		
+
 		[Embed("assets/cube_texture.png")]
 		private var CUBE_TEXTURE:Class;		
-		
-		public function DynamicMeshExample() {
+
+		public function DynamicMeshExample() 
+		{
 			
 			//stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -75,23 +66,25 @@ package examples {
 			
 			stageCopy = new BitmapData(700, 400, true, 0x00000000);
 			var b:Bitmap = new Bitmap(stageCopy);
-			b.filters = [ new BlurFilter(8, 8, 1) ];
+			b.filters = [new BlurFilter(8, 8, 1)];
 			b.blendMode = BlendMode.NORMAL;
 			addChildAt(b, 0);
 			
 			//var cube:Mesh = MeshFactory.createCube(ribbonMat2, 30);
 			//cube.angleX = 1;
 			//renderList.push(cube);
-			
+
 			addEventListener(Event.ENTER_FRAME, onLoop);
 			stage.addEventListener(MouseEvent.MOUSE_UP, mouseClick);
 		}
 
-		private function mouseClick(evt:MouseEvent):void {
+		private function mouseClick(evt:MouseEvent):void 
+		{
 			
 			++modeChanger;
 			
-			if(modeChanger == 3) {
+			if(modeChanger == 3) 
+			{
 				modeChanger = 0;
 			}
 			
@@ -102,18 +95,20 @@ package examples {
 			graphics.drawRect(0, 0, 700, 400);
 			graphics.endFill();
 			
-			if(modeChanger == 1) {
+			if(modeChanger == 1) 
+			{
 				graphics.beginFill(0xFFFFFF, 1);
 				graphics.drawRect(0, 0, 700, 400);
 				graphics.endFill();
-			} else if(modeChanger == 2) {
+			} else if(modeChanger == 2) 
+			{
 				renderer.wireFrameMode = true;
 				getChildAt(0).visible = false;
 			}
-
 		}
-		
-		private function onLoop(evt:Event):void {
+
+		private function onLoop(evt:Event):void 
+		{
 			
 			stageCopy.fillRect(stageCopy.rect, 0x00000000);
 			stageCopy.draw(renderStage);
@@ -136,11 +131,9 @@ package examples {
 			//zValue = Math.sin(getTimer()/1000) * 200;
 			//ribbon.update(xMouse, yMouse, zValue);
 			//ribbon2.update(-xMouse, -yMouse, zValue);
-			
+
 			ribbon.update(v.x, v.y, v.z);
 			ribbon2.update(-v.x, -v.y, -v.z);
-
 		}
 	}
-	
 }

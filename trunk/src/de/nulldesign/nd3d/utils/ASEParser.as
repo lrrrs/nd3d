@@ -1,23 +1,26 @@
-package de.nulldesign.nd3d.utils {
-	
+package de.nulldesign.nd3d.utils 
+{
 	import de.nulldesign.nd3d.geom.Face;
 	import de.nulldesign.nd3d.geom.UV;
-	import de.nulldesign.nd3d.material.Material;
-	import de.nulldesign.nd3d.objects.Mesh;
 	import de.nulldesign.nd3d.geom.Vertex;
+	import de.nulldesign.nd3d.material.Material;
+	import de.nulldesign.nd3d.objects.Mesh;	
 
-	public class ASEParser {
-	
-		public function ASEParser()	{
-			
+	public class ASEParser 
+	{
+
+		public function ASEParser()	
+		{
 		}
-		
+
 		/*
 		 * Original Code by Andre Michelle (www.andre-michelle.com)
 		 * */
-		public static function parseFile(fileData:String, matList:Array, defaultMaterial:Material = null):Mesh {
+		public static function parseFile(fileData:String, matList:Array, defaultMaterial:Material = null):Mesh 
+		{
 			
-			if(defaultMaterial == null) {
+			if(defaultMaterial == null) 
+			{
 				defaultMaterial = new Material(0xFF9900, 1);
 			}
 			
@@ -27,12 +30,12 @@ package de.nulldesign.nd3d.utils {
 			var line:String;
 			var chunk:String;
 			var content:String;
-			var i:Number;
 			
 			var vertexList:Array = [];
 			var uvList:Array = [];
 			
-			while(lines.length)	{
+			while(lines.length)	
+			{
 				
 				line = String(lines.shift());
 				
@@ -43,53 +46,64 @@ package de.nulldesign.nd3d.utils {
 				//-- get chunk description
 				chunk = line.substr(0, line.indexOf(' '));
 				
-				switch(chunk) {
+				switch(chunk) 
+				{
 					case 'MESH_VERTEX_LIST':
-						while((content = String(lines.shift())).indexOf('}') < 0) {
-							content = content.substr(content.indexOf( '*' ) + 1);
-							var mvl: Array = content.split('\t'); // separate here
+						while((content = String(lines.shift())).indexOf('}') < 0) 
+						{
+							content = content.substr(content.indexOf('*') + 1);
+							var mvl:Array = content.split('\t'); 
+							// separate here
 							//-- switch coordinates to fit my coordinate system
 							vertexList.push(new Vertex(parseFloat(mvl[1]), parseFloat(mvl[3]), -parseFloat(mvl[2])));
 						}
-					break;
+						break;
 					
 					case 'MESH_FACE_LIST':
-						while((content = String(lines.shift())).indexOf('}') < 0) {
+						while((content = String(lines.shift())).indexOf('}') < 0) 
+						{
 							content = content.substr(content.indexOf('*') + 1);
-							var mfl:String = content.split('\t')[0]; // ignore: [MESH_SMOOTHING,MESH_MTLID]
-							var matID:Number = content.split('\t')[2].split(" ")[1]; // MATERIAL ID
+							var mfl:String = content.split('\t')[0]; 
+							// ignore: [MESH_SMOOTHING,MESH_MTLID]
+							var matID:Number = content.split('\t')[2].split(" ")[1]; 
+							// MATERIAL ID
 
-							var drc:Array = mfl.split(':'); // separate here
+							var drc:Array = mfl.split(':'); 
+							// separate here
 							var con:String;
 							
 							con = drc[2];
-							var vIndex1:Number = parseInt(con.substr( 0, con.lastIndexOf(' ')));
+							var vIndex1:Number = parseInt(con.substr(0, con.lastIndexOf(' ')));
 							con = drc[3];
-							var vIndex2:Number = parseInt(con.substr( 0, con.lastIndexOf(' ')));
+							var vIndex2:Number = parseInt(con.substr(0, con.lastIndexOf(' ')));
 							con = drc[4];
-							var vIndex3:Number = parseInt(con.substr( 0, con.lastIndexOf(' ')));
+							var vIndex3:Number = parseInt(con.substr(0, con.lastIndexOf(' ')));
 							m.addFace(vertexList[vIndex1], vertexList[vIndex2], vertexList[vIndex3], matList[matID] == null ? defaultMaterial : matList[matID]);
 						}
 						break;
 					
 					case 'MESH_TVERTLIST':
-						while((content = String(lines.shift())).indexOf('}') < 0) {
+						while((content = String(lines.shift())).indexOf('}') < 0) 
+						{
 							content = content.substr(content.indexOf('*') + 1);
-							var mtvl:Array = content.split('\t'); // separate here
+							var mtvl:Array = content.split('\t'); 
+							// separate here
 							uvList.push(new UV(parseFloat(mtvl[1]), parseFloat(mtvl[2])));
 						}
-					break;
+						break;
 					
 					case 'MESH_TFACELIST':
-						var num: Number = 0;
-						while((content = String(lines.shift())).indexOf('}') < 0) {
+						var num:Number = 0;
+						while((content = String(lines.shift())).indexOf('}') < 0) 
+						{
 							content = content.substr(content.indexOf('*') + 1);
-							var mtfl:Array = content.split('\t'); // separate here
+							var mtfl:Array = content.split('\t'); 
+							// separate here
 							var f:Face = m.faceList[num];
 							f.uvMap = [uvList[parseInt(mtfl[1])], uvList[parseInt(mtfl[2])], uvList[parseInt(mtfl[3])]];
 							num++;
 						}
-					break;
+						break;
 				}
 			}
 			

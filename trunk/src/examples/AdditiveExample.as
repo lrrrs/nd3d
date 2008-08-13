@@ -1,32 +1,32 @@
-﻿package examples {
-	
-	import de.nulldesign.nd3d.material.Material;
-	import de.nulldesign.nd3d.objects.Cube;
-	import de.nulldesign.nd3d.objects.Mesh;
-	import de.nulldesign.nd3d.objects.Plane;
-	import de.nulldesign.nd3d.objects.PointCamera;
-	import de.nulldesign.nd3d.objects.SimpleCube;
-	import de.nulldesign.nd3d.objects.Sphere;
-	import de.nulldesign.nd3d.renderer.Renderer;
+package examples 
+{
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
 
-	public class AdditiveExample extends Sprite {
-		
+	import de.nulldesign.nd3d.material.Material;
+	import de.nulldesign.nd3d.objects.Cube;
+	import de.nulldesign.nd3d.objects.Mesh;
+	import de.nulldesign.nd3d.objects.PointCamera;
+	import de.nulldesign.nd3d.renderer.Renderer;	
+
+	public class AdditiveExample extends Sprite 
+	{
+
 		private var cam:PointCamera;
 		private var renderer:Renderer;
 		private var renderList:Array;
 
 		[Embed("assets/cube_texture2.png")]
 		private var MyTexture:Class;
-		
+
 		private var cube:Cube;
 		private var cube2:Cube;
 		private var cube3:Cube;
 		private var cube4:Cube;
-		
-		function AdditiveExample() {
+
+		function AdditiveExample() 
+		{
 
 			var renderClip:Sprite = new Sprite();
 			addChild(renderClip);
@@ -88,7 +88,8 @@
 			addEventListener(Event.ENTER_FRAME, onRenderScene);
 		}
 
-		private function onRenderScene(evt:Event):void {
+		private function onRenderScene(evt:Event):void 
+		{
 
 			cam.angleX += (mouseY - cam.vpY) * .0005;
 			cam.angleY += (mouseX - cam.vpX) * .0005;

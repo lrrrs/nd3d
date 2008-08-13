@@ -1,96 +1,110 @@
-package de.nulldesign.nd3d.geom {
-	import de.nulldesign.nd3d.geom.Quaternion;
+package de.nulldesign.nd3d.geom 
+{
+	import de.nulldesign.nd3d.geom.Quaternion;		
 
-	public class Vertex {
-		
+	public class Vertex 
+	{
+
 		public var x:Number;
 		public var y:Number;
 		public var z:Number;
-		
+
 		public var screenX:Number;
 		public var screenY:Number;
 		public var scale:Number;
-		
+
 		public var x3d:Number;
 		public var y3d:Number;
 		public var z3d:Number;
-		
-		public function Vertex(x:Number, y:Number, z:Number) {
+
+		public function Vertex(x:Number, y:Number, z:Number) 
+		{
 			this.x = x;
 			this.y = y;
 			this.z = z;
 		}
-		
-		public function toString():String {
-			return "Vertex: "+x+"/"+y+"/"+z;
+
+		public function toString():String 
+		{
+			return "Vertex: " + x + "/" + y + "/" + z;
 		}
-		
-        public function add(v:Vertex):void {
+
+		public function add(v:Vertex):void 
+		{
 			x += v.x;
 			y += v.y;
 			z += v.z;
-        }
-    
-        public function sub(v:Vertex):void {
+		}
+
+		public function sub(v:Vertex):void 
+		{
 			x -= v.x;
 			y -= v.y;
 			z -= v.z;
-        }
-    
-        public function mult(n:Number):void {
+		}
+
+		public function mult(n:Number):void 
+		{
 			x *= n;
 			y *= n;
 			z *= n;
-        }
-		
-        public function dot(v:Vertex):Number {
-            return (x * v.x + y * v.y + v.z * z);
-        }
-    
-        public function cross(v:Vertex):Vertex {
+		}
+
+		public function dot(v:Vertex):Number 
+		{
+			return (x * v.x + y * v.y + v.z * z);
+		}
+
+		public function cross(v:Vertex):Vertex 
+		{
             
 			var tmpX:Number = (v.y * z) - (v.z * y);
 			var tmpY:Number = (v.z * x) - (v.x * z);
 			var tmpZ:Number = (v.x * y) - (v.y * x);
 			
 			return new Vertex(tmpX, tmpY, tmpZ);
-        }
-    
-		public function get length():Number {
-			return Math.sqrt(x*x + y*y + z*z);
 		}
-		
-		public function set length(len:Number):void {
+
+		public function get length():Number 
+		{
+			return Math.sqrt(x * x + y * y + z * z);
+		}
+
+		public function set length(len:Number):void 
+		{
 			var curLength:Number = length;
 			x = len * (x / curLength);
 			y = len * (y / curLength);
 			z = len * (z / curLength);
 		}
-		
-        public function normalize():void {
+
+		public function normalize():void 
+		{
 
 			var len:Number = length;
 			
 			x /= len;
 			y /= len;
 			z /= len;
-        }
+		}
 
-		public static function getDirectionVertexFromAngles(angleX:Number, angleY:Number):Vertex {
+		public static function getDirectionVertexFromAngles(angleX:Number, angleY:Number):Vertex 
+		{
 			
 			var sx:Number = Math.sin(angleX);
 			var cx:Number = Math.cos(angleX);
 			var sy:Number = Math.sin(angleY);
 			var cy:Number = Math.cos(angleY);
 
-			var xPos:Number = sy*cx;
+			var xPos:Number = sy * cx;
 			var yPos:Number = sx;
-			var zPos:Number = cy*cx;
+			var zPos:Number = cy * cx;
 			
 			return new Vertex(xPos, yPos, zPos);
 		}
-		
-		public function rotateAround(angleX:Number = 0, angleY:Number = 0):void {
+
+		public function rotateAround(angleX:Number = 0, angleY:Number = 0):void 
+		{
 			
 			// koords rotieren noch nicht mit?? komische bewegung wenn nase weit oben/unten
 			var len:Number = length;
@@ -100,16 +114,18 @@ package de.nulldesign.nd3d.geom {
 			var sy:Number = Math.sin(angleY);
 			var cy:Number = Math.cos(angleY);
 
-			x = len * sy*cx;
+			x = len * sy * cx;
 			y = len * -sx;
-			z = len * cy*cx;
+			z = len * cy * cx;
 		}
-		
-		public function clone():Vertex {
+
+		public function clone():Vertex 
+		{
 			return new Vertex(x, y, z);
 		}
-		
-		public function rotatePoint(q:Quaternion):Vertex {
+
+		public function rotatePoint(q:Quaternion):Vertex 
+		{
 			
 			var q1:Quaternion;
 			var q2:Quaternion;

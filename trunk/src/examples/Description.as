@@ -1,18 +1,18 @@
-﻿package examples 
+package examples 
 {
-	import de.nulldesign.nd3d.geom.Face;
-	import de.nulldesign.nd3d.geom.Vertex;
-	import de.nulldesign.nd3d.objects.Mesh;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 
+	import de.nulldesign.nd3d.geom.Vertex;
+	import de.nulldesign.nd3d.objects.Mesh;	
+
 	public class Description extends Sprite
 	{
 		private var txtField:TextField;
 		private var followMesh:Mesh;
-		
+
 		public function Description(txt:String, followMesh:Mesh) 
 		{
 			txtField = new TextField();
@@ -31,13 +31,11 @@
 			this.followMesh = followMesh;
 			addEventListener(Event.ENTER_FRAME, loop);
 		}
-		
+
 		private function loop(e:Event):void 
 		{
 			this.x = followMesh.positionAsVertex.screenX;
 			this.y = followMesh.positionAsVertex.screenY;
 		}
-		
 	}
-	
 }

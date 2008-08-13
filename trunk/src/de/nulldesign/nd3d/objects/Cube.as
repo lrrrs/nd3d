@@ -1,11 +1,11 @@
-﻿package de.nulldesign.nd3d.objects 
+package de.nulldesign.nd3d.objects 
 {
-	import de.nulldesign.nd3d.geom.Vertex;
-	
+	import de.nulldesign.nd3d.geom.Vertex;		
+
 	/**
-	* ...
-	* @author DefaultUser (Tools -> Custom Arguments...)
-	*/
+	 * ...
+	 * @author DefaultUser (Tools -> Custom Arguments...)
+	 */
 	public class Cube extends Mesh
 	{
 		public function Cube(materialList:Array, size:Number = 100, steps:Number = 3) 
@@ -13,7 +13,7 @@
 			super();
 			createCube(materialList, size, steps);
 		}
-		
+
 		private function createCube(materialList:Array, size:Number = 100, steps:Number = 3):void
 		{
 			var i:Number;
@@ -25,7 +25,7 @@
 			// front
 			var tmpMesh:Mesh = new Plane(size, size, steps, steps, materialList[0]);
 			var vList:Array = tmpMesh.vertexList;
-			for(i = 0; i < vList.length; i++)
+			for(i = 0;i < vList.length; i++)
 			{
 				vList[i].z += -size / 1;
 			}
@@ -36,7 +36,7 @@
 			// right
 			tmpMesh = new Plane(size, size, steps, steps, materialList[1]);
 			vList = tmpMesh.vertexList;
-			for(i = 0; i < vList.length; i++)
+			for(i = 0;i < vList.length; i++)
 			{
 				curVertex = vList[i];
 				
@@ -54,7 +54,7 @@
 			// left
 			tmpMesh = new Plane(size, size, steps, steps, materialList[2]);
 			vList = tmpMesh.vertexList;
-			for(i = 0; i < vList.length; i++)
+			for(i = 0;i < vList.length; i++)
 			{
 				curVertex = vList[i];
 				
@@ -72,7 +72,7 @@
 			// back
 			tmpMesh = new Plane(size, size, steps, steps, materialList[3]);
 			vList = tmpMesh.vertexList;
-			for(i = 0; i < vList.length; i++)
+			for(i = 0;i < vList.length; i++)
 			{
 				
 				curVertex = vList[i];
@@ -91,7 +91,7 @@
 			// bottom
 			tmpMesh = new Plane(size, size, steps, steps, materialList[4]);
 			vList = tmpMesh.vertexList;
-			for(i = 0; i < vList.length; i++)
+			for(i = 0;i < vList.length; i++)
 			{
 				
 				curVertex = vList[i];
@@ -111,7 +111,7 @@
 			tmpMesh = new Plane(size, size, steps, steps, materialList[5]);
 			vList = tmpMesh.vertexList;
 			
-			for(i = 0; i < vList.length; i++)
+			for(i = 0;i < vList.length; i++)
 			{
 				curVertex = vList[i];
 				
@@ -129,7 +129,5 @@
 			
 			vertexList.push(positionAsVertex);
 		}
-		
 	}
-	
 }

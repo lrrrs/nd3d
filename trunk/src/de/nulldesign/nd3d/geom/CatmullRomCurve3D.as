@@ -1,35 +1,42 @@
-package de.nulldesign.nd3d.geom {
-
-	import de.nulldesign.nd3d.geom.Vertex;
+package de.nulldesign.nd3d.geom 
+{
 	import de.nulldesign.nd3d.geom.CubicBezier3D;
+	import de.nulldesign.nd3d.geom.Vertex;	
 
-	public class CatmullRomCurve3D {
-		
+	public class CatmullRomCurve3D 
+	{
+
 		private var curveVertices:Array;
 		private var controlVertices:Array;
 		private var cubicCurves:Array;
 		private var SMOOTHNESS:Number;
-		
-		public function CatmullRomCurve3D() {
+
+		public function CatmullRomCurve3D() 
+		{
 			curveVertices = [];
 		}
-		
-		public function addCurveVertex(p:Vertex):void {
+
+		public function addCurveVertex(p:Vertex):void 
+		{
 			curveVertices.push(p);
 		}
-		
-		public function finalize(closed:Boolean = false, smoothness:Number = 0.5):void {
+
+		public function finalize(closed:Boolean = false, smoothness:Number = 0.5):void 
+		{
 			
 			SMOOTHNESS = smoothness;
 			
-			if(closed) {
+			if(closed) 
+			{
 				calculateClosedCurve();
-			} else {
+			} else 
+			{
 				calculateCurve();
 			}
 		}
-		
-		public function getCurveAt(t:Number):Vertex {
+
+		public function getCurveAt(t:Number):Vertex 
+		{
 
 			var curCurveNum:Number = Math.floor(t * cubicCurves.length);
 			if(curCurveNum >= cubicCurves.length) curCurveNum -= 1;
@@ -40,22 +47,25 @@ package de.nulldesign.nd3d.geom {
 			var curve:CubicBezier3D = cubicCurves[curCurveNum];
 			return curve.getCurveAt(curveT);
 		}
-		
-		private function calculateCurve():void {
+
+		private function calculateCurve():void 
+		{
 			
 			controlVertices = [];
 			cubicCurves = [];
 			var numVertices:uint = curveVertices.length;
-			var numcrtlVertices:uint = numVertices * 2 - 2;
-			
+			//var numcrtlVertices:uint = numVertices * 2 - 2;
+
 			var tx:Number;
 			var ty:Number;
 			var tz:Number;
 			
-			for(var i:uint =0;i<curveVertices.length;++i) {
+			for(var i:uint = 0;i < curveVertices.length;++i) 
+			{
 				
 				//first ctrlVertexVertex
-				if(i == 0) {
+				if(i == 0) 
+				{
 					tx = 0.5 * (curveVertices[1].x - curveVertices[0].x);
 					ty = 0.5 * (curveVertices[1].y - curveVertices[0].y);
 					tz = 0.5 * (curveVertices[1].z - curveVertices[0].z);
@@ -64,16 +74,18 @@ package de.nulldesign.nd3d.geom {
 				}
 				
 				//last controlVertexVertex
-				if(i == numVertices - 1) {
+				if(i == numVertices - 1) 
+				{
 					tx = 0.5 * (curveVertices[numVertices - 1].x - curveVertices[numVertices - 2].x);
 					ty = 0.5 * (curveVertices[numVertices - 1].y - curveVertices[numVertices - 2].y);
 					tz = 0.5 * (curveVertices[numVertices - 1].z - curveVertices[numVertices - 2].z);
 					
-					controlVertices.push(new Vertex(curveVertices[numVertices-1].x - SMOOTHNESS * tx, curveVertices[numVertices - 1].y - SMOOTHNESS * ty, curveVertices[numVertices - 1].z - SMOOTHNESS * tz));
+					controlVertices.push(new Vertex(curveVertices[numVertices - 1].x - SMOOTHNESS * tx, curveVertices[numVertices - 1].y - SMOOTHNESS * ty, curveVertices[numVertices - 1].z - SMOOTHNESS * tz));
 				}
 				
 				//the other Vertices...
-				if(i > 0 && i < numVertices - 1) {
+				if(i > 0 && i < numVertices - 1) 
+				{
 					tx = 0.5 * (curveVertices[i + 1].x - curveVertices[i - 1].x);
 					ty = 0.5 * (curveVertices[i + 1].y - curveVertices[i - 1].y);
 					tz = 0.5 * (curveVertices[i + 1].z - curveVertices[i - 1].z);
@@ -85,25 +97,29 @@ package de.nulldesign.nd3d.geom {
 				}
 			}
 
-			for(i = 0; i < numVertices-1; i++) {
+			for(i = 0;i < numVertices - 1; i++) 
+			{
 				cubicCurves.push(new CubicBezier3D(curveVertices[i], controlVertices[i * 2], controlVertices[i * 2 + 1], curveVertices[i + 1]));
 			}
 		}
-		
-		private function calculateClosedCurve():void {
+
+		private function calculateClosedCurve():void 
+		{
 			
 			controlVertices = [];
 			cubicCurves = [];
 			var numVertices:uint = curveVertices.length;
-			var numcrtlVertices:uint = numVertices * 2;
-			
+			//var numcrtlVertices:uint = numVertices * 2;
+
 			var tx:Number;
 			var ty:Number;
 			var tz:Number;
 			
-			for(var i:uint = 0; i < curveVertices.length; ++i) {
+			for(var i:uint = 0;i < curveVertices.length; ++i) 
+			{
 				//first ctrlVertexVertex
-				if(i == 0) {
+				if(i == 0) 
+				{
 					tx = 0.5 * (curveVertices[1].x - curveVertices[numVertices - 1].x);
 					ty = 0.5 * (curveVertices[1].y - curveVertices[numVertices - 1].y);
 					tz = 0.5 * (curveVertices[1].z - curveVertices[numVertices - 1].z);
@@ -113,7 +129,8 @@ package de.nulldesign.nd3d.geom {
 					controlVertices.push(new Vertex(curveVertices[i].x + SMOOTHNESS * tx, curveVertices[i].y + SMOOTHNESS * ty, curveVertices[i].z + SMOOTHNESS * tz));
 				}
 				//last controlVertexVertex
-				if(i == numVertices - 1) {
+				if(i == numVertices - 1) 
+				{
 					tx = 0.5 * (curveVertices[0].x - curveVertices[i - 1].x);
 					ty = 0.5 * (curveVertices[0].y - curveVertices[i - 1].y);
 					tz = 0.5 * (curveVertices[0].z - curveVertices[i - 1].z);
@@ -123,7 +140,8 @@ package de.nulldesign.nd3d.geom {
 					controlVertices.push(new Vertex(curveVertices[i].x + SMOOTHNESS * tx, curveVertices[i].y + SMOOTHNESS * ty, curveVertices[i].z + SMOOTHNESS * tz));
 				}
 				//the other Vertices...
-				if(i > 0 && i < numVertices - 1) {
+				if(i > 0 && i < numVertices - 1) 
+				{
 					tx = 0.5 * (curveVertices[i + 1].x - curveVertices[i - 1].x);
 					ty = 0.5 * (curveVertices[i + 1].y - curveVertices[i - 1].y);
 					tz = 0.5 * (curveVertices[i + 1].z - curveVertices[i - 1].z);
@@ -134,7 +152,8 @@ package de.nulldesign.nd3d.geom {
 				}
 			}
 			
-			for(i = 0; i < numVertices-1; i++) {
+			for(i = 0;i < numVertices - 1; i++) 
+			{
 				cubicCurves.push(new CubicBezier3D(curveVertices[i], controlVertices[i * 2 + 1], controlVertices[i * 2 + 2], curveVertices[i + 1]));
 			}
 			cubicCurves.push(new CubicBezier3D(curveVertices[numVertices - 1], controlVertices[controlVertices.length - 1], controlVertices[0], curveVertices[0]));

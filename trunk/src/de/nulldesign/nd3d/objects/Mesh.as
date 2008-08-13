@@ -1,37 +1,45 @@
-package de.nulldesign.nd3d.objects {
-	
-	import de.nulldesign.nd3d.geom.UV;
-	import de.nulldesign.nd3d.objects.Object3D;
-	import de.nulldesign.nd3d.geom.Face;
-	import de.nulldesign.nd3d.material.Material;
-	import de.nulldesign.nd3d.geom.Vertex;
+package de.nulldesign.nd3d.objects 
+{
 	import flash.utils.Dictionary;
 
-	public class Mesh extends Object3D {
-		
-		public function Mesh() {
+	import de.nulldesign.nd3d.geom.Face;
+	import de.nulldesign.nd3d.geom.UV;
+	import de.nulldesign.nd3d.geom.Vertex;
+	import de.nulldesign.nd3d.material.Material;
+	import de.nulldesign.nd3d.objects.Object3D;	
+
+	public class Mesh extends Object3D 
+	{
+
+		public function Mesh() 
+		{
 			super();
 		}
-		
-		public function addFace(v1:Vertex, v2:Vertex, v3:Vertex, material:Material = null, uvList:Array = null):void {
+
+		public function addFace(v1:Vertex, v2:Vertex, v3:Vertex, material:Material = null, uvList:Array = null):void 
+		{
 			faceList.push(new Face(this, v1, v2, v3, material, uvList));
 			if(!vertexInList(v1)) vertexList.push(v1);
 			if(!vertexInList(v2)) vertexList.push(v2);
 			if(!vertexInList(v3)) vertexList.push(v3);
 		}
-		
-		public function vertexInList(v:Vertex):Boolean {
-			for(var i:Number = 0; i < vertexList.length; i++) {
-				if(vertexList[i] == v) {
+
+		public function vertexInList(v:Vertex):Boolean 
+		{
+			for(var i:Number = 0;i < vertexList.length; i++) 
+			{
+				if(vertexList[i] == v) 
+				{
 					return true;
 				}
 			}
 			return false;
 		}
-	
-		public function weldVertices(tolerance:Number = 1):void	{
+
+		public function weldVertices(tolerance:Number = 1):void	
+		{
 			
-			trace("before: "+vertexList.length);
+			trace("before: " + vertexList.length);
 			
 			var i:uint;
 			var uniqueList:Dictionary = new Dictionary();
@@ -40,21 +48,23 @@ package de.nulldesign.nd3d.objects {
 			var f:Face;
 			
 			// fill unique listing
-			for(i = 0; i < vertexList.length; i++) {
+			for(i = 0;i < vertexList.length; i++) 
+			{
 				v = vertexList[i];
 				uniqueList[v] = v;
 			}
 			
 			// step through vertices and find duplicates vertices
-			for(i = 0; i < vertexList.length; i++) {
+			for(i = 0;i < vertexList.length; i++) 
+			{
 				
 				v = vertexList[i];
 				
-				for each(uniqueV in uniqueList) {
+				for each(uniqueV in uniqueList) 
+				{
 					
-					if(	Math.abs(v.x - uniqueV.x) <= tolerance && 
-						Math.abs(v.y - uniqueV.y) <= tolerance && 
-						Math.abs(v.z - uniqueV.z) <= tolerance) {
+					if(	Math.abs(v.x - uniqueV.x) <= tolerance && Math.abs(v.y - uniqueV.y) <= tolerance && Math.abs(v.z - uniqueV.z) <= tolerance) 
+					{
 						
 						uniqueList[v] = uniqueV; // replace vertice with unique one
 					}
@@ -63,7 +73,8 @@ package de.nulldesign.nd3d.objects {
 			
 			vertexList = [];
 			
-			for each(f in faceList)	{
+			for each(f in faceList)	
+			{
 				f.v1 = uniqueList[f.v1];
 				f.v2 = uniqueList[f.v2];
 				f.v3 = uniqueList[f.v3];
@@ -73,14 +84,16 @@ package de.nulldesign.nd3d.objects {
 				if(!vertexInList(f.v3)) vertexList.push(f.v3);
 			}
 			
-			trace("after: "+vertexList.length);
+			trace("after: " + vertexList.length);
 		}
-		
-		public function flipNormals():void {
+
+		public function flipNormals():void 
+		{
 			
 			var curFace:Face;
 			
-			for(var i:Number=0; i<faceList.length; i++) {
+			for(var i:Number = 0;i < faceList.length; i++) 
+			{
 				curFace = faceList[i];
 				
 				var tmpVertex:Vertex = curFace.v1;
@@ -100,7 +113,8 @@ package de.nulldesign.nd3d.objects {
 			}
 		}
 
-		public function clone():Mesh {
+		public function clone():Mesh 
+		{
 
 			var m:Mesh = new Mesh();
 
@@ -118,26 +132,31 @@ package de.nulldesign.nd3d.objects {
 			m.vertexList = [];
 			m.faceList = [];
 			
-			for(var i:uint=0; i<faceList.length; i++) {
+			for(var i:uint = 0;i < faceList.length; i++) 
+			{
 				var tmpFace:Face = faceList[i];
 				
 				var tmpV1:Vertex = tmpFace.v1.clone();
 				var tmpV2:Vertex = tmpFace.v2.clone();
 				var tmpV3:Vertex = tmpFace.v3.clone();
 				
-				if(!m.vertexInList(tmpV1)) {
+				if(!m.vertexInList(tmpV1)) 
+				{
 					m.vertexList.push(tmpV1);
 				}
-				if(!m.vertexInList(tmpV2)) {
+				if(!m.vertexInList(tmpV2)) 
+				{
 					m.vertexList.push(tmpV2);
 				}
-				if(!m.vertexInList(tmpV3)) {
+				if(!m.vertexInList(tmpV3)) 
+				{
 					m.vertexList.push(tmpV3);
 				}
 
 				//uv
 				var tmpUVMap:Array = [];
-				for(var j:uint=0; j<tmpFace.uvMap.length; j++) {
+				for(var j:uint = 0;j < tmpFace.uvMap.length; j++) 
+				{
 					var tmpUV:UV = tmpFace.uvMap[j];
 					tmpUVMap.push(tmpUV.clone());
 				}

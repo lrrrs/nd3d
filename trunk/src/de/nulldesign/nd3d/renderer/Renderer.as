@@ -45,10 +45,10 @@ package de.nulldesign.nd3d.renderer
 		public var distanceBlur:Number = 20;
 		public var blurMode:Boolean = false;
 
-		public var facesRendered:Number = 0;
-		public var facesTotal:Number = 0;
-		public var meshesTotal:Number = 0;
-		public var verticesProcessed:Number = 0;
+		public var facesRendered:int = 0;
+		public var facesTotal:int = 0;
+		public var meshesTotal:int = 0;
+		public var verticesProcessed:int = 0;
 
 		private var meshToStage:Dictionary;
 
@@ -102,8 +102,8 @@ package de.nulldesign.nd3d.renderer
 			var cosXMesh:Number;
 			var sinXMesh:Number;
 
-			var i:uint = meshList.length;
-			var j:uint;
+			var i:int = meshList.length;
+			var j:int;
 			var curMesh:Object3D;
 			var curVertex:Vertex;
 			var x:Number;
@@ -258,7 +258,7 @@ package de.nulldesign.nd3d.renderer
 			var curFace:Face;
 			var curMaterial:Material;
 			var curColor:uint;
-			var faceIndex:uint = 0;
+			var faceIndex:int = 0;
 
 			facesTotal = faceList.length;
 			
@@ -333,10 +333,17 @@ package de.nulldesign.nd3d.renderer
 		{
 			
 			var tmpStage:Sprite = stage;
-
+			
+			if (face.meshRef.container) 
+			{
+				meshToStage[face.meshRef] = tmpStage = face.meshRef.container;
+				// bring to front
+				stage.addChild(tmpStage);
+			}
+			
 			if(blurMode) 
 			{
-				if(meshToStage[face.meshRef] == null) 
+				if (meshToStage[face.meshRef] == null) 
 				{ 
 					var s:Sprite = new Sprite();
 					s.filters = [new BlurFilter(1, 1, 2)];
@@ -346,7 +353,6 @@ package de.nulldesign.nd3d.renderer
 
 				tmpStage = meshToStage[face.meshRef];
 				// bring to front
-				stage.removeChild(tmpStage);
 				stage.addChild(tmpStage);
 				
 				// apply blur

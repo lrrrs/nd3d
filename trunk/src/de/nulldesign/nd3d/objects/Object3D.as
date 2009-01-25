@@ -2,11 +2,13 @@ package de.nulldesign.nd3d.objects
 {
 	import de.nulldesign.nd3d.geom.Quaternion;
 	import de.nulldesign.nd3d.geom.Vertex;	
+	import flash.display.Sprite;
 
 	public class Object3D 
 	{
 
 		public var hidden:Boolean = false;
+		public var container:Sprite;
 
 		public var faceList:Array;
 		public var vertexList:Array;

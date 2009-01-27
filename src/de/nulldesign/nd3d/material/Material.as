@@ -13,6 +13,8 @@ package de.nulldesign.nd3d.material
 		public var smoothed:Boolean = false;
 		public var additive:Boolean = false;
 		public var calculateLights:Boolean = true;
+		public var isInteractive:Boolean = false;
+		
 		private var _alpha:Number;
 		private var _texture:BitmapData;
 		private var transformedTexture:BitmapData;

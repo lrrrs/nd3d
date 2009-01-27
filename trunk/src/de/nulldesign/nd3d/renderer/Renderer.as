@@ -1,8 +1,11 @@
 package de.nulldesign.nd3d.renderer 
 {
+	import de.nulldesign.nd3d.objects.KeyframeMesh;
 	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
+	import flash.display.Graphics;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
 	import flash.utils.Dictionary;
 
@@ -34,8 +37,9 @@ package de.nulldesign.nd3d.renderer
 	 */
 	public class Renderer 
 	{
-
 		private var stage:Sprite;
+		private var drawStage:Sprite;
+		private var interactiveStage:Sprite;
 
 		public var wireFrameMode:Boolean = false;
 		public var dynamicLighting:Boolean = false;
@@ -59,6 +63,9 @@ package de.nulldesign.nd3d.renderer
 		public function Renderer(stage:Sprite) 
 		{
 			this.stage = stage;
+			drawStage = this.stage.addChild(new Sprite()) as Sprite; // draw area
+			interactiveStage = this.stage.addChild(new Sprite()) as Sprite; // interactive overlay
+			
 			meshToStage = new Dictionary(true);
 		}
 
@@ -71,7 +78,6 @@ package de.nulldesign.nd3d.renderer
 		 */
 		public function project(meshList:Array, cam:PointCamera):Array 
 		{
-			
 			facesRendered = 0;
 			verticesProcessed = 0;
 			facesTotal = 0;
@@ -132,6 +138,10 @@ package de.nulldesign.nd3d.renderer
 				
 				if(!curMesh.hidden) 
 				{
+					if(curMesh is KeyframeMesh)
+					{
+						(curMesh as KeyframeMesh).updateFrame();
+					}
 
 					faceList = faceList.concat(curMesh.faceList);
 					vertexList = curMesh.vertexList;
@@ -237,7 +247,6 @@ package de.nulldesign.nd3d.renderer
 		 */
 		public function render(meshList:Array, cam:PointCamera):void 
 		{
-			
 			var faceList:Array = project(meshList, cam); 
 			// Mr.doob was here.
 			drawToScreen(faceList, cam);
@@ -251,15 +260,15 @@ package de.nulldesign.nd3d.renderer
 		 */
 		public function drawToScreen(faceList:Array, cam:PointCamera):void 
 		{
-
-			clearStage(stage);
-			
 			var curStage:Sprite;
 			var curFace:Face;
 			var curMaterial:Material;
 			var curColor:uint;
 			var faceIndex:int = 0;
 
+			clearStage(drawStage);
+			clearStage(interactiveStage);
+			
 			facesTotal = faceList.length;
 			
 			// render faces
@@ -287,10 +296,9 @@ package de.nulldesign.nd3d.renderer
 						curColor = curMaterial.color;
 					}
 					
-					if(curFace.material.texture == null || wireFrameMode)
+					if(curMaterial.texture == null || wireFrameMode)
 					{ 
 						// render solid
-
 						if(wireFrameMode)
 						{
 							curStage.graphics.lineStyle(1, 0xFFFFFF, 1);
@@ -318,6 +326,13 @@ package de.nulldesign.nd3d.renderer
 							Texture.renderUV(curStage, curMaterial, curFace.v1, curFace.v2, curFace.v3, curFace.uvMap, (curColor / curMaterial.color) + ambientColorCorrection, ambientColor);
 						}
 					}
+					
+					// draw interactive helper sprites
+					/*
+					if(curMaterial.isInteractive) {
+						drawInteractiveStage(curFace, curMaterial, faceIndex);
+					}
+					*/
 				}
 			}
 		}
@@ -329,16 +344,46 @@ package de.nulldesign.nd3d.renderer
 		 * @param depth of the face
 		 * @return sprite
 		 */
+		private function drawInteractiveStage(face:Face, mat:Material, faceIndex:uint):void 
+		{
+			// be shure that we got enough sprites
+			while(interactiveStage.numChildren < facesTotal) 
+			{
+				var s:Sprite = new Sprite();
+				interactiveStage.addChild(s);
+				s.buttonMode = true;
+				//s.addEventListener(MouseEvent.CLICK, interactiveObjectClick);
+			}
+			
+			var curStage:Sprite = Sprite(interactiveStage.getChildAt(faceIndex));
+			var gfx:Graphics = curStage.graphics;
+			
+			// draw
+			gfx.beginFill(0xFF9900, 0.5);
+			gfx.moveTo(face.v1.screenX, face.v1.screenY);
+			gfx.lineTo(face.v2.screenX, face.v2.screenY);
+			gfx.lineTo(face.v3.screenX, face.v3.screenY);
+			gfx.lineTo(face.v1.screenX, face.v1.screenY);
+			gfx.endFill();
+		}
+		
+		/**
+		 * retrieves the right clip for the given face
+		 * @param current face
+		 * @param face material
+		 * @param depth of the face
+		 * @return sprite
+		 */
 		private function getStage(face:Face, mat:Material, faceIndex:uint):Sprite 
 		{
 			
-			var tmpStage:Sprite = stage;
+			var tmpStage:Sprite = drawStage;
 			
-			if (face.meshRef.container) 
+			if(face.meshRef.container)
 			{
 				meshToStage[face.meshRef] = tmpStage = face.meshRef.container;
 				// bring to front
-				stage.addChild(tmpStage);
+				drawStage.addChild(tmpStage);
 			}
 			
 			if(blurMode) 
@@ -353,7 +398,7 @@ package de.nulldesign.nd3d.renderer
 
 				tmpStage = meshToStage[face.meshRef];
 				// bring to front
-				stage.addChild(tmpStage);
+				drawStage.addChild(tmpStage);
 				
 				// apply blur
 				var avgDistance:Number = 1 - (face.v1.scale + face.v2.scale + face.v3.scale) / 3;

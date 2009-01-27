@@ -19,6 +19,7 @@ package de.nulldesign.nd3d.utils
 	public class MeshLoader extends EventDispatcher 
 	{
 		public static const MESH_TYPE_ASE:String = "ase";
+		public static const MESH_TYPE_MD2:String = "md2";
 		public static const MESH_TYPE_3DS:String = "3ds";		
 		
 		private var mesh:Mesh;
@@ -30,7 +31,7 @@ package de.nulldesign.nd3d.utils
 		private var defaultMaterial:Material;
 
 		private var loader:URLLoader;
-		private var meshData:String;
+		private var meshData:*;
 		private var textureLoader:Loader;
 		private var textureLoadIndex:Number = 0;
 
@@ -49,7 +50,18 @@ package de.nulldesign.nd3d.utils
 			
 			loader = new URLLoader();
 			loader.addEventListener(Event.COMPLETE, onMeshLoaded);
-			loader.dataFormat = URLLoaderDataFormat.TEXT;
+			
+			switch(meshType)
+			{
+				case MeshLoader.MESH_TYPE_ASE: 
+					loader.dataFormat = URLLoaderDataFormat.TEXT;	
+					break;
+				case MeshLoader.MESH_TYPE_3DS: 
+				case MeshLoader.MESH_TYPE_MD2: 
+					loader.dataFormat = URLLoaderDataFormat.BINARY;	
+					break;
+			}
+
 			loader.load(new URLRequest(meshUrl));
 		}
 		
@@ -76,13 +88,17 @@ package de.nulldesign.nd3d.utils
 		{
 			switch(meshType)
 			{
-				case "ase":
+				case MeshLoader.MESH_TYPE_ASE:
 					mesh = ASEParser.parseFile(meshData, matList, defaultMaterial);
 					break;
 					
-				case "3ds":
+				case MeshLoader.MESH_TYPE_3DS:
 					var max3dsParseObj:Max3DSParser = new Max3DSParser();
-					mesh = max3dsParseObj.parseFile(ByteArray(loader.data), matList, defaultMaterial);
+					mesh = max3dsParseObj.parseFile(ByteArray(meshData), matList, defaultMaterial);
+					break;
+				
+				case MeshLoader.MESH_TYPE_MD2:
+					mesh = MD2Parser.parseFile(ByteArray(meshData), matList[0], defaultMaterial);
 					break;
 			}
 			

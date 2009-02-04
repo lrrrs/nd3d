@@ -1,12 +1,14 @@
 package examples
 {
-	import de.nulldesign.nd3d.events.MeshLoadEvent;
+	import de.nulldesign.nd3d.events.MeshEvent;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.Mesh;
 	import de.nulldesign.nd3d.objects.Object3D;
 	import de.nulldesign.nd3d.objects.PointCamera;
 	import de.nulldesign.nd3d.objects.SimpleCube;
 	import de.nulldesign.nd3d.renderer.Renderer;
+	import de.nulldesign.nd3d.utils.MaterialDefaults;
+	import de.nulldesign.nd3d.utils.MD2Parser;
 	import de.nulldesign.nd3d.utils.MeshLoader;
 	
 	import flash.display.BitmapData;
@@ -39,10 +41,10 @@ package examples
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			addEventListener(Event.ENTER_FRAME, onRenderScene);
 
-			var mat:Material = new Material(0x7b7b7b, 1, null, false, true, false, true);
+			var mat:MaterialDefaults = new MaterialDefaults(false, false, true, true);
 
-			meshLoader = new MeshLoader();
-			meshLoader.addEventListener(MeshLoadEvent.TYPE, onMeshLoaded);
+			meshLoader = new MeshLoader(new MD2Parser());
+			meshLoader.addEventListener(MeshEvent.MESH_LOADED, onMeshLoaded);
 			meshLoader.loadMesh("models/pg.md2", ["textures/pg.png"], mat);
 		}
 
@@ -51,7 +53,7 @@ package examples
 			cam.zOffset -= evt.delta * 5;
 		}
 
-		private function onMeshLoaded(evt:MeshLoadEvent):void 
+		private function onMeshLoaded(evt:MeshEvent):void 
 		{
 			evt.mesh.scale(20,20, 20);
 			renderList.push(evt.mesh);

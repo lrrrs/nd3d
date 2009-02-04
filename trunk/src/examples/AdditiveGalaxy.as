@@ -5,6 +5,7 @@ package examples
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
 
+	import de.nulldesign.nd3d.material.BitmapMaterial;
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.Mesh;
@@ -44,7 +45,7 @@ package examples
 			renderList = [];
 
 			var tex:BitmapData = new StarFieldTexture().bitmapData;
-			var tmpMat:Material = new Material(0, 1, tex, false, true);
+			var tmpMat:BitmapMaterial = new BitmapMaterial(tex, true);
 			var m:Mesh = new Sphere(10, 3000, tmpMat);
 			m.flipNormals();
 			renderList.push(m);
@@ -53,7 +54,7 @@ package examples
 			{
 				tex = new ParticleTexture().bitmapData;
 				tex.colorTransform(tex.rect, new ColorTransform(Math.random(), Math.random(), 1, 1));
-				particleMat = new Material(0xFFFFFF, 1, tex, false, false, true, false);				
+				particleMat = new BitmapMaterial(tex, false, false, false, true);				
 				
 				var s:Sprite3D = new Sprite3D(particleMat);
 				//s.xPos = -100 + Math.random() * 200;

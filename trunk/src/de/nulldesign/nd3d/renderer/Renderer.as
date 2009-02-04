@@ -1,6 +1,5 @@
 package de.nulldesign.nd3d.renderer 
 {
-	import de.nulldesign.nd3d.objects.KeyframeMesh;
 	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
 	import flash.display.Graphics;
@@ -14,7 +13,7 @@ package de.nulldesign.nd3d.renderer
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.Object3D;
 	import de.nulldesign.nd3d.objects.PointCamera;
-	import de.nulldesign.nd3d.renderer.Texture;	
+	import de.nulldesign.nd3d.renderer.TextureRenderer;	
 
 	/**
 	 * The heart of the engine. The renderer takes a list of meshes, transforms the geometry into screen coordinates and draws the triangles (faces) on the screen. 
@@ -138,10 +137,7 @@ package de.nulldesign.nd3d.renderer
 				
 				if(!curMesh.hidden) 
 				{
-					if(curMesh is KeyframeMesh)
-					{
-						(curMesh as KeyframeMesh).updateFrame();
-					}
+					if (curMesh.isDynamic) curMesh.update();
 
 					faceList = faceList.concat(curMesh.faceList);
 					vertexList = curMesh.vertexList;
@@ -265,6 +261,7 @@ package de.nulldesign.nd3d.renderer
 			var curMaterial:Material;
 			var curColor:uint;
 			var faceIndex:int = 0;
+			var defaultTexRenderer:TextureRenderer = new TextureRenderer();
 
 			clearStage(drawStage);
 			clearStage(interactiveStage);
@@ -315,15 +312,17 @@ package de.nulldesign.nd3d.renderer
 						curStage.graphics.endFill();
 					}
 					else
-					{ 
+					{
 						// render texture
+						var texRenderer:TextureRenderer = curMaterial.customRenderer || defaultTexRenderer;
+						
 						if(curMaterial.isSprite) // draw normal 2d sprite
 						{ 
-							Texture.render2DSprite(curStage, curMaterial.texture, curFace.v1);
+							texRenderer.render2DSprite(curStage, curMaterial.texture, curFace.v1);
 						}
 						else // texture mapping
 						{ 
-							Texture.renderUV(curStage, curMaterial, curFace.v1, curFace.v2, curFace.v3, curFace.uvMap, (curColor / curMaterial.color) + ambientColorCorrection, ambientColor);
+							texRenderer.renderUV(curStage, curMaterial, curFace.v1, curFace.v2, curFace.v3, curFace.uvMap, (curColor / curMaterial.color) + ambientColorCorrection, ambientColor);
 						}
 					}
 					
@@ -344,7 +343,7 @@ package de.nulldesign.nd3d.renderer
 		 * @param depth of the face
 		 * @return sprite
 		 */
-		private function drawInteractiveStage(face:Face, mat:Material, faceIndex:uint):void 
+		private function drawInteractiveStage(face:Face, mat:Material, faceIndex:int):void 
 		{
 			// be shure that we got enough sprites
 			while(interactiveStage.numChildren < facesTotal) 
@@ -374,47 +373,45 @@ package de.nulldesign.nd3d.renderer
 		 * @param depth of the face
 		 * @return sprite
 		 */
-		private function getStage(face:Face, mat:Material, faceIndex:uint):Sprite 
+		private function getStage(face:Face, mat:Material, faceIndex:int):Sprite 
 		{
-			
 			var tmpStage:Sprite = drawStage;
+			var newStage:Sprite;
 			
+			// resolve/create container sprite
 			if(face.meshRef.container)
 			{
+				if (!face.meshRef.container.parent) tmpStage.addChild(face.meshRef.container);
 				meshToStage[face.meshRef] = tmpStage = face.meshRef.container;
 				// bring to front
 				drawStage.addChild(tmpStage);
 			}
-			
-			if(blurMode) 
+			else if(blurMode || additiveMode)
 			{
 				if (meshToStage[face.meshRef] == null) 
 				{ 
-					var s:Sprite = new Sprite();
-					s.filters = [new BlurFilter(1, 1, 2)];
-					tmpStage.addChild(s);
-					meshToStage[face.meshRef] = s;
+					newStage = new Sprite();
+					tmpStage.addChild(newStage);
+					meshToStage[face.meshRef] = tmpStage = newStage;
 				}
-
-				tmpStage = meshToStage[face.meshRef];
+				else tmpStage = meshToStage[face.meshRef];
 				// bring to front
-				drawStage.addChild(tmpStage);
-				
-				// apply blur
+				if (!additiveMode) drawStage.addChild(tmpStage);
+			}
+			
+			// apply blur
+			if(blurMode) 
+			{
 				var avgDistance:Number = 1 - (face.v1.scale + face.v2.scale + face.v3.scale) / 3;
-				var blur:BlurFilter = tmpStage.filters[0];
+				var blur:BlurFilter = (tmpStage.filters && tmpStage.filters.length) ? 
+					tmpStage.filters[0] : new BlurFilter(1, 1, 2);
 				blur.blurX = blur.blurY = (distanceBlur * avgDistance);
 				tmpStage.filters = [blur];
 			}
 			
-			// check if we've got enough sprites to draw faces on, we need a sprite for every new face
+			// apply blend mode
 			if(additiveMode) 
 			{
-				while(tmpStage.numChildren < facesTotal) 
-				{
-					tmpStage.addChild(new Sprite());
-				}
-				tmpStage = Sprite(tmpStage.getChildAt(faceIndex));
 				tmpStage.blendMode = mat.additive ? BlendMode.ADD : BlendMode.NORMAL;
 			}
 			
@@ -424,7 +421,7 @@ package de.nulldesign.nd3d.renderer
 		private function clearStage(tmpStage:Sprite):void 
 		{
 			tmpStage.graphics.clear();
-			for(var i:uint = 0;i < tmpStage.numChildren; i++) 
+			for(var i:int = 0;i < tmpStage.numChildren; i++) 
 			{
 				clearStage(Sprite(tmpStage.getChildAt(i)));
 			}
@@ -439,7 +436,7 @@ package de.nulldesign.nd3d.renderer
 		 * @param camera instance
 		 * @return
 		 */
-		private function getMatColor(color:Number, fv1:Vertex, fv2:Vertex, fv3:Vertex, cam:PointCamera):Number 
+		private function getMatColor(color:Number, fv1:Vertex, fv2:Vertex, fv3:Vertex, cam:PointCamera):uint
 		{
 
 			// dynamic lighting
@@ -494,13 +491,7 @@ package de.nulldesign.nd3d.renderer
 			var za:Number = (ta.v1.scale + ta.v2.scale + ta.v3.scale) / 3;
 			var zb:Number = (tb.v1.scale + tb.v2.scale + tb.v3.scale) / 3;
 			 */
-			if(za > zb) 
-			{
-				return -1;
-			} else 
-			{
-				return 1;
-			}
+			return (za > zb) ? -1 : 1;
 		}
 	}
 }

@@ -6,8 +6,11 @@ package de.nulldesign.nd3d.objects
 
 	public class Object3D 
 	{
-
+		public var name:String;
+		public var userData:*;
+		
 		public var hidden:Boolean = false;
+		public var isDynamic:Boolean = false;
 		public var container:Sprite;
 
 		public var faceList:Array;
@@ -143,6 +146,16 @@ package de.nulldesign.nd3d.objects
 		public static function deg2rad(deg:Number):Number 
 		{
 			return deg * (Math.PI / 180);
+		}
+		
+		public function toString():String
+		{
+			return "[Object3D " + name + " " + xPos + "," + yPos + "," + zPos + "]";
+		}
+		
+		public function update():void
+		{
+			// to be overriden, called if 'isDynamic' is set
 		}
 	}
 }

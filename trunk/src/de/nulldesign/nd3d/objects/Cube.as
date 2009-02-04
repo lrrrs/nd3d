@@ -2,12 +2,12 @@ package de.nulldesign.nd3d.objects
 {
 	import de.nulldesign.nd3d.geom.Vertex;		
 
-	/**
-	 * ...
-	 * @author DefaultUser (Tools -> Custom Arguments...)
-	 */
 	public class Cube extends Mesh
 	{
+		/**
+		 * Simple cube.
+		 * Side order: front, right, left, back, bottom, top
+		 */
 		public function Cube(materialList:Array, size:Number = 100, steps:Number = 3) 
 		{
 			super();

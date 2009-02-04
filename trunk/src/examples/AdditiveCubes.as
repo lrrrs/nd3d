@@ -8,6 +8,7 @@ package examples
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 
+	import de.nulldesign.nd3d.material.BitmapMaterial;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.Mesh;
 	import de.nulldesign.nd3d.objects.PointCamera;
@@ -40,11 +41,17 @@ package examples
 			cam.zOffset = 2000;
 			
 			renderList = [];
-
+			
+			// direct color transform
 			var texture1:BitmapData = new MyTexture().bitmapData;
 			texture1.colorTransform(texture1.rect, new ColorTransform(0.3, 0.5, 0.6, 1, 0, 0, 0, 0));
+			var mat1:BitmapMaterial = new BitmapMaterial(texture1, false, false, true, true);
+			
+			// dynamic color transform
 			var texture2:BitmapData = new MyTexture().bitmapData;
-			texture2.colorTransform(texture2.rect, new ColorTransform(1, 0.5, 1, 1, 0, 0, 0, 0));
+			var mat2:BitmapMaterial = new BitmapMaterial(texture2, false, false, true, true);
+			mat2.colorTransform = new ColorTransform(1, 0.5, 1, 1, 0, 0, 0, 0);
+			
 			var texture3:BitmapData = new MyTexture().bitmapData;
 			texture3.colorTransform(texture3.rect, new ColorTransform(1, 1, 0.5, 1, 0, 0, 0, 0));
 			var texture4:BitmapData = new MyTexture().bitmapData;
@@ -52,12 +59,12 @@ package examples
 			var texture5:BitmapData = new MyTexture().bitmapData;
 			texture5.colorTransform(texture5.rect, new ColorTransform(1, 1, 0, 1, 0, 0, 0, 0));
 			
-			var c1:Mesh = new SimpleCube(new Material(0xFF9900, 1, texture1, true, false, true), 200);
-			var c2:Mesh = new SimpleCube(new Material(0xFF9900, 1, texture2, true, false, true), 300);
-			var c3:Mesh = new SimpleCube(new Material(0xFF9900, 1, texture3, true, false, true), 400);
-			var c4:Mesh = new SimpleCube(new Material(0xFF9900, 1, texture4, true, false, true), 500);
-			var c5:Mesh = new SimpleCube(new Material(0xFF9900, 1, texture5, true, false, true), 600);
-
+			var c1:Mesh = new SimpleCube(mat1, 200);
+			var c2:Mesh = new SimpleCube(mat2, 300);
+			var c3:Mesh = new SimpleCube(new BitmapMaterial(texture3, false, false, true, true), 400);
+			var c4:Mesh = new SimpleCube(new BitmapMaterial(texture4, false, false, true, true), 500);
+			var c5:Mesh = new SimpleCube(new BitmapMaterial(texture5, false, false, true, true), 600);
+			
 			renderList.push(c1, c2, c3, c4, c5);
 			
 			addEventListener(Event.ENTER_FRAME, onRenderScene);

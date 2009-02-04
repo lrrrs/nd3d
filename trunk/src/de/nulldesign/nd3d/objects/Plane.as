@@ -4,10 +4,6 @@ package de.nulldesign.nd3d.objects
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.material.Material;	
 
-	/**
-	 * ...
-	 * @author DefaultUser (Tools -> Custom Arguments...)
-	 */
 	public class Plane extends Mesh 
 	{
 
@@ -17,7 +13,7 @@ package de.nulldesign.nd3d.objects
 			createPlane(width, height, stepsX, stepsY, material);
 		}
 
-		private function createPlane(width:Number, height:Number, stepsX:Number, stepsY:Number, material:Material):void
+		protected function createPlane(width:Number, height:Number, stepsX:Number, stepsY:Number, material:Material):void
 		{
 			var i:Number;
 			var j:Number;
@@ -29,7 +25,7 @@ package de.nulldesign.nd3d.objects
 			for(i = 0;i <= stepsX; i++)
 			{
 				ar.push([]);
-				for(j = 0;j <= stepsX; j++)
+				for(j = 0;j <= stepsY; j++)
 				{
 					var x:Number = i * (width / stepsX) - width / 2;
 					var y:Number = j * (height / stepsY) - height / 2;

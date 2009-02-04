@@ -1,5 +1,6 @@
 package examples 
 {
+	import de.nulldesign.nd3d.material.BitmapMaterial;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
@@ -7,7 +8,8 @@ package examples
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 
-	import de.nulldesign.nd3d.events.MeshLoadEvent;
+	import de.nulldesign.nd3d.events.MeshEvent;
+	import de.nulldesign.nd3d.utils.ASEParser;
 	import de.nulldesign.nd3d.geom.Face;
 	import de.nulldesign.nd3d.geom.UV;
 	import de.nulldesign.nd3d.geom.Vertex;
@@ -57,25 +59,23 @@ package examples
 			
 			earthBump = new EARTH_BUMP_TEXTURE();
 			
-			var mat:Material = new Material(0xFF9900, 1);
 			var textures:Array = [];
 			textures.push("textures/EarthMap.jpg");
 			textures.push("textures/EarthMap.jpg");
 
-			meshLoader = new MeshLoader();
-			meshLoader.addEventListener(MeshLoadEvent.TYPE, onMeshLoaded);
-			meshLoader.loadMesh("models/sphere_l0.ASE", textures, mat);
+			meshLoader = new MeshLoader(new ASEParser());
+			meshLoader.addEventListener(MeshEvent.MESH_LOADED, onMeshLoaded);
+			meshLoader.loadMesh("models/sphere_l0.ASE", textures);
 			
-			var mat2:Material = new Material(0xFF9900, 1);
 			var textures2:Array = [];
 			textures2.push("textures/ringmap.png");
 			textures2.push("textures/ringmap.png");
 			
-			meshLoader2 = new MeshLoader();
-			meshLoader2.addEventListener(MeshLoadEvent.TYPE, onMeshLoaded2);
-			meshLoader2.loadMesh("models/ring.ASE", textures2, mat2);			
+			meshLoader2 = new MeshLoader(new ASEParser());
+			meshLoader2.addEventListener(MeshEvent.MESH_LOADED, onMeshLoaded2);
+			meshLoader2.loadMesh("models/ring.ASE", textures2);			
 			
-			var starFieldMat:Material = new Material(0, 1, new STARFIELD_TEXTURE().bitmapData, false, true);
+			var starFieldMat:BitmapMaterial = new BitmapMaterial(new STARFIELD_TEXTURE().bitmapData, true);
 			var starField:Sphere = new Sphere(10, 5000, starFieldMat);
 			starField.flipNormals();
 			
@@ -90,13 +90,13 @@ package examples
 			cam.zOffset -= evt.delta * 10;
 		}
 
-		private function onMeshLoaded2(evt:MeshLoadEvent):void 
+		private function onMeshLoaded2(evt:MeshEvent):void 
 		{
 			renderList.push(evt.mesh);
 			evt.mesh.scale(1.3, 1.3, 1.3);
 		}
 
-		private function onMeshLoaded(evt:MeshLoadEvent):void 
+		private function onMeshLoaded(evt:MeshEvent):void 
 		{
 			renderList.push(evt.mesh);
 			planet = evt.mesh;	

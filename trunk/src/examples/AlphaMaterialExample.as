@@ -1,5 +1,6 @@
 package examples 
 {
+	import de.nulldesign.nd3d.material.BitmapMaterial;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -48,8 +49,10 @@ package examples
 			
 			var tex:BitmapData = new MyTexture().bitmapData;
 			
-			// flat, single colored material, no lighting
-			var mat:Material = new Material(0xFFFFFF, 1, null, false, false, false, false);
+			// note: each sphere has a custom container sprite
+			
+			// flat, single colored material, no lighting, custom filter
+			var mat:Material = new Material(0xFFFFFF, 1);
 			sphere = new Sphere(10, 100, mat);
 			sphere.container = new Sprite();
 			sphere.container.filters = [ new GlowFilter(0x00ff00, 1, 15, 15) ];
@@ -58,7 +61,7 @@ package examples
 			renderList.push(sphere);
 			
 			// flat, single colored material, lighting enabled
-			var mat2:Material = new Material(0xFFFFFF, 1, null, false, false, false, true);
+			var mat2:Material = new Material(0xFFFFFF, 1, true);
 			sphere2 = new Sphere(10, 100, mat2);
 			sphere2.container = new Sprite();
 			sphere2.xPos = 120;
@@ -66,22 +69,23 @@ package examples
 			renderList.push(sphere2);
 			
 			// textured material, no lighting
-			var mat3:Material = new Material(0xFFFFFF, 0.2, tex, false, false, false, false);
+			var mat3:BitmapMaterial = new BitmapMaterial(tex);
 			sphere3 = new Sphere(10, 100, mat3);
 			sphere3.container = new Sprite();
 			sphere3.xPos = -120;
 			sphere3.yPos = 120;
 			renderList.push(sphere3);
 			
-			// textured material, lighting enabled
-			var mat4:Material = new Material(0xFFFFFF, 0.6, tex, false, false, false, true);
+			// alpha textured material, lighting enabled
+			var mat4:BitmapMaterial = new BitmapMaterial(tex, false, true);
+			mat4.alpha = 0.6;
 			sphere4 = new Sphere(10, 100, mat4);
 			sphere4.container = new Sprite();
 			sphere4.xPos = 120;
 			sphere4.yPos = 120;
 			renderList.push(sphere4);
 			
-			desc1 = new Description("flat, single colored material, no lighting", sphere);
+			desc1 = new Description("flat, single colored material, no lighting, custom filter", sphere);
 			descriptionClip.addChild(desc1);
 			
 			desc2 = new Description("flat, single colored material, lighting enabled", sphere2);
@@ -90,7 +94,7 @@ package examples
 			desc3 = new Description("textured material, no lighting", sphere3);
 			descriptionClip.addChild(desc3);
 
-			desc4 = new Description("textured material, lighting enabled", sphere4);
+			desc4 = new Description("alpha textured material, lighting enabled", sphere4);
 			descriptionClip.addChild(desc4);
 			
 			addEventListener(Event.ENTER_FRAME, onRenderScene);

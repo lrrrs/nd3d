@@ -1,5 +1,8 @@
 package examples 
 {
+	import de.nulldesign.nd3d.material.BitmapMaterial;
+	import de.nulldesign.nd3d.objects.Box;
+	import de.nulldesign.nd3d.utils.ASEParser;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -7,7 +10,7 @@ package examples
 	import flash.events.MouseEvent;
 	import flash.ui.Keyboard;
 
-	import de.nulldesign.nd3d.events.MeshLoadEvent;
+	import de.nulldesign.nd3d.events.MeshEvent;
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.Cube;
@@ -72,17 +75,16 @@ package examples
 			var space3:BitmapData = new Space3().bitmapData;
 			var space4:BitmapData = new Space4().bitmapData;
 			
-			var spaceMat1:Material = new Material(0, 1, space1);
-			var spaceMat2:Material = new Material(0, 1, space2);
-			var spaceMat3:Material = new Material(0, 1, space3);
-			var spaceMat4:Material = new Material(0, 1, space4);
+			var spaceMat1:BitmapMaterial = new BitmapMaterial(space1);
+			var spaceMat2:BitmapMaterial = new BitmapMaterial(space2);
+			var spaceMat3:BitmapMaterial = new BitmapMaterial(space3);
+			var spaceMat4:BitmapMaterial = new BitmapMaterial(space4);
 			
 			skyBox = new Cube([spaceMat1, spaceMat2, spaceMat3, spaceMat4, spaceMat3, spaceMat2], 3000, 4);
 			skyBox.flipNormals();
 			renderList.push(skyBox);
-
+			
 			// fighter test
-			var mat:Material = new Material(0xFF9900, 1);
 			var textures:Array = [];
 			textures.push("textures/page3.jpg");
 			textures.push("textures/page1.jpg");
@@ -90,26 +92,22 @@ package examples
 			textures.push("textures/page0.jpg");
 			textures.push("textures/page2.jpg");
 
-			meshLoader = new MeshLoader();
-			meshLoader.addEventListener(MeshLoadEvent.TYPE, onMeshLoaded);
-			meshLoader.loadMesh("models/fighter.ASE", textures, mat);
+			meshLoader = new MeshLoader(new ASEParser());
+			meshLoader.addEventListener(MeshEvent.MESH_LOADED, onMeshLoaded);
+			meshLoader.loadMesh("models/fighter.ASE", textures);
 			
 			// minelayercorvette
-			var mat2:Material = new Material(0xFF9900, 1);
 			var textures2:Array = [];
-
 			textures2.push("textures/minelayer_page0.jpg");
 			textures2.push("textures/minelayer_top.jpg");
 			textures2.push("textures/minelayer_page0.jpg");
 
-			meshLoader2 = new MeshLoader();
-			meshLoader2.addEventListener(MeshLoadEvent.TYPE, onMeshLoaded2);
-			meshLoader2.loadMesh("models/minelayercorvette.ASE", textures2, mat2);
+			meshLoader2 = new MeshLoader(new ASEParser());
+			meshLoader2.addEventListener(MeshEvent.MESH_LOADED, onMeshLoaded2);
+			meshLoader2.loadMesh("models/minelayercorvette.ASE", textures2);
 			
 			// swarmer test
-			var mat3:Material = new Material(0xFF9900, 1);
 			var textures3:Array = [];
-
 			textures3.push("textures/swarmer_page0.jpg");
 			textures3.push("textures/swarmer_page0.jpg");
 			textures3.push("textures/swarmer_fronthatch.jpg");
@@ -120,9 +118,9 @@ package examples
 			textures3.push("textures/swarmer_tailsidesrear.jpg");
 			textures3.push("textures/swarmer_bottemtail.jpg");
 
-			meshLoader3 = new MeshLoader();
-			meshLoader3.addEventListener(MeshLoadEvent.TYPE, onMeshLoaded3);
-			meshLoader3.loadMesh("models/p2advanceswarmer.ASE", textures3, mat3);
+			meshLoader3 = new MeshLoader(new ASEParser());
+			meshLoader3.addEventListener(MeshEvent.MESH_LOADED, onMeshLoaded3);
+			meshLoader3.loadMesh("models/p2advanceswarmer.ASE", textures3);
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -131,7 +129,7 @@ package examples
 			addEventListener(Event.ENTER_FRAME, onRenderScene);
 		}
 
-		private function onMeshLoaded3(evt:MeshLoadEvent):void 
+		private function onMeshLoaded3(evt:MeshEvent):void 
 		{
 			renderList.push(evt.mesh);
 			
@@ -144,7 +142,7 @@ package examples
 			followRef = spaceShip;
 		}
 
-		private function onMeshLoaded2(evt:MeshLoadEvent):void 
+		private function onMeshLoaded2(evt:MeshEvent):void 
 		{
 			renderList.push(evt.mesh);
 			
@@ -155,7 +153,7 @@ package examples
 			spaceShip2.zPos = (Math.random() - Math.random()) * 200;
 		}
 
-		private function onMeshLoaded(evt:MeshLoadEvent):void 
+		private function onMeshLoaded(evt:MeshEvent):void 
 		{
 			renderList.push(evt.mesh);
 			

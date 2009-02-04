@@ -1,31 +1,41 @@
 package de.nulldesign.nd3d.utils
 {
+	import de.nulldesign.nd3d.events.MeshEvent;
 	import de.nulldesign.nd3d.material.Material;
-	import de.nulldesign.nd3d.utils.MD2;
+	import de.nulldesign.nd3d.objects.MD2;
 	import de.nulldesign.nd3d.objects.Mesh;
-	
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.utils.ByteArray;
 	
-    public class MD2Parser
-    { 	
-		public var mesh:Mesh;
-		
-        /**
-         * @author katopz@sleepydesign.com
-         */		
-        public function MD2Parser(data:ByteArray, mat:Material)
-        {
-            mesh = new MD2(mat,data);
-        }
+	/**
+	 * [broadcast event] Dispatched when the mesh and textures are fully loaded.
+	 * @eventType de.nulldesign.nd3d.events.MeshEvent
+	 */
+	[Event(name="meshLoaded", type="de.nulldesign.nd3d.events.MeshEvent")] 
 	
-		public static function parseFile(data:ByteArray, mat:Material, defaultMaterial:Material = null):Mesh 
+	
+	/**
+	 * @author katopz@sleepydesign.com
+	 */	
+    public class MD2Parser extends EventDispatcher implements IMeshParser
+    {
+		public var mesh:Mesh;
+		private var fps:int;
+		private var scale:Number;
+		
+		public function MD2Parser(fps:int = 24, scale:Number = 1)
+		{
+			this.fps = fps;
+			this.scale = scale;
+		}
+	
+		public function parseFile(meshData:ByteArray, matList:Array, defaultMaterial:MaterialDefaults = null):void
         {
-			if(defaultMaterial == null) 
-			{
-				defaultMaterial = new Material(0xFF9900, 1);
-			}
+			var mat:Material = matList ? matList[0] : defaultMaterial.getMaterial();
+			mesh = new MD2(mat, meshData, fps, scale);
 			
-            return new MD2Parser(data, mat ? mat : defaultMaterial).mesh;
+			dispatchEvent(new MeshEvent(MeshEvent.MESH_PARSED, mesh));
         }
     }
 }

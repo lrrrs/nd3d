@@ -6,6 +6,7 @@ package examples
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
 
+	import de.nulldesign.nd3d.material.BitmapMaterial;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.Mesh;
 	import de.nulldesign.nd3d.objects.PointCamera;
@@ -41,7 +42,7 @@ package examples
 
 			var texture:BitmapData = new MyTexture().bitmapData;
 			texture.colorTransform(texture.rect, new ColorTransform(0.0, 1.0, 1.0, 0.5, 0, 0, 0, 0));
-			var mat:Material = new Material(0x00DDFF, 1, texture, true, false, true);
+			var mat:BitmapMaterial = new BitmapMaterial(texture, false, false, true, true);
 			
 			for(var i:Number = 0;i < 3; i++) 
 			{

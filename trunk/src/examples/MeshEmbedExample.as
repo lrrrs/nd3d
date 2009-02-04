@@ -6,7 +6,7 @@ package examples
 	import flash.filters.GlowFilter;
 	import flash.utils.ByteArray;
 
-	import de.nulldesign.nd3d.events.MeshLoadEvent;
+	import de.nulldesign.nd3d.events.MeshEvent;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.PointCamera;
 	import de.nulldesign.nd3d.renderer.Renderer;
@@ -45,12 +45,12 @@ package examples
 			var mat:Material = new Material(0x7b7b7b, 1, null, false, true, false, true);
 			var textures:Array = [new monkeyTexture()];
 			meshLoader = new MeshLoader();
-			meshLoader.addEventListener(MeshLoadEvent.TYPE, onMeshLoaded);
+			meshLoader.addEventListener(MeshEvent.MESH_LOADED, onMeshLoaded);
 			meshLoader.loadMeshBytes(new monkeyMeshData() as ByteArray, textures, mat, MeshLoader.MESH_TYPE_ASE);
 			
 			textures = [new hatTexture()];
 			meshLoader = new MeshLoader();
-			meshLoader.addEventListener(MeshLoadEvent.TYPE, onMeshLoaded);
+			meshLoader.addEventListener(MeshEvent.MESH_LOADED, onMeshLoaded);
 			meshLoader.loadMeshBytes(new hatMeshData() as ByteArray, textures, mat, MeshLoader.MESH_TYPE_ASE);
 		}
 

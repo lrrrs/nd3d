@@ -34,6 +34,12 @@
 			isReflectDirty = true;
 		}
 		
+		public function updateReflect():void
+		{
+			isReflectDirty = true;
+			update();
+		}
+		
 		override public function update():void
 		{
 			if (isReflectDirty)

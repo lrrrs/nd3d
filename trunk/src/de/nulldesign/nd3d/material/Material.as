@@ -5,9 +5,9 @@ package de.nulldesign.nd3d.material
 
 	public class Material 
 	{
-		protected var _color:uint;
-		protected var _alpha:Number;
-		protected var _texture:BitmapData;
+		protected var _color:uint = 0xffffff;
+		protected var _alpha:Number = 1;
+		protected var _texture:BitmapData = null;
 		public var isSprite:Boolean;
 		public var doubleSided:Boolean = false;
 		public var smoothed:Boolean;

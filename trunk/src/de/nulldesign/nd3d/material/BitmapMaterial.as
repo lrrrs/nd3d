@@ -28,7 +28,7 @@
 		}
 		
 		// color-transform the bitmap
-		public function applyTransformations():void
+		public function update():void
 		{
 			if (!_texture) return;
 			isDirty = false;
@@ -72,12 +72,13 @@
 		
 		override public function get texture():BitmapData 
 		{
-			if (isDirty) applyTransformations();
+			if (isDirty) update();
 			return transformedTexture; 
 		}
 		
 		override public function set texture(value:BitmapData):void 
 		{
+			if (_texture == value) return;
 			super.texture = value;
 			isDirty = true;
 		}

@@ -1,12 +1,22 @@
 package de.nulldesign.nd3d.utils 
 {
+	import de.nulldesign.nd3d.events.MeshEvent;
 	import de.nulldesign.nd3d.geom.Face;
 	import de.nulldesign.nd3d.geom.UV;
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.Mesh;	
+	import flash.events.EventDispatcher;
+	import flash.utils.ByteArray;
+	
+	/**
+	 * [broadcast event] Dispatched when the mesh and textures are fully loaded.
+	 * @eventType de.nulldesign.nd3d.events.MeshEvent
+	 */
+	[Event(name="meshLoaded", type="de.nulldesign.nd3d.events.MeshEvent")] 
+	
 
-	public class ASEParser 
+	public class ASEParser extends EventDispatcher implements IMeshParser
 	{
 
 		public function ASEParser()	
@@ -15,14 +25,11 @@ package de.nulldesign.nd3d.utils
 
 		/*
 		 * Original Code by Andre Michelle (www.andre-michelle.com)
-		 * */
-		public static function parseFile(fileData:String, matList:Array, defaultMaterial:Material = null):Mesh 
+		 */
+		public function parseFile(meshData:ByteArray, matList:Array, defaultMaterial:MaterialDefaults = null):void 
 		{
-			
-			if(defaultMaterial == null) 
-			{
-				defaultMaterial = new Material(0xFF9900, 1);
-			}
+			var fileData:String = meshData.readUTFBytes(meshData.length);
+			var defMat:Material = (defaultMaterial) ? defaultMaterial.getMaterial() : new Material(0xffffff);
 			
 			var m:Mesh = new Mesh();
 			
@@ -78,7 +85,7 @@ package de.nulldesign.nd3d.utils
 							var vIndex2:Number = parseInt(con.substr(0, con.lastIndexOf(' ')));
 							con = drc[4];
 							var vIndex3:Number = parseInt(con.substr(0, con.lastIndexOf(' ')));
-							m.addFace(vertexList[vIndex1], vertexList[vIndex2], vertexList[vIndex3], matList[matID] == null ? defaultMaterial : matList[matID]);
+							m.addFace(vertexList[vIndex1], vertexList[vIndex2], vertexList[vIndex3], matList[matID] == null ? defMat : matList[matID]);
 						}
 						break;
 					
@@ -107,7 +114,7 @@ package de.nulldesign.nd3d.utils
 				}
 			}
 			
-			return m;
+			dispatchEvent(new MeshEvent(MeshEvent.MESH_PARSED, m));
 		}
 	}
 }

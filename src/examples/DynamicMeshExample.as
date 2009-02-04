@@ -1,5 +1,6 @@
 package examples 
 {
+	import de.nulldesign.nd3d.material.BitmapMaterial;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.BlendMode;
@@ -53,14 +54,14 @@ package examples
 			
 			var texture:Bitmap = new CUBE_TEXTURE();
 			
-			var ribbonMat:Material = new Material(0xFF9900, 1, texture.bitmapData, true, false, true);
+			var ribbonMat:BitmapMaterial = new BitmapMaterial(texture.bitmapData, false, false, true, true);
 			ribbon = new Ribbon(0.3, 30, 10, ribbonMat);
 			renderList.push(ribbon);
 
 			var texture2:Bitmap = new CUBE_TEXTURE();
 			texture2.bitmapData.colorTransform(texture2.bitmapData.rect, new ColorTransform(0.5, 1, 1, 1, 0, 0, 0, 0));
 			
-			var ribbonMat2:Material = new Material(0xFF9900, 1, texture2.bitmapData, true, false, true);
+			var ribbonMat2:BitmapMaterial = new BitmapMaterial(texture2.bitmapData, false, false, true, true);
 			ribbon2 = new Ribbon(0.3, 30, 10, ribbonMat2);
 			renderList.push(ribbon2);
 			
@@ -129,11 +130,11 @@ package examples
 			v = v.rotatePoint(q);
 
 			//zValue = Math.sin(getTimer()/1000) * 200;
-			//ribbon.update(xMouse, yMouse, zValue);
-			//ribbon2.update(-xMouse, -yMouse, zValue);
+			//ribbon.continueTo(xMouse, yMouse, zValue);
+			//ribbon2.continueTo(-xMouse, -yMouse, zValue);
 
-			ribbon.update(v.x, v.y, v.z);
-			ribbon2.update(-v.x, -v.y, -v.z);
+			ribbon.continueTo(v.x, v.y, v.z);
+			ribbon2.continueTo(-v.x, -v.y, -v.z);
 		}
 	}
 }

@@ -35,7 +35,7 @@ package de.nulldesign.nd3d.objects
 			createRibbon();
 		}
 
-		public function update(xPos:Number, yPos:Number, zPos:Number):void 
+		public function continueTo(xPos:Number, yPos:Number, zPos:Number):void 
 		{
 
 			for(var i:Number = 0;i < controlPoints.length; i++) 

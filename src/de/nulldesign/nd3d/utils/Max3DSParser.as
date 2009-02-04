@@ -1,14 +1,15 @@
 package de.nulldesign.nd3d.utils 
 {
+	import de.nulldesign.nd3d.events.MeshEvent;
 	import de.nulldesign.nd3d.geom.UV;
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.Mesh;
-	
+	import flash.events.EventDispatcher;
 	import flash.utils.ByteArray;
 	import flash.utils.Endian;
 	
-	public class Max3DSParser 
+	public class Max3DSParser extends EventDispatcher implements IMeshParser
 	{
 
 	//>----- Color Types --------------------------------------------------------
@@ -96,24 +97,17 @@ package de.nulldesign.nd3d.utils
 		}
 
 		
-		public function parseFile(fileData:ByteArray, matList:Array, defaultMaterial:Material = null):Mesh 
+		public function parseFile(fileData:ByteArray, matList:Array, defaultMaterial:MaterialDefaults = null):void 
 		{
-			_itll= matList.length;
-			_matList=matList;
+			_itll = matList.length;
+			_matList = matList;
 		
-			if(defaultMaterial == null) 
-			{ 
-				_defaultMaterial = new Material(0x000000, 1);
-			}
-			else
-			{
-				_defaultMaterial = defaultMaterial;
-			}
+			_defaultMaterial = (defaultMaterial || new MaterialDefaults()).getMaterial();
 			
 		    mesh = new Mesh();
 			parse(fileData);
-			return mesh;
-	
+			
+			dispatchEvent(new MeshEvent(MeshEvent.MESH_PARSED, mesh));
 		}
 		
 		/**
@@ -122,22 +116,22 @@ package de.nulldesign.nd3d.utils
 		 * @param	data
 		 */ 
 		private function parse(data:ByteArray):void
-				{
-					if(!data)
-						throw new Error("Invalid ByteArray!");
-					
-					_data = data;
-					_data.endian = Endian.LITTLE_ENDIAN;
-					_data.position = 0;
-					
-					//first chunk is always the primary, so we simply read it and parse it
-					var chunk:Chunk3ds = new Chunk3ds();
-					readChunk(chunk);
-					parse3DS(chunk);
+		{
+			if(!data)
+				throw new Error("Invalid ByteArray!");
+			
+			_data = data;
+			_data.endian = Endian.LITTLE_ENDIAN;
+			_data.position = 0;
+			
+			//first chunk is always the primary, so we simply read it and parse it
+			var chunk:Chunk3ds = new Chunk3ds();
+			readChunk(chunk);
+			parse3DS(chunk);
 
-				}
+		}
 		
-	/*
+		/*
 		 * Replaces a texture extension with an alternative extension.
 		 * 
 		 * @param	originalExtension	For example "bmp", "gif", etc

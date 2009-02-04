@@ -1,5 +1,8 @@
 package de.nulldesign.nd3d.utils 
 {
+	import de.nulldesign.nd3d.events.MeshEvent;
+	import de.nulldesign.nd3d.objects.Mesh;
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.Loader;
@@ -10,99 +13,58 @@ package de.nulldesign.nd3d.utils
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
 	import flash.utils.ByteArray;
+	
+	/**
+	 * [broadcast event] Dispatched when the mesh and textures are fully loaded.
+	 * @eventType de.nulldesign.nd3d.events.MeshEvent.MESH_LOADED
+	 */
+	[Event(name="meshLoaded", type="de.nulldesign.nd3d.events.MeshEvent")] 
 
-	import de.nulldesign.nd3d.events.MeshLoadEvent;
-	import de.nulldesign.nd3d.material.Material;
-	import de.nulldesign.nd3d.objects.Mesh;
-	import de.nulldesign.nd3d.utils.ASEParser;	
-
+	/**
+	 * @author Lars Gerckens (www.nulldesign.de), philippe.elsass*gmail.com
+	 */
 	public class MeshLoader extends EventDispatcher 
 	{
-		public static const MESH_TYPE_ASE:String = "ase";
-		public static const MESH_TYPE_MD2:String = "md2";
-		public static const MESH_TYPE_3DS:String = "3ds";		
-		
 		private var mesh:Mesh;
 
 		private var meshUrl:String;
-		private var meshType:String;
 		private var textureList:Array;
 		private var matList:Array;
-		private var defaultMaterial:Material;
+		private var defaultMaterial:MaterialDefaults;
 
+		private var parser:IMeshParser;
 		private var loader:URLLoader;
-		private var meshData:*;
+		private var meshData:ByteArray;
 		private var textureLoader:Loader;
 		private var textureLoadIndex:Number = 0;
 
-		public function MeshLoader() 
+		public function MeshLoader(parser:IMeshParser) 
 		{
+			this.parser = parser;
+		}
+		
+		public function loadMeshBytes(meshData:ByteArray, textureList:Array, defaultMaterial:MaterialDefaults = null):void 
+		{
+			this.meshUrl = null;
+			this.meshData = meshData;
+			this.textureList = textureList;
+			this.defaultMaterial = defaultMaterial || new MaterialDefaults();
+			
+			matList = [];
+			if(textureList.length) loadNextTexture();
+			else buildMesh();
 		}
 
-		public function loadMesh(meshUrl:String, textureList:Array, defaultMaterial:Material):void 
+		public function loadMesh(meshUrl:String, textureList:Array, defaultMaterial:MaterialDefaults = null):void 
 		{
 			this.meshUrl = meshUrl;
 			this.textureList = textureList;
-			this.defaultMaterial = defaultMaterial;
-			this.meshType = meshUrl.substr(meshUrl.length - 3, 3).toLowerCase();
-			
-			matList = [];
+			this.defaultMaterial = defaultMaterial || new MaterialDefaults();
 			
 			loader = new URLLoader();
+			loader.dataFormat = URLLoaderDataFormat.BINARY;
 			loader.addEventListener(Event.COMPLETE, onMeshLoaded);
-			
-			switch(meshType)
-			{
-				case MeshLoader.MESH_TYPE_ASE: 
-					loader.dataFormat = URLLoaderDataFormat.TEXT;	
-					break;
-				case MeshLoader.MESH_TYPE_3DS: 
-				case MeshLoader.MESH_TYPE_MD2: 
-					loader.dataFormat = URLLoaderDataFormat.BINARY;	
-					break;
-			}
-
 			loader.load(new URLRequest(meshUrl));
-		}
-		
-		public function loadMeshBytes(meshData:ByteArray, textureList:Array, defaultMaterial:Material, meshType:String):void 
-		{
-			this.meshUrl = null;
-			meshData.position = 0;
-			this.meshData = meshData.readUTFBytes(meshData.length);
-			this.textureList = textureList;
-			this.defaultMaterial = defaultMaterial;
-			this.meshType = meshType;
-			
-			matList = [];
-			if(textureList.length) 
-			{
-				loadNextTexture();
-			} else 
-			{
-				buildMesh();
-			}
-		}
-
-		private function buildMesh():void 
-		{
-			switch(meshType)
-			{
-				case MeshLoader.MESH_TYPE_ASE:
-					mesh = ASEParser.parseFile(meshData, matList, defaultMaterial);
-					break;
-					
-				case MeshLoader.MESH_TYPE_3DS:
-					var max3dsParseObj:Max3DSParser = new Max3DSParser();
-					mesh = max3dsParseObj.parseFile(ByteArray(meshData), matList, defaultMaterial);
-					break;
-				
-				case MeshLoader.MESH_TYPE_MD2:
-					mesh = MD2Parser.parseFile(ByteArray(meshData), matList[0], defaultMaterial);
-					break;
-			}
-			
-			dispatchEvent(new MeshLoadEvent(mesh));
 		}
 
 		private function onMeshLoaded(evt:Event):void 
@@ -111,13 +73,26 @@ package de.nulldesign.nd3d.utils
 			loader.removeEventListener(Event.COMPLETE, onMeshLoaded);
 			loader = null;
 			
-			if(textureList.length) 
+			matList = [];
+			if(textureList.length) loadNextTexture();
+			else buildMesh();
+		}
+
+		private function buildMesh():void 
+		{
+			if (parser)
 			{
-				loadNextTexture();
-			} else 
-			{
-				buildMesh();
+				parser.addEventListener(MeshEvent.MESH_PARSED, onParseComplete);
+				parser.parseFile(meshData, matList, defaultMaterial);
 			}
+		}
+		
+		private function onParseComplete(e:MeshEvent):void 
+		{
+			parser.removeEventListener(MeshEvent.MESH_PARSED, onParseComplete);
+			mesh = e.mesh;
+			
+			dispatchEvent(new MeshEvent(MeshEvent.MESH_LOADED, mesh));
 		}
 
 		private function loadNextTexture():void 
@@ -130,6 +105,10 @@ package de.nulldesign.nd3d.utils
 			{
 				textureLoader.loadBytes(texture);
 			}
+			else if (texture is URLRequest)
+			{
+				textureLoader.load(texture);
+			}
 			else
 			{
 				var urlReq:URLRequest = new URLRequest(texture);
@@ -139,33 +118,24 @@ package de.nulldesign.nd3d.utils
 
 		private function onTextureLoaded(evt:Event):void 
 		{
+			textureLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onTextureLoaded);
 			++textureLoadIndex;
 			
-			textureLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onTextureLoaded);
-			
 			var bmp:BitmapData;
-			if(textureLoader.contentLoaderInfo.contentType == "image/png") 
+			if (textureLoader.content is Bitmap)
+			{
+				bmp = (textureLoader.content as Bitmap).bitmapData;
+			}
+			else
 			{
 				bmp = new BitmapData(textureLoader.width, textureLoader.height, true, 0x00000000);
-			} else 
-			{
-				bmp = new BitmapData(textureLoader.width, textureLoader.height, false, 0x000000);
+				bmp.draw(textureLoader);
 			}
-
-			bmp.draw(textureLoader);
 			
-			var tmpMat:Material = defaultMaterial.clone();
-			tmpMat.texture = bmp;
+			matList.push(defaultMaterial.getMaterial(bmp));
 			
-			matList.push(tmpMat);
-			
-			if(textureLoadIndex < textureList.length) 
-			{
-				loadNextTexture();
-			} else 
-			{
-				buildMesh();
-			}
+			if(textureLoadIndex < textureList.length) loadNextTexture();
+			else buildMesh();
 		}
 	}	
 }

@@ -1,7 +1,6 @@
 package examples 
 {
 	import de.nulldesign.nd3d.material.BitmapMaterial;
-	import de.nulldesign.nd3d.objects.Box;
 	import de.nulldesign.nd3d.utils.ASEParser;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;

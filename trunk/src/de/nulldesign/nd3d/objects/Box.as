@@ -32,7 +32,6 @@ package de.nulldesign.nd3d.objects
 			var tmpMesh:Mesh;
 			var vList:Array;
 			
-			// TODO : fix FD completion afer ? foo :...
 			var aSteps:Array = (steps is Array) ? steps : [ steps, steps, steps, steps, steps, steps ];
 			for (i = 0; i < aSteps.length; i++) 
 			{

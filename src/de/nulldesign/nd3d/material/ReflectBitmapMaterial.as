@@ -12,7 +12,7 @@
 	 */
 	public class ReflectBitmapMaterial extends BitmapMaterial
 	{
-		protected var reference:Material;
+		protected var reference:BitmapMaterial;
 		protected var ratio:Number;
 		protected var topAlpha:Number;
 		protected var tempBmp:BitmapData;
@@ -25,18 +25,13 @@
 		 * @param	ratio	Height ratio of the reflection
 		 * @param	topAlpha	Maximum alpha of the reflection
 		 */
-		public function ReflectBitmapMaterial(reference:Material, ratio:Number = 0.3, topAlpha:Number = 0.3) 
+		public function ReflectBitmapMaterial(reference:BitmapMaterial, ratio:Number = 0.3, topAlpha:Number = 0.3) 
 		{
 			super(null, reference.smoothed, reference.calculateLights, reference.doubleSided, reference.additive);
 			this.reference = reference;
 			this.ratio = ratio;
 			this.topAlpha = topAlpha;
 			isReflectDirty = true;
-		}
-		
-		public function updateReflect():void
-		{
-			update();
 		}
 		
 		override public function update():void

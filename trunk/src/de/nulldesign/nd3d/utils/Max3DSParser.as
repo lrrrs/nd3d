@@ -374,7 +374,7 @@ package de.nulldesign.nd3d.utils
 					else if(matObj.diffuse)
 					{
 						_matLookupIndex[matObj.name]=_matList.length;
-						_matList.push(new Material(matObj.diffuse, matObj.alpha, null, false, true, false, true));
+						_matList.push(new Material(matObj.diffuse, matObj.alpha, false, false, false));
 	
 					}
 			}
@@ -478,7 +478,7 @@ package de.nulldesign.nd3d.utils
 			
 			for (var i:int = 0; i < numUVs; i++)
 			{
-				uvs.push(new UV(_data.readFloat(), _data.readFloat()));
+				uvs.push(new UV(_data.readFloat(), 1 - _data.readFloat()));
 				chunk.bytesRead += 8;
 			}
 			return uvs;
@@ -496,7 +496,7 @@ package de.nulldesign.nd3d.utils
 			
 			for (var i:int = 0; i < numVerts; i++)
 			{
-				vertices.push(new Vertex(_data.readFloat(), _data.readFloat(), _data.readFloat()));
+				vertices.push(new Vertex(_data.readFloat(), _data.readFloat(), -_data.readFloat()));
 				chunk.bytesRead += 12;
 			}
 			

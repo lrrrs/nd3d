@@ -17,7 +17,7 @@ package de.nulldesign.nd3d.renderer
 		 * @param bitmap object
 		 * @param transformed vertex
 		 */
-		public function render2DSprite(stage:Sprite, textureBitmap:BitmapData, a:Vertex):void 
+		public function render2DSprite(gfx:Graphics, textureBitmap:BitmapData, a:Vertex):void 
 		{
 			
 			var scale:Number = a.scale;
@@ -31,9 +31,7 @@ package de.nulldesign.nd3d.renderer
 			var tMat:Matrix = new Matrix();
 			tMat.scale(scale, scale);
 			tMat.translate(x0, y0);
-			
-			var gfx:Graphics = stage.graphics;
-			
+
 			gfx.beginBitmapFill(textureBitmap, tMat, false, true);
 			gfx.moveTo(a.screenX, a.screenY);
 			gfx.moveTo(x0, y0);
@@ -55,7 +53,7 @@ package de.nulldesign.nd3d.renderer
 		 * @param between 0 and 1, defines the strength of the light
 		 * @param ambient color
 		 */
-		public function renderUV(stage:Sprite, material:Material, a:Vertex, b:Vertex, c:Vertex, uvMap:Array, colorFactor:Number, ambientColor:uint):void 
+		public function renderUV(gfx:Graphics, material:Material, a:Vertex, b:Vertex, c:Vertex, uvMap:Array, colorFactor:Number, ambientColor:uint):void 
 		{
 			
 			var x0:Number = a.screenX;
@@ -114,8 +112,6 @@ package de.nulldesign.nd3d.renderer
 					smoothing = false;
 				}
 			}
-			
-			var gfx:Graphics = stage.graphics;
 			
 			gfx.beginBitmapFill(texture, tMat, false, smoothing);
 			gfx.moveTo(x0, y0);

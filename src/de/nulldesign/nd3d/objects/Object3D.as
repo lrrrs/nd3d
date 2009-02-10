@@ -22,7 +22,7 @@ package de.nulldesign.nd3d.objects
 		public var xPos:Number = 0;
 		public var yPos:Number = 0;
 		public var zPos:Number = 0;
-
+		
 		private var _angleX:Number = 0;
 
 		public function set angleX(angle:Number):void 

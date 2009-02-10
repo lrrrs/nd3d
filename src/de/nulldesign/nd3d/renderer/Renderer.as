@@ -1,9 +1,11 @@
 package de.nulldesign.nd3d.renderer 
 {
+	import de.nulldesign.nd3d.events.Mouse3DEvent;
 	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
 	import flash.display.Graphics;
 	import flash.display.Sprite;
+	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
 	import flash.utils.Dictionary;
@@ -34,7 +36,7 @@ package de.nulldesign.nd3d.renderer
 	 * 
 	 * @author Lars Gerckens (www.nulldesign.de)
 	 */
-	public class Renderer 
+	public class Renderer extends EventDispatcher
 	{
 		private var stage:Sprite;
 		private var drawStage:Sprite;
@@ -54,7 +56,12 @@ package de.nulldesign.nd3d.renderer
 		public var verticesProcessed:int = 0;
 
 		private var meshToStage:Dictionary;
-
+		
+		private var lastHighlightMesh:Object3D;
+		private var lastHighlightFace:Face;
+		private var currentHighlightMesh:Object3D;
+		private var currentHighlightedFace:Face;
+		
 		/**
 		 * Constructor of class Renderer
 		 * @param all geometry is renderes to the graphichs object of this sprite
@@ -64,6 +71,11 @@ package de.nulldesign.nd3d.renderer
 			this.stage = stage;
 			drawStage = this.stage.addChild(new Sprite()) as Sprite; // draw area
 			interactiveStage = this.stage.addChild(new Sprite()) as Sprite; // interactive overlay
+			interactiveStage.buttonMode = true;
+			interactiveStage.useHandCursor = true;
+			interactiveStage.addEventListener(MouseEvent.CLICK, interactiveMouseClick);
+			interactiveStage.addEventListener(MouseEvent.MOUSE_OVER, interactiveMouseOver);
+			interactiveStage.addEventListener(MouseEvent.MOUSE_OUT, interactiveMouseOut);
 			
 			meshToStage = new Dictionary(true);
 		}
@@ -256,7 +268,7 @@ package de.nulldesign.nd3d.renderer
 		 */
 		public function drawToScreen(faceList:Array, cam:PointCamera):void 
 		{
-			var curStage:Sprite;
+			var curStageGfx:Graphics;
 			var curFace:Face;
 			var curMaterial:Material;
 			var curColor:uint;
@@ -265,6 +277,9 @@ package de.nulldesign.nd3d.renderer
 
 			clearStage(drawStage);
 			clearStage(interactiveStage);
+			
+			currentHighlightedFace = null;
+			currentHighlightMesh = null;
 			
 			facesTotal = faceList.length;
 			
@@ -281,7 +296,7 @@ package de.nulldesign.nd3d.renderer
 
 					++facesRendered;
 				   
-					curStage = getStage(curFace, curMaterial, faceIndex);
+					curStageGfx = getStage(curFace, curMaterial, faceIndex).graphics;
 					
 					// simple dynamic lighting
 					if(dynamicLighting && curMaterial.calculateLights)
@@ -298,18 +313,18 @@ package de.nulldesign.nd3d.renderer
 						// render solid
 						if(wireFrameMode)
 						{
-							curStage.graphics.lineStyle(1, 0xFFFFFF, 1);
+							curStageGfx.lineStyle(1, 0xFFFFFF, 1);
 						}
 						else
 						{
-							curStage.graphics.beginFill(curColor, curMaterial.alpha);
+							curStageGfx.beginFill(curColor, curMaterial.alpha);
 						}
 						
-						curStage.graphics.moveTo(curFace.v1.screenX, curFace.v1.screenY);
-						curStage.graphics.lineTo(curFace.v2.screenX, curFace.v2.screenY);
-						curStage.graphics.lineTo(curFace.v3.screenX, curFace.v3.screenY);
-						curStage.graphics.lineTo(curFace.v1.screenX, curFace.v1.screenY);
-						curStage.graphics.endFill();
+						curStageGfx.moveTo(curFace.v1.screenX, curFace.v1.screenY);
+						curStageGfx.lineTo(curFace.v2.screenX, curFace.v2.screenY);
+						curStageGfx.lineTo(curFace.v3.screenX, curFace.v3.screenY);
+						curStageGfx.lineTo(curFace.v1.screenX, curFace.v1.screenY);
+						curStageGfx.endFill();
 					}
 					else
 					{
@@ -318,54 +333,83 @@ package de.nulldesign.nd3d.renderer
 						
 						if(curMaterial.isSprite) // draw normal 2d sprite
 						{ 
-							texRenderer.render2DSprite(curStage, curMaterial.texture, curFace.v1);
+							texRenderer.render2DSprite(curStageGfx, curMaterial.texture, curFace.v1);
 						}
 						else // texture mapping
 						{ 
-							texRenderer.renderUV(curStage, curMaterial, curFace.v1, curFace.v2, curFace.v3, curFace.uvMap, (curColor / curMaterial.color) + ambientColorCorrection, ambientColor);
+							texRenderer.renderUV(curStageGfx, curMaterial, curFace.v1, curFace.v2, curFace.v3, curFace.uvMap, (curColor / curMaterial.color) + ambientColorCorrection, ambientColor);
 						}
 					}
 					
 					// draw interactive helper sprites
-					/*
-					if(curMaterial.isInteractive) {
-						drawInteractiveStage(curFace, curMaterial, faceIndex);
+					
+					if(curMaterial.isInteractive)
+					{
+						if(checkMouse(curFace))
+						{
+							interactiveStage.graphics.beginFill(0xffffff, 0.0);
+							interactiveStage.graphics.moveTo(curFace.v1.screenX, curFace.v1.screenY);
+							interactiveStage.graphics.lineTo(curFace.v2.screenX, curFace.v2.screenY);
+							interactiveStage.graphics.lineTo(curFace.v3.screenX, curFace.v3.screenY);
+							interactiveStage.graphics.lineTo(curFace.v1.screenX, curFace.v1.screenY);
+							interactiveStage.graphics.endFill();
+						
+							currentHighlightedFace = curFace;
+							currentHighlightMesh = curFace.meshRef;
+						}
 					}
-					*/
 				}
 			}
 		}
 
-		/**
-		 * retrieves the right clip for the given face
-		 * @param current face
-		 * @param face material
-		 * @param depth of the face
-		 * @return sprite
-		 */
-		private function drawInteractiveStage(face:Face, mat:Material, faceIndex:int):void 
+		private function interactiveMouseClick(e:MouseEvent):void 
 		{
-			// be shure that we got enough sprites
-			while(interactiveStage.numChildren < facesTotal) 
+			if(currentHighlightMesh)
 			{
-				var s:Sprite = new Sprite();
-				interactiveStage.addChild(s);
-				s.buttonMode = true;
-				//s.addEventListener(MouseEvent.CLICK, interactiveObjectClick);
+				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_CLICK, currentHighlightMesh, currentHighlightedFace));
 			}
-			
-			var curStage:Sprite = Sprite(interactiveStage.getChildAt(faceIndex));
-			var gfx:Graphics = curStage.graphics;
-			
-			// draw
-			gfx.beginFill(0xFF9900, 0.5);
-			gfx.moveTo(face.v1.screenX, face.v1.screenY);
-			gfx.lineTo(face.v2.screenX, face.v2.screenY);
-			gfx.lineTo(face.v3.screenX, face.v3.screenY);
-			gfx.lineTo(face.v1.screenX, face.v1.screenY);
-			gfx.endFill();
 		}
 		
+		private function interactiveMouseOver(e:MouseEvent):void 
+		{
+			if(currentHighlightMesh != lastHighlightMesh)
+			{
+				lastHighlightMesh = currentHighlightMesh;
+				lastHighlightFace = currentHighlightedFace;
+				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_OVER, currentHighlightMesh, currentHighlightedFace));
+			}
+		}
+		
+		private function interactiveMouseOut(e:MouseEvent):void 
+		{
+			if(currentHighlightMesh != lastHighlightMesh)
+			{
+				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_OUT, lastHighlightMesh, lastHighlightFace));
+			}
+		}
+		
+		private function checkMouse(face:Face):Boolean
+		{
+			// algorithm from http://www.blackpawn.com/texts/pointinpoly/default.html
+			
+			// Compute vectors    
+			var v0:Vertex = new Vertex(face.v3.screenX - face.v1.screenX, face.v3.screenY - face.v1.screenY, 0);
+			var v1:Vertex = new Vertex(face.v2.screenX - face.v1.screenX, face.v2.screenY - face.v1.screenY, 0);
+			var v2:Vertex = new Vertex(drawStage.mouseX - face.v1.screenX, drawStage.mouseY - face.v1.screenY, 0);
+			// Compute dot products
+			var dot00:Number = v0.dot(v0);
+			var dot01:Number = v0.dot(v1);
+			var dot02:Number = v0.dot(v2);
+			var dot11:Number = v1.dot(v1);
+			var dot12:Number = v1.dot(v2);
+			// Compute barycentric coordinates
+			var invDenom:Number = 1 / (dot00 * dot11 - dot01 * dot01);
+			var u:Number = (dot11 * dot02 - dot01 * dot12) * invDenom;
+			var v:Number = (dot00 * dot12 - dot01 * dot02) * invDenom;
+			// Check if point is in triangle
+			return (u > 0) && (v > 0) && (u + v < 1);
+		}
+
 		/**
 		 * retrieves the right clip for the given face
 		 * @param current face

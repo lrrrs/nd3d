@@ -80,7 +80,7 @@ package de.nulldesign.nd3d.utils
 
 		private function buildMesh():void 
 		{
-			if (parser)
+			if(parser)
 			{
 				parser.addEventListener(MeshEvent.MESH_PARSED, onParseComplete);
 				parser.parseFile(meshData, matList, defaultMaterial);

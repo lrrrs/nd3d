@@ -1,5 +1,6 @@
 package examples 
 {
+	import de.nulldesign.nd3d.material.BitmapMaterial;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -48,28 +49,28 @@ package examples
 			var tex:BitmapData = new MyTexture().bitmapData;
 			
 			// flat, single colored material, no lighting
-			var mat:Material = new Material(0xFFFFFF, 1, null, false, false, false, false);
+			var mat:Material = new Material(0xFFFFFF, 1, false, false, false);
 			sphere = new Sphere(10, 100, mat);
 			sphere.xPos = -120;
 			sphere.yPos = -120;
 			renderList.push(sphere);
 			
 			// flat, single colored material, lighting enabled
-			var mat2:Material = new Material(0xFFFFFF, 1, null, false, false, false, true);
+			var mat2:Material = new Material(0xFFFFFF, 1, true, false, false);
 			sphere2 = new Sphere(10, 100, mat2);
 			sphere2.xPos = 120;
 			sphere2.yPos = -120;
 			renderList.push(sphere2);
 			
 			// textured material, no lighting
-			var mat3:Material = new Material(0xFFFFFF, 1, tex, false, false, false, false);
+			var mat3:BitmapMaterial = new BitmapMaterial(tex, false, false, false, false);
 			sphere3 = new Sphere(10, 100, mat3);
 			sphere3.xPos = -120;
 			sphere3.yPos = 120;
 			renderList.push(sphere3);
 			
 			// textured material, lighting enabled
-			var mat4:Material = new Material(0xFFFFFF, 1, tex, false, false, false, true);
+			var mat4:BitmapMaterial = new BitmapMaterial(tex, false, true, false, false);
 			sphere4 = new Sphere(10, 100, mat4);
 			sphere4.xPos = 120;
 			sphere4.yPos = 120;

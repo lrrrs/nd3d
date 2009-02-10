@@ -1,5 +1,6 @@
 ﻿package de.nulldesign.nd3d.utils 
 {
+	import de.nulldesign.nd3d.material.BitmapMaterial;
 	import de.nulldesign.nd3d.material.Material;
 	import flash.display.BitmapData;
 	
@@ -27,10 +28,14 @@
 		
 		public function getMaterial(texture:BitmapData = null):Material
 		{
-			var mat:Material = new Material(color, alpha, doubleSided, additive, calculateLights);
-			mat.texture = texture || this.texture;
-			mat.smoothed = smoothed;
-			return mat;
+			if (texture)
+			{
+				return new BitmapMaterial(texture, smoothed, calculateLights, doubleSided, additive);
+			}
+			else
+			{
+				return new Material(color, alpha, calculateLights, doubleSided, additive);
+			}
 		}
 		
 	}

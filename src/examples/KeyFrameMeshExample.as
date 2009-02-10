@@ -2,6 +2,7 @@ package examples
 {
 	import de.nulldesign.nd3d.events.MeshEvent;
 	import de.nulldesign.nd3d.material.Material;
+	import de.nulldesign.nd3d.objects.MD2;
 	import de.nulldesign.nd3d.objects.Mesh;
 	import de.nulldesign.nd3d.objects.Object3D;
 	import de.nulldesign.nd3d.objects.PointCamera;
@@ -24,7 +25,8 @@ package examples
 		private var renderer:Renderer;
 		private var renderList:Array;
 		private var meshLoader:MeshLoader;
-
+		private var cat:MD2;
+		
 		function KeyFrameMeshExample() 
 		{
 
@@ -55,8 +57,9 @@ package examples
 
 		private function onMeshLoaded(evt:MeshEvent):void 
 		{
-			evt.mesh.scale(20,20, 20);
-			renderList.push(evt.mesh);
+			cat = evt.mesh as MD2;
+			cat.scale(20,20, 20);
+			renderList.push(cat);
 		}
 
 		private function onRenderScene(evt:Event):void 
@@ -67,6 +70,8 @@ package examples
 			cam.angleZ = Object3D.deg2rad(45);
 			
 			renderer.render(renderList, cam);
+			
+			if(cat) cat.update();
 		}
 	}
 }

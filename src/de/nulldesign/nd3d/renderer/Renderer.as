@@ -1,6 +1,8 @@
 package de.nulldesign.nd3d.renderer 
 {
 	import de.nulldesign.nd3d.events.Mouse3DEvent;
+	import de.nulldesign.nd3d.material.LineMaterial;
+	import de.nulldesign.nd3d.material.WireMaterial;
 	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
 	import flash.display.Graphics;
@@ -147,8 +149,6 @@ package de.nulldesign.nd3d.renderer
 				
 				if(!curMesh.hidden) 
 				{
-					if (curMesh.isDynamic) curMesh.update();
-
 					faceList = faceList.concat(curMesh.faceList);
 					vertexList = curMesh.vertexList;
 	
@@ -306,7 +306,27 @@ package de.nulldesign.nd3d.renderer
 						curColor = curMaterial.color;
 					}
 					
-					if(curMaterial.texture == null || wireFrameMode)
+					// render line
+					if(curMaterial is LineMaterial)
+					{
+						var v0:Vertex;
+						var v1:Vertex;
+						var length:uint 		= curFace.vertexList.length;
+						var thickness:Number 	= LineMaterial(curMaterial).thickness;
+						var alpha:Number 		= curMaterial.alpha;
+						
+						curStageGfx.lineStyle(thickness, curColor, alpha);
+						
+						for(var i:uint = 0; i < length - 1; i++)
+						{
+							v0 = curFace.vertexList[i];
+							v1 = curFace.vertexList[i+1];
+							curStageGfx.moveTo(v0.screenX, v0.screenY);
+							curStageGfx.lineTo(v1.screenX, v1.screenY);
+							curStageGfx.endFill();
+						}
+					}
+					else if(curMaterial.texture == null || wireFrameMode || curMaterial is WireMaterial) 
 					{ 
 						// render solid
 						if(wireFrameMode)
@@ -315,7 +335,14 @@ package de.nulldesign.nd3d.renderer
 						}
 						else
 						{
-							curStageGfx.beginFill(curColor, curMaterial.alpha);
+							if(curMaterial is WireMaterial)
+							{
+								curStageGfx.lineStyle(1, curMaterial.color, curMaterial.alpha);
+							}
+							else
+							{
+								curStageGfx.beginFill(curColor, curMaterial.alpha);
+							}
 						}
 						
 						curStageGfx.moveTo(curFace.v1.screenX, curFace.v1.screenY);
@@ -341,7 +368,7 @@ package de.nulldesign.nd3d.renderer
 					
 					// draw interactive helper sprites
 					
-					if(curMaterial.isInteractive)
+					if(curMaterial.isInteractive || curFace.meshRef.isInteractive)
 					{
 						if(checkMouse(curFace))
 						{

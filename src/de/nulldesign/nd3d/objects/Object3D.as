@@ -10,7 +10,6 @@ package de.nulldesign.nd3d.objects
 		public var userData:*;
 		
 		public var hidden:Boolean = false;
-		public var isDynamic:Boolean = false;
 		public var container:Sprite;
 
 		public var faceList:Array;
@@ -22,6 +21,8 @@ package de.nulldesign.nd3d.objects
 		public var xPos:Number = 0;
 		public var yPos:Number = 0;
 		public var zPos:Number = 0;
+		
+		public var isInteractive:Boolean = false;
 		
 		private var _angleX:Number = 0;
 
@@ -151,11 +152,6 @@ package de.nulldesign.nd3d.objects
 		public function toString():String
 		{
 			return "[Object3D " + name + " " + xPos + "," + yPos + "," + zPos + "]";
-		}
-		
-		public function update():void
-		{
-			// to be overriden, called if 'isDynamic' is set
 		}
 	}
 }

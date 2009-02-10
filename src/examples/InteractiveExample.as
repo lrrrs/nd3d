@@ -3,7 +3,9 @@
 	import de.nulldesign.nd3d.events.Mouse3DEvent;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.Cube;
+	import de.nulldesign.nd3d.objects.Object3D;
 	import de.nulldesign.nd3d.objects.PointCamera;
+	import de.nulldesign.nd3d.objects.Sphere;
 	import de.nulldesign.nd3d.renderer.Renderer;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -19,13 +21,14 @@
 		
 		public function InteractiveExample() 
 		{
-			renderer = new Renderer(Sprite(addChild(new Sprite())));
-			renderer.additiveMode = true;
+			renderer = new Renderer(this);
+			renderer.dynamicLighting = true;
 			
 			cam = new PointCamera(600, 400);
 			
 			addEventListener(Event.ENTER_FRAME, onRenderScene);
 			
+			// materials can be interactive / clickable
 			var matList:Array = [];
 			var mat:Material = new Material(0xFF0000, 1);
 			mat.isInteractive = true;
@@ -43,7 +46,14 @@
 			matList.push(mat);
 			
 			var cube:Cube = new Cube(matList, 100, 3);
+			cube.xPos = -150;
 			renderList = [ cube ];
+			
+			// or whole objects
+			var sphere:Sphere = new Sphere(10, 100, new Material(0xFFFFFF, 1.0, true));
+			sphere.isInteractive = true;
+			sphere.xPos = 200;
+			renderList.push(sphere);
 			
 			renderer.addEventListener(Mouse3DEvent.MOUSE_CLICK, mouseClick);
 			renderer.addEventListener(Mouse3DEvent.MOUSE_OVER, mouseOver);
@@ -78,8 +88,11 @@
 		{
 			renderer.render(renderList, cam);
 			
-			(renderList[0] as Cube).angleX += 0.01;
-			(renderList[0] as Cube).angleY += 0.01;
+			(renderList[0] as Object3D).angleX += 0.01;
+			(renderList[0] as Object3D).angleY += 0.01;
+			
+			(renderList[1] as Object3D).angleX += 0.01;
+			(renderList[1] as Object3D).angleY += 0.01;
 		}
 	}
 	

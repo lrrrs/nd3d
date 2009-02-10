@@ -32,6 +32,8 @@
     <option useResourceBundleMetadata="True" />
     <option warnings="True" />
     <option verboseStackTraces="True" />
+    <option linkReport="" />
+    <option loadExterns="" />
     <option additional="-use-network=false" />
     <option customSDK="" />
   </build>
@@ -61,7 +63,7 @@
   </library>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <compile path="src\examples\KeyFrameMeshExample.as" />
+    <compile path="src\examples\InteractiveExample.as" />
   </compileTargets>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>

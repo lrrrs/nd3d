@@ -1,10 +1,12 @@
 package examples 
 {
+	import de.nulldesign.nd3d.events.MeshEvent;
+	import de.nulldesign.nd3d.utils.ASEParser;
+	import de.nulldesign.nd3d.utils.MaterialDefaults;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 
-	import de.nulldesign.nd3d.events.MeshLoadEvent;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.PointCamera;
 	import de.nulldesign.nd3d.renderer.Renderer;
@@ -36,7 +38,6 @@ package examples
 			addEventListener(Event.ENTER_FRAME, onRenderScene);
 
 			// minelayercorvette
-			var mat:Material = new Material(0x7b7b7b, 1, null, false, true, false, true);
 			var textures:Array = [];
 			textures.push("textures/page3.jpg");
 			textures.push("textures/page1.jpg");
@@ -44,9 +45,9 @@ package examples
 			textures.push("textures/page0.jpg");
 			textures.push("textures/page2.jpg");
 
-			meshLoader = new MeshLoader();
-			meshLoader.addEventListener(MeshLoadEvent.TYPE, onMeshLoaded);
-			meshLoader.loadMesh("models/fighter.ASE", textures, mat);
+			meshLoader = new MeshLoader(new ASEParser());
+			meshLoader.addEventListener(MeshEvent.MESH_LOADED, onMeshLoaded);
+			meshLoader.loadMesh("models/fighter.ASE", textures, new MaterialDefaults(true, true));
 		}
 
 		private function onMouseWheel(evt:MouseEvent):void 
@@ -54,7 +55,7 @@ package examples
 			cam.zOffset -= evt.delta * 5;
 		}
 
-		private function onMeshLoaded(evt:MeshLoadEvent):void 
+		private function onMeshLoaded(evt:MeshEvent):void 
 		{
 			evt.mesh.scale(3, 3, 3);
 			renderList.push(evt.mesh);
@@ -62,7 +63,6 @@ package examples
 
 		private function onRenderScene(evt:Event):void 
 		{
-
 			cam.angleX += (mouseY - cam.vpY) * .0005;
 			cam.angleY += (mouseX - cam.vpX) * .0005;
 

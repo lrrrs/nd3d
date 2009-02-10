@@ -89,7 +89,7 @@ package de.nulldesign.nd3d.objects
 			type = ANIM_STOP;
 		}
 		
-		override public function update():void
+		public function update():void
 		{
 			ctime = getTimer();
 			

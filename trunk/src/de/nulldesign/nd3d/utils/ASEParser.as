@@ -30,7 +30,7 @@ package de.nulldesign.nd3d.utils
 		{
 			var fileData:String = meshData.readUTFBytes(meshData.length);
 			var defMat:Material = (defaultMaterial) ? defaultMaterial.getMaterial() : new Material(0xffffff);
-			
+
 			var m:Mesh = new Mesh();
 			
 			var lines:Array = unescape(fileData).split('\r\n');

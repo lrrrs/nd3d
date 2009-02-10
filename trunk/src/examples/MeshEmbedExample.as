@@ -1,5 +1,7 @@
 package examples 
 {
+	import de.nulldesign.nd3d.utils.ASEParser;
+	import de.nulldesign.nd3d.utils.MaterialDefaults;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -42,16 +44,15 @@ package examples
 			addEventListener(Event.ENTER_FRAME, onRenderScene);
 
 			// embedded monkey
-			var mat:Material = new Material(0x7b7b7b, 1, null, false, true, false, true);
 			var textures:Array = [new monkeyTexture()];
-			meshLoader = new MeshLoader();
+			meshLoader = new MeshLoader(new ASEParser());
 			meshLoader.addEventListener(MeshEvent.MESH_LOADED, onMeshLoaded);
-			meshLoader.loadMeshBytes(new monkeyMeshData() as ByteArray, textures, mat, MeshLoader.MESH_TYPE_ASE);
+			meshLoader.loadMeshBytes(new monkeyMeshData() as ByteArray, textures, new MaterialDefaults(false, true));
 			
 			textures = [new hatTexture()];
-			meshLoader = new MeshLoader();
+			meshLoader = new MeshLoader(new ASEParser());
 			meshLoader.addEventListener(MeshEvent.MESH_LOADED, onMeshLoaded);
-			meshLoader.loadMeshBytes(new hatMeshData() as ByteArray, textures, mat, MeshLoader.MESH_TYPE_ASE);
+			meshLoader.loadMeshBytes(new hatMeshData() as ByteArray, textures, new MaterialDefaults(false, true));
 		}
 
 		private function onMouseWheel(evt:MouseEvent):void 
@@ -59,7 +60,7 @@ package examples
 			cam.zOffset -= evt.delta * 5;
 		}
 
-		private function onMeshLoaded(evt:MeshLoadEvent):void 
+		private function onMeshLoaded(evt:MeshEvent):void 
 		{
 			evt.mesh.scale(20, 20, 20);
 			if (evt.target == meshLoader) // FIX hat offset

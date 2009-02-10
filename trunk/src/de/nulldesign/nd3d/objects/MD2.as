@@ -147,9 +147,6 @@ package de.nulldesign.nd3d.objects
 				  "\n|\tfaces:" + faces.length +
 				  "\n|_________________________________"
 				  );
-			
-			// auto-update on render
-			isDynamic = frames.length > 1;
 		}
 		
 		/**

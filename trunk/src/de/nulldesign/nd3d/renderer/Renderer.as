@@ -74,8 +74,6 @@ package de.nulldesign.nd3d.renderer
 			interactiveStage.buttonMode = true;
 			interactiveStage.useHandCursor = true;
 			interactiveStage.addEventListener(MouseEvent.CLICK, interactiveMouseClick);
-			interactiveStage.addEventListener(MouseEvent.MOUSE_OVER, interactiveMouseOver);
-			interactiveStage.addEventListener(MouseEvent.MOUSE_OUT, interactiveMouseOut);
 			
 			meshToStage = new Dictionary(true);
 		}
@@ -360,6 +358,19 @@ package de.nulldesign.nd3d.renderer
 					}
 				}
 			}
+			
+			if(currentHighlightedFace && currentHighlightedFace != lastHighlightFace)
+			{
+				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_OVER, currentHighlightMesh, currentHighlightedFace));
+				lastHighlightMesh = currentHighlightMesh;
+				lastHighlightFace = currentHighlightedFace;
+			}
+			else if(!currentHighlightedFace && lastHighlightFace)
+			{
+				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_OUT, lastHighlightMesh, lastHighlightFace));
+				lastHighlightFace = null;
+				lastHighlightMesh = null;
+			}
 		}
 
 		private function interactiveMouseClick(e:MouseEvent):void 
@@ -369,25 +380,7 @@ package de.nulldesign.nd3d.renderer
 				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_CLICK, currentHighlightMesh, currentHighlightedFace));
 			}
 		}
-		
-		private function interactiveMouseOver(e:MouseEvent):void 
-		{
-			if(currentHighlightMesh != lastHighlightMesh)
-			{
-				lastHighlightMesh = currentHighlightMesh;
-				lastHighlightFace = currentHighlightedFace;
-				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_OVER, currentHighlightMesh, currentHighlightedFace));
-			}
-		}
-		
-		private function interactiveMouseOut(e:MouseEvent):void 
-		{
-			if(currentHighlightMesh != lastHighlightMesh)
-			{
-				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_OUT, lastHighlightMesh, lastHighlightFace));
-			}
-		}
-		
+
 		private function checkMouse(face:Face):Boolean
 		{
 			// algorithm from http://www.blackpawn.com/texts/pointinpoly/default.html

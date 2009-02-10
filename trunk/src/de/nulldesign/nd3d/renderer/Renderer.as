@@ -359,7 +359,7 @@ package de.nulldesign.nd3d.renderer
 				}
 			}
 			
-			if(currentHighlightedFace && currentHighlightedFace != lastHighlightFace)
+			if(currentHighlightedFace && currentHighlightMesh != lastHighlightMesh)
 			{
 				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_OVER, currentHighlightMesh, currentHighlightedFace));
 				lastHighlightMesh = currentHighlightMesh;

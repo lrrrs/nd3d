@@ -48,21 +48,30 @@
 			renderer.addEventListener(Mouse3DEvent.MOUSE_CLICK, mouseClick);
 			renderer.addEventListener(Mouse3DEvent.MOUSE_OVER, mouseOver);
 			renderer.addEventListener(Mouse3DEvent.MOUSE_OUT, mouseOut);
+			
+			text = new TextField();
+			text.textColor = 0xFFFFFF;
+			text.width = 300;
+			
+			addChild(text);
 		}
 		
 		private function mouseOut(e:Mouse3DEvent):void 
 		{
 			e.face.material.alpha = 1.0;
+			text.text = "mouseOut: " + getTimer();
 		}
 		
 		private function mouseOver(e:Mouse3DEvent):void 
 		{
 			e.face.material.alpha = 0.8;
+			text.text = "mouseOver: " + getTimer();
 		}
 		
 		private function mouseClick(e:Mouse3DEvent):void 
 		{
 			e.face.material.alpha = 0.5;
+			text.text = "mouseClick: " + getTimer();
 		}
 		
 		private function onRenderScene(evt:Event):void 

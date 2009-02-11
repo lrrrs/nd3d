@@ -380,7 +380,7 @@ package de.nulldesign.nd3d.renderer
 							texRenderer.renderUV(curStageGfx, curMaterial, curFace.v1, curFace.v2, curFace.v3, curFace.uvMap, (curColor / curMaterial.color) + ambientColorCorrection, ambientColor);
 						}
 					}
-					
+
 					// check for mouse interaction
 					if(curMaterial.isInteractive || curFace.meshRef.isInteractive)
 					{

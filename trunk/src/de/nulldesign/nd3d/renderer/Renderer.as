@@ -353,6 +353,7 @@ package de.nulldesign.nd3d.renderer
 							}
 							else
 							{
+								curStageGfx.lineStyle();
 								curStageGfx.beginFill(curColor, curMaterial.alpha);
 							}
 						}
@@ -365,6 +366,8 @@ package de.nulldesign.nd3d.renderer
 					}
 					else
 					{
+						curStageGfx.lineStyle();
+						
 						// render texture
 						var texRenderer:TextureRenderer = curMaterial.customRenderer || defaultTexRenderer;
 						

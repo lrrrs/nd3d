@@ -2,6 +2,7 @@ package de.nulldesign.nd3d.renderer
 {
 	import de.nulldesign.nd3d.events.Mouse3DEvent;
 	import de.nulldesign.nd3d.material.LineMaterial;
+	import de.nulldesign.nd3d.material.PixelMaterial;
 	import de.nulldesign.nd3d.material.WireMaterial;
 	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
@@ -272,7 +273,9 @@ package de.nulldesign.nd3d.renderer
 			var curColor:uint;
 			var faceIndex:int = 0;
 			var defaultTexRenderer:TextureRenderer = new TextureRenderer();
-
+			
+			var thickness:Number;
+			
 			clearStage(drawStage);
 			clearStage(interactiveStage);
 			
@@ -288,10 +291,11 @@ package de.nulldesign.nd3d.renderer
 				curFace = faceList[faceIndex];
 				curMaterial = curFace.material;
 				
-				if((wireFrameMode || curMaterial.doubleSided || curMaterial.isSprite || !isBackFace(curFace.v1, curFace.v2, curFace.v3)) && (curFace.v1.z3d > -cam.fl - cam.zOffset && curFace.v2.z3d > -cam.fl - cam.zOffset && curFace.v3.z3d > -cam.fl - cam.zOffset)) 
-				{ 
-					// face needs to be doublesided OR not backfacing AND not out of screen
-
+				// face needs to be doublesided OR not backfacing AND not out of screen
+				if((wireFrameMode || curMaterial.doubleSided || curMaterial.isSprite || 
+					!isBackFace(curFace.v1, curFace.v2, curFace.v3)) && 
+					(curFace.v1.z3d > -cam.fl - cam.zOffset && curFace.v2.z3d > -cam.fl - cam.zOffset && curFace.v3.z3d > -cam.fl - cam.zOffset)) 
+				{
 					++facesRendered;
 				   
 					curStageGfx = getStage(curFace, curMaterial, faceIndex).graphics;
@@ -306,13 +310,22 @@ package de.nulldesign.nd3d.renderer
 						curColor = curMaterial.color;
 					}
 					
-					// render line
-					if(curMaterial is LineMaterial)
+					// pixel material
+					if(curMaterial is PixelMaterial)
+					{
+						thickness = PixelMaterial(curMaterial).thickness;
+
+						curStageGfx.beginFill(curMaterial.color, curMaterial.alpha);
+						curStageGfx.drawCircle(curFace.v1.screenX, curFace.v1.screenY, thickness);
+						curStageGfx.drawCircle(curFace.v2.screenX, curFace.v2.screenY, thickness);
+						curStageGfx.drawCircle(curFace.v3.screenX, curFace.v3.screenY, thickness);
+					}
+					else if(curMaterial is LineMaterial) // render line
 					{
 						var v0:Vertex;
 						var v1:Vertex;
 						var length:uint 		= curFace.vertexList.length;
-						var thickness:Number 	= LineMaterial(curMaterial).thickness;
+						thickness = LineMaterial(curMaterial).thickness;
 						var alpha:Number 		= curMaterial.alpha;
 						
 						curStageGfx.lineStyle(thickness, curColor, alpha);
@@ -326,9 +339,8 @@ package de.nulldesign.nd3d.renderer
 							curStageGfx.endFill();
 						}
 					}
-					else if(curMaterial.texture == null || wireFrameMode || curMaterial is WireMaterial) 
+					else if(curMaterial.texture == null || wireFrameMode || curMaterial is WireMaterial) // render solid or wire
 					{ 
-						// render solid
 						if(wireFrameMode)
 						{
 							curStageGfx.lineStyle(1, 0xFFFFFF, 1);
@@ -366,8 +378,7 @@ package de.nulldesign.nd3d.renderer
 						}
 					}
 					
-					// draw interactive helper sprites
-					
+					// check for mouse interaction
 					if(curMaterial.isInteractive || curFace.meshRef.isInteractive)
 					{
 						if(checkMouse(curFace))
@@ -411,7 +422,6 @@ package de.nulldesign.nd3d.renderer
 		private function checkMouse(face:Face):Boolean
 		{
 			// algorithm from http://www.blackpawn.com/texts/pointinpoly/default.html
-			
 			// Compute vectors    
 			var v0:Vertex = new Vertex(face.v3.screenX - face.v1.screenX, face.v3.screenY - face.v1.screenY, 0);
 			var v1:Vertex = new Vertex(face.v2.screenX - face.v1.screenX, face.v2.screenY - face.v1.screenY, 0);

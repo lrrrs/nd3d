@@ -28,7 +28,7 @@
 		
 		public function getMaterial(texture:BitmapData = null):Material
 		{
-			if (texture)
+			if(texture)
 			{
 				return new BitmapMaterial(texture, smoothed, calculateLights, doubleSided, additive);
 			}

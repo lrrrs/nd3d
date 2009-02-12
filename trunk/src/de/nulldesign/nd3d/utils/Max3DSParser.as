@@ -183,7 +183,7 @@ package de.nulldesign.nd3d.utils
 				    	m = _defaultMaterial;
 				    }
 				
-					mesh.addFace(v0, v1, v2, m, [t0, t1, t2]);
+					mesh.addFace(v0, v2, v1, m, [t0, t2, t1]);
 					
 				}
 					
@@ -496,7 +496,11 @@ package de.nulldesign.nd3d.utils
 			
 			for (var i:int = 0; i < numVerts; i++)
 			{
-				vertices.push(new Vertex(_data.readFloat(), _data.readFloat(), -_data.readFloat()));
+				var xx:Number = _data.readFloat();
+				var yy:Number = _data.readFloat();
+				var zz:Number = _data.readFloat();
+				
+				vertices.push(new Vertex(xx, -zz, yy));
 				chunk.bytesRead += 12;
 			}
 			

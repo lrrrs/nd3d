@@ -14,7 +14,7 @@ package de.nulldesign.nd3d.objects
 			vertexList.push(v0);
 			vertexList.push(v1);
 			
-			material = material?material:new LineMaterial(0xFFFFFF);
+			material = material ? material:new LineMaterial(0xFFFFFF);
 			
 			positionAsVertex = v1;
 			

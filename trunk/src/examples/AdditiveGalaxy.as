@@ -28,7 +28,7 @@ package examples
 		private var StarFieldTexture:Class;	
 
 		private var numParticles:uint = 400;
-		private var particleMat:Material;
+		private var particleMat:BitmapMaterial;
 
 		public function AdditiveGalaxy() 
 		{

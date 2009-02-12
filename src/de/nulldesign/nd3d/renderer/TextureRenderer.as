@@ -1,6 +1,8 @@
 package de.nulldesign.nd3d.renderer 
 {
-	import flash.display.BitmapData;
+  import de.nulldesign.nd3d.material.PixelMaterial;	
+  
+  import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.display.Sprite;
 	import flash.geom.Matrix;
@@ -17,10 +19,22 @@ package de.nulldesign.nd3d.renderer
 		 * @param bitmap object
 		 * @param transformed vertex
 		 */
-		public function render2DSprite(gfx:Graphics, textureBitmap:BitmapData, a:Vertex):void 
+		public function render2DSprite(gfx:Graphics, material:Material, a:Vertex):void 
 		{
-			
-			var scale:Number = a.scale;
+			// render sprites as dots
+			if(material is PixelMaterial)
+			{
+        var pm:PixelMaterial = material as PixelMaterial;
+        
+        gfx.beginFill(pm.color, pm.alpha);
+        gfx.drawCircle(a.screenX, a.screenY, pm.thickness);
+        gfx.endFill();
+				return;
+			}
+      
+      // render bitmap sprites
+			var textureBitmap:BitmapData = material.texture;
+      var scale:Number = a.scale;
 			var width:Number = (textureBitmap.width * scale) / 2;
 			var height:Number = (textureBitmap.height * scale) / 2;
 			var x0:Number = a.screenX - width;

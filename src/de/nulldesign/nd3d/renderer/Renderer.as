@@ -1,6 +1,8 @@
 package de.nulldesign.nd3d.renderer 
 {
-	import de.nulldesign.nd3d.events.Mouse3DEvent;
+  import de.nulldesign.nd3d.objects.Sprite3D;  
+  import de.nulldesign.nd3d.material.BitmapMaterial;	
+  import de.nulldesign.nd3d.events.Mouse3DEvent;
 	import de.nulldesign.nd3d.material.LineMaterial;
 	import de.nulldesign.nd3d.material.PixelMaterial;
 	import de.nulldesign.nd3d.material.WireMaterial;
@@ -44,6 +46,7 @@ package de.nulldesign.nd3d.renderer
 		private var stage:Sprite;
 		private var drawStage:Sprite;
 		private var interactiveStage:Sprite;
+		private var defaultTexRenderer:TextureRenderer = new TextureRenderer();
 
 		public var wireFrameMode:Boolean = false;
 		public var dynamicLighting:Boolean = false;
@@ -76,7 +79,7 @@ package de.nulldesign.nd3d.renderer
 			interactiveStage = this.stage.addChild(new Sprite()) as Sprite; // interactive overlay
 			interactiveStage.buttonMode = true;
 			interactiveStage.useHandCursor = true;
-			interactiveStage.addEventListener(MouseEvent.CLICK, interactiveMouseClick);
+			interactiveStage.addEventListener(MouseEvent.CLICK, interactiveMouseClick, false, 0, true);
 			
 			meshToStage = new Dictionary(true);
 		}
@@ -88,7 +91,7 @@ package de.nulldesign.nd3d.renderer
 		 * @param a camera instance
 		 * @return a depth sorted list of transformed faces
 		 */
-		public function project(meshList:Array, cam:PointCamera):Array 
+		public function project(meshList:Array, cam:PointCamera, dontZSort:Boolean = false):Array 
 		{
 			facesRendered = 0;
 			verticesProcessed = 0;
@@ -152,8 +155,8 @@ package de.nulldesign.nd3d.renderer
 				{
 					faceList = faceList.concat(curMesh.faceList);
 					vertexList = curMesh.vertexList;
-	
-					j = vertexList.length;
+
+          j = vertexList.length;
 
 					cosZMesh = Math.cos(curMesh.angleZ);
 					sinZMesh = Math.sin(curMesh.angleZ);
@@ -240,9 +243,12 @@ package de.nulldesign.nd3d.renderer
 					}
 				}
 			}
-			
+
 			// sort
-			faceList = faceList.sort(faceZSort);
+			if(!dontZSort)
+			{
+				faceList = faceList.sort(faceZSort);
+			}
 			
 			return faceList;
 		}
@@ -272,8 +278,6 @@ package de.nulldesign.nd3d.renderer
 			var curMaterial:Material;
 			var curColor:uint;
 			var faceIndex:int = 0;
-			var defaultTexRenderer:TextureRenderer = new TextureRenderer();
-			
 			var thickness:Number;
 			
 			clearStage(drawStage);
@@ -298,7 +302,7 @@ package de.nulldesign.nd3d.renderer
 				{
 					++facesRendered;
 				   
-					curStageGfx = getStage(curFace, curMaterial, faceIndex).graphics;
+					curStageGfx = getStage(curFace, curMaterial).graphics;
 					
 					// simple dynamic lighting
 					if(dynamicLighting && curMaterial.calculateLights)
@@ -314,7 +318,7 @@ package de.nulldesign.nd3d.renderer
 					if(curMaterial is PixelMaterial)
 					{
 						thickness = PixelMaterial(curMaterial).thickness;
-
+						// Every vertex in a face is drawn multiple times. Just a quick hack, needs to be optimized.
 						curStageGfx.beginFill(curMaterial.color, curMaterial.alpha);
 						curStageGfx.drawCircle(curFace.v1.screenX, curFace.v1.screenY, thickness);
 						curStageGfx.drawCircle(curFace.v2.screenX, curFace.v2.screenY, thickness);
@@ -363,8 +367,8 @@ package de.nulldesign.nd3d.renderer
 						curStageGfx.lineTo(curFace.v3.screenX, curFace.v3.screenY);
 						curStageGfx.lineTo(curFace.v1.screenX, curFace.v1.screenY);
 						curStageGfx.endFill();
-					}
-					else
+					} 
+					else if(curMaterial is BitmapMaterial || curMaterial.isSprite) // render textures and/or sprites
 					{
 						curStageGfx.lineStyle();
 						
@@ -373,13 +377,13 @@ package de.nulldesign.nd3d.renderer
 						
 						if(curMaterial.isSprite) // draw normal 2d sprite
 						{ 
-							texRenderer.render2DSprite(curStageGfx, curMaterial.texture, curFace.v1);
+						  texRenderer.render2DSprite(curStageGfx, curMaterial, curFace.v1);
 						}
 						else // texture mapping
 						{ 
-							texRenderer.renderUV(curStageGfx, curMaterial, curFace.v1, curFace.v2, curFace.v3, curFace.uvMap, (curColor / curMaterial.color) + ambientColorCorrection, ambientColor);
+						  texRenderer.renderUV(curStageGfx, curMaterial, curFace.v1, curFace.v2, curFace.v3, curFace.uvMap, (curColor / curMaterial.color) + ambientColorCorrection, ambientColor);
 						}
-					}
+					}					
 
 					// check for mouse interaction
 					if(curMaterial.isInteractive || curFace.meshRef.isInteractive)
@@ -450,7 +454,7 @@ package de.nulldesign.nd3d.renderer
 		 * @param depth of the face
 		 * @return sprite
 		 */
-		private function getStage(face:Face, mat:Material, faceIndex:int):Sprite 
+		private function getStage(face:Face, mat:Material):Sprite 
 		{
 			var tmpStage:Sprite = drawStage;
 			var newStage:Sprite;

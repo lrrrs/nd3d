@@ -1,4 +1,4 @@
-﻿package examples 
+package examples 
 {
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.material.LineMaterial;
@@ -7,8 +7,9 @@
 	import de.nulldesign.nd3d.objects.Line3D;
 	import de.nulldesign.nd3d.objects.Sphere;
 	import de.nulldesign.nd3d.view.AbstractView;
+
 	import flash.events.Event;
-	
+
 	/**
 	 * ...
 	 * @author ...
@@ -16,7 +17,7 @@
 	public class MaterialExample2 extends AbstractView
 	{
 		private var s:Sphere;
-		
+
 		public function MaterialExample2() 
 		{
 			super(600, 400);
@@ -36,7 +37,7 @@
 			var g:Ground = new Ground(300, 300, 5, 5, new WireMaterial(0xCCCCCC, 0.4, true));
 			renderList.push(g);
 		}
-		
+
 		override protected function loop(e:Event):void
 		{
 			super.loop(e);
@@ -48,5 +49,4 @@
 			cam.angleY += (mouseX - cam.vpX) * .0005;
 		}
 	}
-	
 }

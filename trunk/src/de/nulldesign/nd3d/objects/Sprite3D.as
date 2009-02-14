@@ -1,6 +1,6 @@
 package de.nulldesign.nd3d.objects 
 {
-  import de.nulldesign.nd3d.geom.Face;
+	import de.nulldesign.nd3d.geom.Face;
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.Object3D;	

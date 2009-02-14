@@ -75,7 +75,8 @@ package de.nulldesign.nd3d.objects
 						{
 							v2 = col[i][col[i].length - 1];
 							v3 = col[i - 1][col[i].length - 1];
-						} else 
+						} 
+						else 
 						{
 							v2 = col[i][j - 1];
 							v3 = col[i - 1][j - 1];
@@ -85,7 +86,8 @@ package de.nulldesign.nd3d.objects
 						{
 							v1 = col[i][0];
 							v4 = col[i - 1][0];
-						} else 
+						} 
+						else 
 						{
 							v1 = col[i][j];
 							v4 = col[i - 1][j];
@@ -96,11 +98,11 @@ package de.nulldesign.nd3d.objects
 						uv3 = new UV(j / col[j].length, (i - 1) / col.length);
 						uv4 = new UV((j + 1) / col[j].length, (i - 1) / col.length);
 						
-            // flip uv coordianates, otherwise the texture is flipped
-            uv1.u = 1 - uv1.u;
-            uv2.u = 1 - uv2.u;
-            uv3.u = 1 - uv3.u;
-            uv4.u = 1 - uv4.u;
+						// flip uv coordianates, otherwise the texture is flipped
+						uv1.u = 1 - uv1.u;
+						uv2.u = 1 - uv2.u;
+						uv3.u = 1 - uv3.u;
+						uv4.u = 1 - uv4.u;
 						
 						// add faces
 						if(i < col.length - 1) 

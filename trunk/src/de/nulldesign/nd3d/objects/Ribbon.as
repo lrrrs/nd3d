@@ -50,7 +50,8 @@ package de.nulldesign.nd3d.objects
 					controlVertex.x = xPos;
 					controlVertex.y = yPos;
 					controlVertex.z = zPos;
-				} else 
+				} 
+				else 
 				{
 					controlVertex.x += (previousVertex.x - controlVertex.x) * speed;
 					controlVertex.y += (previousVertex.y - controlVertex.y) * speed;
@@ -91,7 +92,8 @@ package de.nulldesign.nd3d.objects
 					var lastVIndex:uint = vertexList.length - 1;
 					
 					var uvStart:Number = i * (1 / controlPoints.length);
-					var uvEnd:Number = (i + 1) * (1 / controlPoints.length);;
+					var uvEnd:Number = (i + 1) * (1 / controlPoints.length);
+					;
 					
 					var uv0:UV = new UV(0, uvStart);
 					var uv1:UV = new UV(0, uvEnd);

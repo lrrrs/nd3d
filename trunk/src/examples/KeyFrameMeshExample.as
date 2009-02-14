@@ -11,7 +11,7 @@ package examples
 	import de.nulldesign.nd3d.utils.MaterialDefaults;
 	import de.nulldesign.nd3d.utils.MD2Parser;
 	import de.nulldesign.nd3d.utils.MeshLoader;
-	
+
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -19,6 +19,7 @@ package examples
 	import flash.geom.ColorTransform;
 
 	[SWF(backgroundColor="#FFFFFF")]
+
 	public class KeyFrameMeshExample extends Sprite 
 	{
 		private var cam:PointCamera;
@@ -26,7 +27,7 @@ package examples
 		private var renderList:Array;
 		private var meshLoader:MeshLoader;
 		private var cat:MD2;
-		
+
 		function KeyFrameMeshExample() 
 		{
 
@@ -58,7 +59,7 @@ package examples
 		private function onMeshLoaded(evt:MeshEvent):void 
 		{
 			cat = evt.mesh as MD2;
-			cat.scale(20,20, 20);
+			cat.scale(20, 20, 20);
 			renderList.push(cat);
 		}
 

@@ -3,9 +3,9 @@ package de.nulldesign.nd3d.objects
 	import de.nulldesign.nd3d.animation.Frame;
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.material.Material;
-	
+
 	import flash.utils.getTimer;
-	
+
 	/**
 	 * KeyframeMesh provides framework for objects that have keyframed animation.
 	 * Note that is class is [abstract] in that in itself provides no functionality.
@@ -20,7 +20,7 @@ package de.nulldesign.nd3d.objects
 	 * 
 	 * @version 05.01.07
 	 * @author Philippe Ajoux (philippe.ajoux@gmail.com)
- 	 * @modifier katopz@sleepydesign.com 
+	 * @modifier katopz@sleepydesign.com 
 	 */
 	public class KeyframeMesh extends Mesh
 	{
@@ -33,12 +33,12 @@ package de.nulldesign.nd3d.objects
 		public static const ANIM_NORMAL:int = 1;
 		public static const ANIM_LOOP:int = 2;
 		public static const ANIM_STOP:int = 4;
-		
+
 		/**
 		 * The array of frames that make up the animation sequence.
 		 */
 		public var frames:Array = new Array();
-		
+
 		/**
 		 * Keep track of the current frame number and animation
 		 */
@@ -46,12 +46,12 @@ package de.nulldesign.nd3d.objects
 		private var interp:Number = 0;
 		private var start:int, end:int, type:int;
 		private var ctime:Number = 0, otime:Number = 0;
-		
+
 		/**
 		 * Number of animation frames to display per second
 		 */
 		public var fps:int;
-		
+
 		/**
 		 * KeyframeMesh is a class used [internal] to provide a "keyframe animation"/"vertex animation"/"mesh deformation"
 		 * framework for subclass loaders. There are some subtleties to using this class, so please, I suggest you
@@ -63,13 +63,13 @@ package de.nulldesign.nd3d.objects
 			this.fps = fps;
 			scale = scale;
 		}
-		
+
 		public function gotoAndPlay(frame:int):void
 		{
 			keyframe = frame;
 			type = ANIM_NORMAL;
 		}
-		
+
 		public function loop(start:int, end:int):void
 		{
 			this.start = (start % frames.length);
@@ -77,34 +77,34 @@ package de.nulldesign.nd3d.objects
 			this.end = (end % frames.length);
 			type = ANIM_LOOP;
 		}
-		
+
 		public function stop():void
 		{
 			type = ANIM_STOP;
 		}
-		
+
 		public function gotoAndStop(frame:int):void
 		{
 			keyframe = frame;
 			type = ANIM_STOP;
 		}
-		
+
 		public function update():void
 		{
 			ctime = getTimer();
 			
-			var dst			:Vertex;
-			var a			:Vertex;
-			var b			:Vertex;
-			var vertices	:Array = vertexList;
-			var cframe		:Frame;
-			var nframe		:Frame;
-			var i			:int;
+			var dst:Vertex;
+			var a:Vertex;
+			var b:Vertex;
+			var vertices:Array = vertexList;
+			var cframe:Frame;
+			var nframe:Frame;
+			var i:int;
 			
 			cframe = frames[_currentFrame];
 			nframe = frames[(_currentFrame + 1) % frames.length];
 			
-			for (i = 0; i < vertices.length; i++)
+			for (i = 0;i < vertices.length; i++)
 			{
 				dst = vertices[i];
 				a = cframe.vertices[i];
@@ -116,7 +116,7 @@ package de.nulldesign.nd3d.objects
 			}
 
 			// Update the timer part, to get time based animation
-			
+
 			if (type != ANIM_STOP)
 			{
 				interp += fps * (ctime - otime) / 1000;
@@ -131,8 +131,15 @@ package de.nulldesign.nd3d.objects
 			}
 			otime = ctime;
 		}
-		
-		public function get keyframe():int { return _currentFrame; }
-		public function set keyframe(i:int):void { _currentFrame = i % frames.length; }
+
+		public function get keyframe():int 
+		{ 
+			return _currentFrame; 
+		}
+
+		public function set keyframe(i:int):void 
+		{ 
+			_currentFrame = i % frames.length; 
+		}
 	}
 }

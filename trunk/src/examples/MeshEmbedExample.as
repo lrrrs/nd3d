@@ -2,6 +2,7 @@ package examples
 {
 	import de.nulldesign.nd3d.utils.ASEParser;
 	import de.nulldesign.nd3d.utils.MaterialDefaults;
+
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -16,12 +17,16 @@ package examples
 
 	public class MeshEmbedExample extends Sprite 
 	{
+
 		[Embed(source='assets/monkey.ase', mimeType="application/octet-stream")]
 		private const monkeyMeshData:Class;
+
 		[Embed(source='assets/monkey.jpg', mimeType="application/octet-stream")]
 		private const monkeyTexture:Class;
+
 		[Embed(source='assets/hat.ase', mimeType="application/octet-stream")]
 		private const hatMeshData:Class;
+
 		[Embed(source='assets/hat.jpg', mimeType="application/octet-stream")]
 		private const hatTexture:Class;
 

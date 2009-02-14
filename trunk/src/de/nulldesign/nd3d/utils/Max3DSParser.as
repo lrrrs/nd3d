@@ -89,7 +89,7 @@ package de.nulldesign.nd3d.utils
 		private var _textureExtensionReplacements:Object;
 		private var _textureMatCount:int=0;
 		private var _itll:int; //initialTextureListLength
-	    private var _matLookupIndex:Object;
+	  private var _matLookupIndex:Object;
 		
 		public function Max3DSParser()	
 		{
@@ -103,8 +103,8 @@ package de.nulldesign.nd3d.utils
 			_matList = matList;
 		
 			_defaultMaterial = (defaultMaterial || new MaterialDefaults()).getMaterial();
-			
-		    mesh = new Mesh();
+
+      mesh = new Mesh();
 			parse(fileData);
 			
 			dispatchEvent(new MeshEvent(MeshEvent.MESH_PARSED, mesh));
@@ -331,8 +331,8 @@ package de.nulldesign.nd3d.utils
 
 		
 
-         function checkForName(name:String, obj:*):Boolean
-         {
+       function checkForName(name:String, obj:*):Boolean
+       {
 			if(name != null)
 			{
 				outerloop: for (var key:String in obj)
@@ -374,8 +374,8 @@ package de.nulldesign.nd3d.utils
 					else if(matObj.diffuse)
 					{
 						_matLookupIndex[matObj.name]=_matList.length;
-						_matList.push(new Material(matObj.diffuse, matObj.alpha, false, false, false));
-	
+            //_matList.push(new Material(matObj.diffuse, matObj.alpha, false, false, false));
+            _matList.push(new Material(matObj.diffuse, matObj.alpha,  _defaultMaterial.calculateLights,  _defaultMaterial.doubleSided,  _defaultMaterial.additive));
 					}
 			}
 

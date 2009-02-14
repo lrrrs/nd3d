@@ -6,21 +6,21 @@ package de.nulldesign.nd3d.objects
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.KeyframeMesh;
-	
+
 	import flash.events.Event;
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
 	import flash.utils.ByteArray;
 	import flash.utils.Endian;
-	
+
 	public class MD2 extends KeyframeMesh
 	{
 		// [internal] Used for loading the MD2 file
 		private var file:String;
 		private var loader:URLLoader;
 		private var loadScale:Number;
-		
+
 		// [internal] Md2 file format has a bunch of header information
 		// that is typically just read straight into a C-style struct, but
 		// since this is not C =( we have to create variables for all of it.
@@ -31,7 +31,7 @@ package de.nulldesign.nd3d.objects
 		private var num_tris:int, num_glcmds:int, num_frames:int;
 		private var offset_skins:int, offset_st:int, offset_tris:int;
 		private var offset_frames:int, offset_glcmds:int, offset_end:int;
-		
+
 		/**
 		 * Md2 class lets you load a Quake 2 MD2 file with animation!
 		 * 
@@ -39,10 +39,11 @@ package de.nulldesign.nd3d.objects
 		 * @param filename	The path to the file that will be loaded
 		 * @param fps		The number of frames per second to animate at
 		 * @param scale		The internal load scaling (experiment for your liking)
- 		 * @author Philippe Ajoux (philippe.ajoux@gmail.com)
- 		 * @modifier katopz@sleepydesign.com
+		 * @author Philippe Ajoux (philippe.ajoux@gmail.com)
+		 * @modifier katopz@sleepydesign.com
 		 */
 		private var material:Material;
+
 		public function MD2(material:Material, data:ByteArray, fps:int = 24, scale:Number = 1)
 		{
 			this.material = material;
@@ -52,9 +53,8 @@ package de.nulldesign.nd3d.objects
 			//visible = false;
 			//load(filename);
 			parse(data);
-
 		}
-		
+
 		/**
 		 * Actually load the file using a URLLoader instance
 		 * 
@@ -68,14 +68,14 @@ package de.nulldesign.nd3d.objects
 			
 			try
 			{
-	            loader.load(new URLRequest(filename));
+				loader.load(new URLRequest(filename));
 			}
 			catch(e:Error)
 			{
 				trace("Error in loading MD2 file (" + filename + "): \n" + e.message + "\n" + e.getStackTrace());
 			}
 		}
-		
+
 		/**
 		 * Parse the MD2 file. This is actually pretty straight forward.
 		 * Only complicated parts (bit convoluded) are the frame loading.
@@ -100,21 +100,21 @@ package de.nulldesign.nd3d.objects
 			// Vertice setup
 			// 		Be sure to allocate memory for the vertices to the object
 			//		These vertices will be updated each frame with the proper coordinates
-			for (i = 0; i < num_vertices-1; i++)
-				vertices.push(new Vertex(0,0,0));
+			for (i = 0;i < num_vertices - 1; i++)
+				vertices.push(new Vertex(0, 0, 0));
 
 			// UV coordinates
 			//		Load them!
 			data.position = offset_st;
-			for (i = 0; i < num_st; i++)
-				uvs.push(new UV(data.readShort() / skinwidth,  ( data.readShort() / skinheight) ));
+			for (i = 0;i < num_st; i++)
+				uvs.push(new UV(data.readShort() / skinwidth, ( data.readShort() / skinheight)));
 
 			// Faces
 			//		Creates the faces with the proper references to vertices
 			//		NOTE: DO NOT change the order of the variable assignments here, 
 			//			  or nothing will work.
 			data.position = offset_tris;
-			for (i = 0; i < num_tris; i++)
+			for (i = 0;i < num_tris; i++)
 			{
 				a = data.readUnsignedShort();
 				b = data.readUnsignedShort();
@@ -125,11 +125,7 @@ package de.nulldesign.nd3d.objects
 				
 				//faceList.push(new Face(this, v1, v2, v3, material, uvList));
 				// Create and add the face
-				faces.push(new Face
-				(
-					this, vertices[c], vertices[b], vertices[a], material,
-					[uvs[tc], uvs[tb], uvs[ta]]
-				));
+				faces.push(new Face(this, vertices[c], vertices[b], vertices[a], material, [uvs[tc], uvs[tb], uvs[ta]]));
 			}
 			
 			// Frame animation data
@@ -139,16 +135,9 @@ package de.nulldesign.nd3d.objects
 			
 			//loader.close();
 			//visible = true;
-			trace("__________________________________" + 
-				  "\n_______Parsed MD2_________________" +
-				  "\n|" + 
-				  "\n|\tvertices:" + vertices.length +
-				  "\n|\ttexture vertices:" + uvs.length +
-				  "\n|\tfaces:" + faces.length +
-				  "\n|_________________________________"
-				  );
+			trace("__________________________________" + "\n_______Parsed MD2_________________" + "\n|" + "\n|\tvertices:" + vertices.length + "\n|\ttexture vertices:" + uvs.length + "\n|\tfaces:" + faces.length + "\n|_________________________________");
 		}
-		
+
 		/**
 		 * Reads in all the frames
 		 */
@@ -159,7 +148,7 @@ package de.nulldesign.nd3d.objects
 			var verts:Array, frame:Frame;
 			var i:int, j:int, char:int;
 			
-			for (i = 0; i < num_frames; i++)
+			for (i = 0;i < num_frames; i++)
 			{
 				verts = new Array();
 				frame = new Frame("", verts);
@@ -172,23 +161,19 @@ package de.nulldesign.nd3d.objects
 				ty = data.readFloat();
 				tz = data.readFloat();
 				
-				for (j = 0; j < 16; j++)
+				for (j = 0;j < 16; j++)
 					if ((char = data.readUnsignedByte()) != 0)
 						frame.name += String.fromCharCode(char);
 				
 				// Note, the extra data.position++ in the for loop is there 
 				// to skip over a byte that holds the "vertex normal index"
-				for (j = 0; j < num_vertices; j++, data.position++)
-					verts.push(new Vertex(
-						((sx * data.readUnsignedByte()) + tx) * loadScale, 
-						((sy * data.readUnsignedByte()) + ty) * loadScale,
-						((sz * data.readUnsignedByte()) + tz) * loadScale));
+				for (j = 0;j < num_vertices; j++, data.position++)
+					verts.push(new Vertex(((sx * data.readUnsignedByte()) + tx) * loadScale, ((sy * data.readUnsignedByte()) + ty) * loadScale, ((sz * data.readUnsignedByte()) + tz) * loadScale));
 						
 				frames.push(frame);
-				
 			}
 		}
-		
+
 		/**
 		 * Reads in all that MD2 Header data that is declared as private variables.
 		 * I know its a lot, and it looks ugly, but only way to do it in Flash

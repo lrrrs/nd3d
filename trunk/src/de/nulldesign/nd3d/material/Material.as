@@ -1,6 +1,7 @@
 package de.nulldesign.nd3d.material 
 {
 	import de.nulldesign.nd3d.renderer.TextureRenderer;
+
 	import flash.display.BitmapData;
 
 	public class Material 
@@ -29,14 +30,35 @@ package de.nulldesign.nd3d.material
 		{
 			return new Material(color, alpha, calculateLights, doubleSided, additive);
 		}
-		
-		public function get color():uint { return _color; }
-		public function set color(value:uint):void { _color = value; }
-		
-		public function get alpha():Number { return _alpha; }
-		public function set alpha(value:Number):void { _alpha = value; }
-		
-		public function get texture():BitmapData { return _texture; }
-		public function set texture(value:BitmapData):void  { _texture = value; }
+
+		public function get color():uint 
+		{ 
+			return _color; 
+		}
+
+		public function set color(value:uint):void 
+		{ 
+			_color = value; 
+		}
+
+		public function get alpha():Number 
+		{ 
+			return _alpha; 
+		}
+
+		public function set alpha(value:Number):void 
+		{ 
+			_alpha = value; 
+		}
+
+		public function get texture():BitmapData 
+		{ 
+			return _texture; 
+		}
+
+		public function set texture(value:BitmapData):void  
+		{ 
+			_texture = value; 
+		}
 	}
 }

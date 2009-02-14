@@ -77,7 +77,8 @@ package de.nulldesign.nd3d.objects
 				if(angle < 0) 
 				{
 					angle += Math.PI * 2;
-				} else 
+				} 
+				else 
 				{
 					angle -= Math.PI * 2;
 				}
@@ -117,6 +118,11 @@ package de.nulldesign.nd3d.objects
 			x += (target.xPos - x) * speed;
 			y += (target.yPos - y) * speed;
 			z += (target.zPos - z) * speed;
+		}
+
+		public function toString():String
+		{
+			return "[PointCamera " + " x: " + x + ", y: " + y + ", z: " + z + ", angleX: " + angleX + ", angleY: " + angleY + ", angleZ: " + angleZ + "]";
 		}
 	}
 }

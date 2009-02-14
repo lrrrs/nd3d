@@ -1,6 +1,7 @@
 package examples 
 {
 	import de.nulldesign.nd3d.material.BitmapMaterial;
+
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -55,7 +56,7 @@ package examples
 			var mat:Material = new Material(0xFFFFFF, 1);
 			sphere = new Sphere(10, 100, mat);
 			sphere.container = new Sprite();
-			sphere.container.filters = [ new GlowFilter(0x00ff00, 1, 15, 15) ];
+			sphere.container.filters = [new GlowFilter(0x00ff00, 1, 15, 15)];
 			sphere.xPos = -120;
 			sphere.yPos = -120;
 			renderList.push(sphere);

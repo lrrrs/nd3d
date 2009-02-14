@@ -29,7 +29,8 @@ package de.nulldesign.nd3d.geom
 			if(closed) 
 			{
 				calculateClosedCurve();
-			} else 
+			} 
+			else 
 			{
 				calculateCurve();
 			}

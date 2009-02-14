@@ -11,7 +11,7 @@ package de.nulldesign.nd3d.objects
 			super();
 			createPlane(width, height, stepsX, stepsY, material);
 		}
-		
+
 		private function createPlane(width:Number, height:Number, stepsX:uint, stepsY:uint, material:Material):void
 		{
 			var i:Number;
@@ -26,8 +26,8 @@ package de.nulldesign.nd3d.objects
 				ar.push([]);
 				for(j = 0;j <= stepsX; j++)
 				{
-					var x:Number = i * (width / stepsX) - width *.5;
-					var y:Number = j * (height / stepsY) - height *.5;
+					var x:Number = i * (width / stepsX) - width * .5;
+					var y:Number = j * (height / stepsY) - height * .5;
 					ar[i].push(new Vertex(x, 0, y));
 				}
 			}

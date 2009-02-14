@@ -1,12 +1,11 @@
-﻿package examples 
+package examples 
 {
 	import de.nulldesign.nd3d.material.PixelMaterial;
 	import de.nulldesign.nd3d.objects.Sphere;
 	import de.nulldesign.nd3d.view.AbstractView;
-	import flash.events.Event;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
-	
-	/**
+	/**
 	 * ...
 	 * @author ...
 	 */
@@ -14,8 +13,7 @@
 	{
 		private var s:Sphere;
 		private var s2:Sphere;
-		
-		public function PixelMaterialExample() 
+		public function PixelMaterialExample() 
 		{
 			super(600, 400);
 			
@@ -29,8 +27,7 @@
 
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		}
-		
-		override protected function loop(e:Event):void
+		override protected function loop(e:Event):void
 		{
 			super.loop(e);
 			
@@ -43,12 +40,9 @@
 			cam.angleX += (mouseY - cam.vpY) * .0005;
 			cam.angleY += (mouseX - cam.vpX) * .0005;
 		}
-		
-		private function onMouseWheel(evt:MouseEvent):void 
+		private function onMouseWheel(evt:MouseEvent):void 
 		{
 			cam.zOffset -= evt.delta * 10;
 		}
-		
 	}
-	
 }

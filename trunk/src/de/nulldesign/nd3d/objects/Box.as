@@ -2,6 +2,7 @@ package de.nulldesign.nd3d.objects
 {
 	import de.nulldesign.nd3d.geom.Face;
 	import de.nulldesign.nd3d.geom.Vertex;		
+
 	import flash.geom.Point;
 
 	/**
@@ -32,11 +33,11 @@ package de.nulldesign.nd3d.objects
 			var tmpMesh:Mesh;
 			var vList:Array;
 			
-			var aSteps:Array = (steps is Array) ? steps : [ steps, steps, steps, steps, steps, steps ];
-			for (i = 0; i < aSteps.length; i++) 
+			var aSteps:Array = (steps is Array) ? steps : [steps, steps, steps, steps, steps, steps];
+			for (i = 0;i < aSteps.length; i++) 
 			{
-			   if (aSteps[i] is Point) continue;
-			   aSteps[i] = new Point(aSteps[i], aSteps[i]);
+				if (aSteps[i] is Point) continue;
+				aSteps[i] = new Point(aSteps[i], aSteps[i]);
 			}
 			
 			// front

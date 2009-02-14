@@ -1,4 +1,4 @@
-﻿package examples 
+package examples 
 {
 	import de.nulldesign.nd3d.events.Mouse3DEvent;
 	import de.nulldesign.nd3d.material.Material;
@@ -7,18 +7,19 @@
 	import de.nulldesign.nd3d.objects.PointCamera;
 	import de.nulldesign.nd3d.objects.Sphere;
 	import de.nulldesign.nd3d.renderer.Renderer;
+
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.text.TextField;
 	import flash.utils.getTimer;
-	
+
 	public class InteractiveExample extends Sprite
 	{
 		private var cam:PointCamera;
 		private var renderer:Renderer;
 		private var renderList:Array;
 		private var text:TextField;
-		
+
 		public function InteractiveExample() 
 		{
 			renderer = new Renderer(this);
@@ -47,7 +48,7 @@
 			
 			var cube:Cube = new Cube(matList, 100, 3);
 			cube.xPos = -150;
-			renderList = [ cube ];
+			renderList = [cube];
 			
 			// or whole objects
 			var sphere:Sphere = new Sphere(10, 100, new Material(0xFFFFFF, 1.0, true));
@@ -65,25 +66,25 @@
 			
 			addChild(text);
 		}
-		
+
 		private function mouseOut(e:Mouse3DEvent):void 
 		{
 			e.face.material.alpha = 1.0;
 			text.text = "mouseOut: " + getTimer();
 		}
-		
+
 		private function mouseOver(e:Mouse3DEvent):void 
 		{
 			e.face.material.alpha = 0.8;
 			text.text = "mouseOver: " + getTimer();
 		}
-		
+
 		private function mouseClick(e:Mouse3DEvent):void 
 		{
 			e.face.material.alpha = 0.5;
 			text.text = "mouseClick: " + getTimer();
 		}
-		
+
 		private function onRenderScene(evt:Event):void 
 		{
 			renderer.render(renderList, cam);
@@ -95,5 +96,4 @@
 			(renderList[1] as Object3D).angleY += 0.01;
 		}
 	}
-	
 }

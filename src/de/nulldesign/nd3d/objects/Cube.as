@@ -1,7 +1,7 @@
 package de.nulldesign.nd3d.objects 
 {
-  import de.nulldesign.nd3d.geom.Face;	
-  import de.nulldesign.nd3d.geom.Vertex;		
+	import de.nulldesign.nd3d.geom.Face;	
+	import de.nulldesign.nd3d.geom.Vertex;		
 
 	public class Cube extends Mesh
 	{
@@ -128,11 +128,11 @@ package de.nulldesign.nd3d.objects
 			faceList = faceList.concat(tmpMesh.faceList);
 			weldVertices();
 			
-			for(i = 0; i < faceList.length; i++)
+			for(i = 0;i < faceList.length; i++)
 			{
-        var f:Face = faceList[i] as Face;
-        f.meshRef = this;
-      }
+				var f:Face = faceList[i] as Face;
+				f.meshRef = this;
+			}
 			
 			vertexList.push(positionAsVertex);
 		}

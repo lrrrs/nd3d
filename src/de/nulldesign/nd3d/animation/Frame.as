@@ -1,5 +1,6 @@
 package de.nulldesign.nd3d.animation
 {
+
 	/**
 	 * Used in combination with KeyframeMesh DisplayObject3D and all sub-classes
 	 * to provided keyframe-based animation to objects.
@@ -14,7 +15,7 @@ package de.nulldesign.nd3d.animation
 	{
 		public var name:String;
 		public var vertices:Array;
-		
+
 		/**
 		 * Create a new Frame with a name and a set of vertices
 		 * 
@@ -26,7 +27,7 @@ package de.nulldesign.nd3d.animation
 			this.name = name;
 			this.vertices = vertices;
 		}
-		
+
 		public function toString():String
 		{
 			return "[Frame][name:" + name + "][vertices:" + vertices.length + "]";

@@ -6,15 +6,15 @@ package de.nulldesign.nd3d.utils
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.Mesh;	
+
 	import flash.events.EventDispatcher;
 	import flash.utils.ByteArray;
-	
+
 	/**
 	 * [broadcast event] Dispatched when the mesh and textures are fully loaded.
 	 * @eventType de.nulldesign.nd3d.events.MeshEvent
 	 */
 	[Event(name="meshLoaded", type="de.nulldesign.nd3d.events.MeshEvent")] 
-	
 
 	public class ASEParser extends EventDispatcher implements IMeshParser
 	{

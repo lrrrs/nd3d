@@ -1,11 +1,12 @@
 package de.nulldesign.nd3d.renderer 
 {
-  import de.nulldesign.nd3d.objects.Sprite3D;  
-  import de.nulldesign.nd3d.material.BitmapMaterial;	
-  import de.nulldesign.nd3d.events.Mouse3DEvent;
+	import de.nulldesign.nd3d.objects.Sprite3D;  
+	import de.nulldesign.nd3d.material.BitmapMaterial;	
+	import de.nulldesign.nd3d.events.Mouse3DEvent;
 	import de.nulldesign.nd3d.material.LineMaterial;
 	import de.nulldesign.nd3d.material.PixelMaterial;
 	import de.nulldesign.nd3d.material.WireMaterial;
+
 	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
 	import flash.display.Graphics;
@@ -62,12 +63,12 @@ package de.nulldesign.nd3d.renderer
 		public var verticesProcessed:int = 0;
 
 		private var meshToStage:Dictionary;
-		
+
 		private var lastHighlightMesh:Object3D;
 		private var lastHighlightFace:Face;
 		private var currentHighlightMesh:Object3D;
 		private var currentHighlightedFace:Face;
-		
+
 		/**
 		 * Constructor of class Renderer
 		 * @param all geometry is renderes to the graphichs object of this sprite
@@ -80,7 +81,7 @@ package de.nulldesign.nd3d.renderer
 			interactiveStage.buttonMode = true;
 			interactiveStage.useHandCursor = true;
 			interactiveStage.addEventListener(MouseEvent.CLICK, interactiveMouseClick, false, 0, true);
-			
+
 			meshToStage = new Dictionary(true);
 		}
 
@@ -97,7 +98,7 @@ package de.nulldesign.nd3d.renderer
 			verticesProcessed = 0;
 			facesTotal = 0;
 			meshesTotal = meshList.length;
-			
+
 			// cam rotation
 			var cosZ:Number = Math.cos(cam.angleZ);
 			var sinZ:Number = Math.sin(cam.angleZ);
@@ -156,7 +157,7 @@ package de.nulldesign.nd3d.renderer
 					faceList = faceList.concat(curMesh.faceList);
 					vertexList = curMesh.vertexList;
 
-          j = vertexList.length;
+					j = vertexList.length;
 
 					cosZMesh = Math.cos(curMesh.angleZ);
 					sinZMesh = Math.sin(curMesh.angleZ);
@@ -294,11 +295,9 @@ package de.nulldesign.nd3d.renderer
 				
 				curFace = faceList[faceIndex];
 				curMaterial = curFace.material;
-				
+
 				// face needs to be doublesided OR not backfacing AND not out of screen
-				if((wireFrameMode || curMaterial.doubleSided || curMaterial.isSprite || 
-					!isBackFace(curFace.v1, curFace.v2, curFace.v3)) && 
-					(curFace.v1.z3d > -cam.fl - cam.zOffset && curFace.v2.z3d > -cam.fl - cam.zOffset && curFace.v3.z3d > -cam.fl - cam.zOffset)) 
+				if((wireFrameMode || curMaterial.doubleSided || curMaterial.isSprite || !isBackFace(curFace.v1, curFace.v2, curFace.v3)) && (curFace.v1.z3d > -cam.fl - cam.zOffset && curFace.v2.z3d > -cam.fl - cam.zOffset && curFace.v3.z3d > -cam.fl - cam.zOffset)) 
 				{
 					++facesRendered;
 				   
@@ -328,16 +327,16 @@ package de.nulldesign.nd3d.renderer
 					{
 						var v0:Vertex;
 						var v1:Vertex;
-						var length:uint 		= curFace.vertexList.length;
+						var length:uint = curFace.vertexList.length;
 						thickness = LineMaterial(curMaterial).thickness;
-						var alpha:Number 		= curMaterial.alpha;
+						var alpha:Number = curMaterial.alpha;
 						
 						curStageGfx.lineStyle(thickness, curColor, alpha);
 						
-						for(var i:uint = 0; i < length - 1; i++)
+						for(var i:uint = 0;i < length - 1; i++)
 						{
 							v0 = curFace.vertexList[i];
-							v1 = curFace.vertexList[i+1];
+							v1 = curFace.vertexList[i + 1];
 							curStageGfx.moveTo(v0.screenX, v0.screenY);
 							curStageGfx.lineTo(v1.screenX, v1.screenY);
 							curStageGfx.endFill();
@@ -351,9 +350,11 @@ package de.nulldesign.nd3d.renderer
 						}
 						else
 						{
-							if(curMaterial is WireMaterial)
+							var wMat:WireMaterial = curMaterial as WireMaterial;
+							if(wMat)
 							{
 								curStageGfx.lineStyle(1, curMaterial.color, curMaterial.alpha);
+								if(wMat.fillAlpha > 0) curStageGfx.beginFill(wMat.fillColor, wMat.fillAlpha);
 							}
 							else
 							{
@@ -377,11 +378,11 @@ package de.nulldesign.nd3d.renderer
 						
 						if(curMaterial.isSprite) // draw normal 2d sprite
 						{ 
-						  texRenderer.render2DSprite(curStageGfx, curMaterial, curFace.v1);
+							texRenderer.render2DSprite(curStageGfx, curMaterial, curFace.v1);
 						}
 						else // texture mapping
 						{ 
-						  texRenderer.renderUV(curStageGfx, curMaterial, curFace.v1, curFace.v2, curFace.v3, curFace.uvMap, (curColor / curMaterial.color) + ambientColorCorrection, ambientColor);
+							texRenderer.renderUV(curStageGfx, curMaterial, curFace.v1, curFace.v2, curFace.v3, curFace.uvMap, (curColor / curMaterial.color) + ambientColorCorrection, ambientColor);
 						}
 					}					
 
@@ -484,8 +485,7 @@ package de.nulldesign.nd3d.renderer
 			if(blurMode) 
 			{
 				var avgDistance:Number = 1 - (face.v1.scale + face.v2.scale + face.v3.scale) / 3;
-				var blur:BlurFilter = (tmpStage.filters && tmpStage.filters.length) ? 
-					tmpStage.filters[0] : new BlurFilter(1, 1, 2);
+				var blur:BlurFilter = (tmpStage.filters && tmpStage.filters.length) ? tmpStage.filters[0] : new BlurFilter(1, 1, 2);
 				blur.blurX = blur.blurY = (distanceBlur * avgDistance);
 				tmpStage.filters = [blur];
 			}

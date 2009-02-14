@@ -39,7 +39,7 @@ package de.nulldesign.nd3d.objects
 		public function weldVertices(tolerance:Number = 1):void	
 		{
 			//trace("before: " + vertexList.length);
-			
+
 			var i:uint;
 			var uniqueList:Dictionary = new Dictionary();
 			var v:Vertex;
@@ -166,7 +166,7 @@ package de.nulldesign.nd3d.objects
 
 			return m;
 		}
-		
+
 		/**
 		 * Translate vertices coordinates
 		 */
@@ -179,7 +179,7 @@ package de.nulldesign.nd3d.objects
 				curVertex.z += tz;
 			}
 		}
-		
+
 		/**
 		 * Rotate vertices coordinates around X axis
 		 * @param	angle	In radian
@@ -195,7 +195,7 @@ package de.nulldesign.nd3d.objects
 				curVertex.z = z1;
 			}
 		}
-		
+
 		/**
 		 * Rotate vertices coordinates around Y axis
 		 * @param	angle	In radian
@@ -211,7 +211,7 @@ package de.nulldesign.nd3d.objects
 				curVertex.z = z1;
 			}
 		}
-		
+
 		/**
 		 * Rotate vertices coordinates around Z axis
 		 * @param	angle	In radian

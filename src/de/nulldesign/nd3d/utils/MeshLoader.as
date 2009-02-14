@@ -1,7 +1,9 @@
 package de.nulldesign.nd3d.utils 
 {
+	import de.nulldesign.nd3d.material.Material;	
 	import de.nulldesign.nd3d.events.MeshEvent;
 	import de.nulldesign.nd3d.objects.Mesh;
+
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
@@ -13,7 +15,7 @@ package de.nulldesign.nd3d.utils
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
 	import flash.utils.ByteArray;
-	
+
 	/**
 	 * [broadcast event] Dispatched when the mesh and textures are fully loaded.
 	 * @eventType de.nulldesign.nd3d.events.MeshEvent.MESH_LOADED
@@ -42,7 +44,7 @@ package de.nulldesign.nd3d.utils
 		{
 			this.parser = parser;
 		}
-		
+
 		public function loadMeshBytes(meshData:ByteArray, textureList:Array, defaultMaterial:MaterialDefaults = null):void 
 		{
 			this.meshUrl = null;
@@ -86,7 +88,7 @@ package de.nulldesign.nd3d.utils
 				parser.parseFile(meshData, matList, defaultMaterial);
 			}
 		}
-		
+
 		private function onParseComplete(e:MeshEvent):void 
 		{
 			parser.removeEventListener(MeshEvent.MESH_PARSED, onParseComplete);

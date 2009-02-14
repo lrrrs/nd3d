@@ -2,13 +2,14 @@ package de.nulldesign.nd3d.objects
 {
 	import de.nulldesign.nd3d.geom.Quaternion;
 	import de.nulldesign.nd3d.geom.Vertex;	
+
 	import flash.display.Sprite;
 
 	public class Object3D 
 	{
 		public var name:String;
 		public var userData:*;
-		
+
 		public var hidden:Boolean = false;
 		public var container:Sprite;
 
@@ -21,9 +22,9 @@ package de.nulldesign.nd3d.objects
 		public var xPos:Number = 0;
 		public var yPos:Number = 0;
 		public var zPos:Number = 0;
-		
+
 		public var isInteractive:Boolean = false;
-		
+
 		private var _angleX:Number = 0;
 
 		public function set angleX(angle:Number):void 
@@ -148,10 +149,10 @@ package de.nulldesign.nd3d.objects
 		{
 			return deg * (Math.PI / 180);
 		}
-		
+
 		public function toString():String
 		{
-			return "[Object3D " + name + " " + xPos + "," + yPos + "," + zPos + "]";
+			return "[Object3D " + name + " x: " + xPos + ", y: " + yPos + ", z: " + zPos + ", angleX: " + angleX + ", angleY: " + angleY + ", angleZ: " + angleZ + "]";
 		}
 	}
 }

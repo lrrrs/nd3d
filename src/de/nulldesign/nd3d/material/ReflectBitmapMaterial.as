@@ -1,11 +1,11 @@
-﻿package de.nulldesign.nd3d.material 
+package de.nulldesign.nd3d.material 
 {
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	
+
 	/**
 	 * ...
 	 * @author philippe.elsass*gmail.com
@@ -18,7 +18,7 @@
 		protected var tempBmp:BitmapData;
 		protected var gradient:Shape;
 		protected var isReflectDirty:Boolean;
-		
+
 		/**
 		 * Create a material reflection.
 		 * @param	reference	Material to reflect
@@ -33,13 +33,13 @@
 			this.topAlpha = topAlpha;
 			isReflectDirty = true;
 		}
-		
+
 		public function updateReflect():void
 		{
 			isReflectDirty = true;
 			update();
 		}
-		
+
 		override public function update():void
 		{
 			if (isReflectDirty)
@@ -68,7 +68,7 @@
 			// inherit color transforms
 			super.update();
 		}
-		
+
 		protected function createGradient(w:int, h:int):void
 		{
 			var gradMat:Matrix = new Matrix();
@@ -78,12 +78,11 @@
 			gradient.graphics.drawRect(0, 0, w, h);
 			gradient.graphics.endFill();
 		}
-		
+
 		override public function get texture():BitmapData 
 		{
 			if (isReflectDirty) update();
 			return super.texture; 
 		}
 	}
-	
 }

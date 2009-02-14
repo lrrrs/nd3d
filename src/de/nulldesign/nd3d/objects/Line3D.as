@@ -7,14 +7,14 @@ package de.nulldesign.nd3d.objects
 
 	public class Line3D extends Mesh 
 	{
-		public function Line3D(v0:Vertex, v1:Vertex, material:LineMaterial=null) 
+		public function Line3D(v0:Vertex, v1:Vertex, material:LineMaterial = null) 
 		{
 			super();
 			
 			vertexList.push(v0);
 			vertexList.push(v1);
 			
-			material = material ? material:new LineMaterial(0xFFFFFF);
+			material = material ? material : new LineMaterial(0xFFFFFF);
 			
 			positionAsVertex = v1;
 			

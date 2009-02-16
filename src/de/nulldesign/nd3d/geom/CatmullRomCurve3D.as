@@ -2,7 +2,10 @@ package de.nulldesign.nd3d.geom
 {
 	import de.nulldesign.nd3d.geom.CubicBezier3D;
 	import de.nulldesign.nd3d.geom.Vertex;	
-
+	/**
+	 * A 3-dimensional Catmullrom curve
+	 * @author Lars Gerckens (lars@nulldesign.de)
+	 */
 	public class CatmullRomCurve3D 
 	{
 
@@ -16,14 +19,22 @@ package de.nulldesign.nd3d.geom
 			curveVertices = [];
 		}
 
+		/**
+		 * add a new controlvertex to the curve
+		 * @param new control vertex
+		 */
 		public function addCurveVertex(p:Vertex):void 
 		{
 			curveVertices.push(p);
 		}
 
+		/**
+		 * calulates the resulting curve
+		 * @param closed
+		 * @param smoothness
+		 */
 		public function finalize(closed:Boolean = false, smoothness:Number = 0.5):void 
 		{
-			
 			SMOOTHNESS = smoothness;
 			
 			if(closed) 
@@ -35,7 +46,11 @@ package de.nulldesign.nd3d.geom
 				calculateCurve();
 			}
 		}
-
+		/**
+		 * returns a vertex of the curve
+		 * @param begin: 0, end: 1
+		 * @return current vertex of the curve at t
+		 */
 		public function getCurveAt(t:Number):Vertex 
 		{
 

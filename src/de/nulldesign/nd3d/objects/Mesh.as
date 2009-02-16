@@ -7,15 +7,25 @@ package de.nulldesign.nd3d.objects
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.Object3D;	
-
+	
+	/**
+	 * Basic object for every 3d object that contains faces
+	 * @author Lars Gerckens (lars@nulldesign.de)
+	 */
 	public class Mesh extends Object3D 
 	{
-
 		public function Mesh() 
 		{
 			super();
 		}
-
+		/**
+		 * Adds a new face to the mesh
+		 * @param	first vertex
+		 * @param	second vertex
+		 * @param	third vertex
+		 * @param	material
+		 * @param	array containing exactly three UV coordinates
+		 */
 		public function addFace(v1:Vertex, v2:Vertex, v3:Vertex, material:Material = null, uvList:Array = null):void 
 		{
 			faceList.push(new Face(this, v1, v2, v3, material, uvList));
@@ -23,7 +33,11 @@ package de.nulldesign.nd3d.objects
 			if(!vertexInList(v2)) vertexList.push(v2);
 			if(!vertexInList(v3)) vertexList.push(v3);
 		}
-
+		/**
+		 * Checks if a mesh already contains a vertex
+		 * @param vertex to check
+		 * @return
+		 */
 		public function vertexInList(v:Vertex):Boolean 
 		{
 			for(var i:Number = 0;i < vertexList.length; i++) 
@@ -35,7 +49,10 @@ package de.nulldesign.nd3d.objects
 			}
 			return false;
 		}
-
+		/**
+		 * Welds vertices that are close together
+		 * @param tolerance
+		 */
 		public function weldVertices(tolerance:Number = 1):void	
 		{
 			//trace("before: " + vertexList.length);
@@ -86,6 +103,9 @@ package de.nulldesign.nd3d.objects
 			//trace("after: " + vertexList.length);
 		}
 
+		/**
+		 * Flips the normals of every face in the mesh
+		 */
 		public function flipNormals():void 
 		{
 			
@@ -112,6 +132,10 @@ package de.nulldesign.nd3d.objects
 			}
 		}
 
+		/**
+		 * Clones the mesh
+		 * @return new cloned mesh
+		 */
 		public function clone():Mesh 
 		{
 

@@ -7,8 +7,8 @@ package de.nulldesign.nd3d.events
 	import flash.events.Event;
 
 	/**
-	 * ...
-	 * @author ...
+	 * Mouse3DEvent, dispatched by the Renderer on mesh rollover/rollout/click
+	 * @author Lars Gerckens (lars@nulldesign.de)
 	 */
 	public class Mouse3DEvent extends Event
 	{

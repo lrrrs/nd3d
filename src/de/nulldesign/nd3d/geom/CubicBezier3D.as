@@ -1,7 +1,10 @@
 package de.nulldesign.nd3d.geom 
 {
 	import de.nulldesign.nd3d.geom.Vertex;		
-
+	/**
+	 * Mathematical representation of a cubic bezier curve used by CatmullRomCurve3D
+	 * @author Lars Gerckens (lars@nulldesign.de)
+	 */
 	public class CubicBezier3D 
 	{
 

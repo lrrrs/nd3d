@@ -1,7 +1,10 @@
 package de.nulldesign.nd3d.geom 
 {
 	import de.nulldesign.nd3d.geom.Quaternion;		
-
+	/**
+	 * A Vertex, the basic element of a face
+	 * @author Lars Gerckens (lars@nulldesign.de)
+	 */
 	public class Vertex 
 	{
 
@@ -90,7 +93,6 @@ package de.nulldesign.nd3d.geom
 
 		public static function getDirectionVertexFromAngles(angleX:Number, angleY:Number):Vertex 
 		{
-			
 			var sx:Number = Math.sin(angleX);
 			var cx:Number = Math.cos(angleX);
 			var sy:Number = Math.sin(angleY);
@@ -105,8 +107,6 @@ package de.nulldesign.nd3d.geom
 
 		public function rotateAround(angleX:Number = 0, angleY:Number = 0):void 
 		{
-			
-			// koords rotieren noch nicht mit?? komische bewegung wenn nase weit oben/unten
 			var len:Number = length;
 			
 			var sx:Number = Math.sin(angleX);
@@ -124,9 +124,13 @@ package de.nulldesign.nd3d.geom
 			return new Vertex(x, y, z);
 		}
 
+		/**
+		 * rotates a vertex by a quaterion (experimental)
+		 * @param rotation as quaterion
+		 * @return new rotated vertex
+		 */
 		public function rotatePoint(q:Quaternion):Vertex 
 		{
-			
 			var q1:Quaternion;
 			var q2:Quaternion;
 			var q3:Quaternion;

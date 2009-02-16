@@ -18,8 +18,8 @@ package de.nulldesign.nd3d.view
 	import flash.events.Event;
 
 	/**
-	 * ...
-	 * @author ...
+	 * A prepared 3D scene with debug modes (debug axis, debug display and manual placement ob ojects)
+	 * @author Lars Gerckens (www.nulldesign.de)
 	 */
 	public class AbstractView extends Sprite
 	{

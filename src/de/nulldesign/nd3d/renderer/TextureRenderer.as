@@ -9,7 +9,11 @@ package de.nulldesign.nd3d.renderer
 
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.material.Material;	
-
+	
+	/**
+	 * The TextureRenderer
+	 * @author Lars Gerckens (www.nulldesign.de)
+	 */
 	public class TextureRenderer
 	{
 

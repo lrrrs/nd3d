@@ -5,6 +5,10 @@ package de.nulldesign.nd3d.objects
 
 	import flash.display.Sprite;
 
+	/**
+	 * Root class for every 3D object. Extend this class (or Mesh) if you want to write your own 3D objects. all 3d objects can be interactive, that means you are able to click on an interactive 3d object. A Mouse3DEvent then is dispatched by the Renderer containing information about the clicked mesh / face
+	 * @author Lars Gerckens (lars@nulldesign.de)
+	 */
 	public class Object3D 
 	{
 		public var name:String;

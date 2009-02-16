@@ -7,7 +7,7 @@ package de.nulldesign.nd3d.material
 	import flash.geom.Matrix;
 
 	/**
-	 * ...
+	 * BitmapMaterial, used to display textured 3d objects
 	 * @author philippe.elsass*gmail.com
 	 */
 	public class BitmapMaterial extends Material
@@ -15,7 +15,15 @@ package de.nulldesign.nd3d.material
 		protected var transformedTexture:BitmapData;
 		protected var _ct:ColorTransform;
 		protected var isDirty:Boolean;
-
+		
+		/**
+		 * Constructor of class BitmapMaterial
+		 * @param	texture
+		 * @param	whether the bitmap should be drawn smoothed or not
+		 * @param	should lights be calculated for this texture
+		 * @param	should this material be drawn on backfaces as well
+		 * @param	use additive blending for this material
+		 */
 		public function BitmapMaterial(texture:BitmapData = null, smoothed:Boolean = false, calculateLights:Boolean = false, doubleSided:Boolean = false, additive:Boolean = false) 
 		{
 			super(0xffffff, 1, calculateLights, doubleSided, additive);

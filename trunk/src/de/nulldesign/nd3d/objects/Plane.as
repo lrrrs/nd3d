@@ -3,10 +3,20 @@ package de.nulldesign.nd3d.objects
 	import de.nulldesign.nd3d.geom.UV;
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.material.Material;	
-
+	/**
+	 * A plane
+	 * @author Lars Gerckens (lars@nulldesign.de)
+	 */
 	public class Plane extends Mesh 
 	{
-
+		/**
+		 * Constructor of class plane
+		 * @param	width
+		 * @param	height
+		 * @param	stepsX
+		 * @param	stepsY
+		 * @param	material
+		 */
 		public function Plane(width:Number, height:Number, stepsX:Number, stepsY:Number, material:Material) 
 		{
 			super();

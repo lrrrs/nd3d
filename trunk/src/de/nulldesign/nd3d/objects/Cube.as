@@ -2,12 +2,17 @@ package de.nulldesign.nd3d.objects
 {
 	import de.nulldesign.nd3d.geom.Face;	
 	import de.nulldesign.nd3d.geom.Vertex;		
-
+	/**
+	 * Cube
+	 * @author Lars Gerckens (lars@nulldesign.de)
+	 */
 	public class Cube extends Mesh
 	{
 		/**
 		 * Simple cube.
-		 * Side order: front, right, left, back, bottom, top
+		 * @param list of materials for every side of the cube (front, right, left, back, bottom, top)
+		 * @param size of the cube
+		 * @param detaillevel
 		 */
 		public function Cube(materialList:Array, size:Number = 100, steps:Number = 3) 
 		{

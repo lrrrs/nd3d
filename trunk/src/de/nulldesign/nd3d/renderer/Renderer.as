@@ -39,6 +39,10 @@ package de.nulldesign.nd3d.renderer
 	 * <b>facesTotal:</b> Render statistics, calculated every frame<br/>
 	 * <b>meshesTotal:</b> Render statistics, calculated every frame <br/>
 	 * <b>verticesProcessed:</b> Render statistics, calculated every frame<br/> 
+	 * <br/> 
+	 * <b>Interactive objects:</b><br/>
+	 * You can set a Object3D or a Material to interactive. When the user hovers over the object or clicks it, a Mouse3DEvent is dispatched, containing information about the clicked object.<br/>
+	 * Available events are: Mouse3DEvent.MOUSE_OVER, Mouse3DEvent.MOUSE_OUT, Mouse3DEvent.MOUSE_CLICK
 	 * 
 	 * @author Lars Gerckens (www.nulldesign.de)
 	 */

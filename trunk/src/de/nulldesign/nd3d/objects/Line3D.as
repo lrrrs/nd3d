@@ -5,6 +5,10 @@ package de.nulldesign.nd3d.objects
 	import de.nulldesign.nd3d.material.LineMaterial;
 	import de.nulldesign.nd3d.material.Material;	
 
+	/**
+	 * Line3D, a simple 3d line between two vertices
+	 * @author Lars Gerckens (lars@nulldesign.de)
+	 */
 	public class Line3D extends Mesh 
 	{
 		public function Line3D(v0:Vertex, v1:Vertex, material:LineMaterial = null) 

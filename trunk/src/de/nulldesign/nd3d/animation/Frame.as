@@ -30,7 +30,7 @@ package de.nulldesign.nd3d.animation
 
 		public function toString():String
 		{
-			return "[Frame][name:" + name + "][vertices:" + vertices.length + "]";
+			return "[Frame] [name:" + name + "] [vertices:" + vertices.length + "]";
 		}	
 	}
 }

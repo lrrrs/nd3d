@@ -2,8 +2,8 @@ package de.nulldesign.nd3d.material
 {
 
 	/**
-	 * ...
-	 * @author ...
+	 * PixelMaterial. Instead of whole faces, only the vertices are drawn as dots
+	 * @author Lars Gerckens (lars@nulldesign.de)
 	 */
 	public class PixelMaterial extends Material 
 	{

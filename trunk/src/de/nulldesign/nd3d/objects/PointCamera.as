@@ -3,9 +3,12 @@ package de.nulldesign.nd3d.objects
 	import de.nulldesign.nd3d.geom.Quaternion;
 	import de.nulldesign.nd3d.objects.Object3D;	
 
+	/**
+	 * A simple pointcamera
+	 * @author Lars Gerckens (lars@nulldesign.de)
+	 */
 	public class PointCamera 
 	{
-
 		// 2d perspective values
 		public var fl:Number = 250;
 		public var zOffset:Number = 100;
@@ -86,10 +89,14 @@ package de.nulldesign.nd3d.objects
 			
 			return angle;
 		}
-
+		/**
+		 * Experimental
+		 * @param	target
+		 * @param	speed
+		 * @param	turnSpeed
+		 */
 		public function follow(target:Object3D, speed:Number, turnSpeed:Number):void 
 		{
-			
 			/*
 			// CAM FOLLOW... COORDS SWITCHED???!
 			cam.angleZ = spaceShip.angleX;

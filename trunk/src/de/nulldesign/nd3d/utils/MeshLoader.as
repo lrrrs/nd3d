@@ -23,6 +23,7 @@ package de.nulldesign.nd3d.utils
 	[Event(name="meshLoaded", type="de.nulldesign.nd3d.events.MeshEvent")] 
 
 	/**
+	 * MeshLoader used to load meshes from external files
 	 * @author Lars Gerckens (www.nulldesign.de), philippe.elsass*gmail.com
 	 */
 	public class MeshLoader extends EventDispatcher 
@@ -39,12 +40,20 @@ package de.nulldesign.nd3d.utils
 		private var meshData:ByteArray;
 		private var textureLoader:Loader;
 		private var textureLoadIndex:Number = 0;
-
+		/**
+		 * Constructor of class MeshLoader
+		 * @param Parser used to parse the loaded mesh
+		 */
 		public function MeshLoader(parser:IMeshParser) 
 		{
 			this.parser = parser;
 		}
-
+		/**
+		 * Loads a mesh by given bytearray
+		 * @param	meshData
+		 * @param	textureList
+		 * @param	defaultMaterial
+		 */
 		public function loadMeshBytes(meshData:ByteArray, textureList:Array, defaultMaterial:MaterialDefaults = null):void 
 		{
 			this.meshUrl = null;
@@ -56,7 +65,12 @@ package de.nulldesign.nd3d.utils
 			if(textureList.length) loadNextTexture();
 			else buildMesh();
 		}
-
+		/**
+		 * Loads a mesh by an url
+		 * @param	meshUrl
+		 * @param	textureList
+		 * @param	defaultMaterial
+		 */
 		public function loadMesh(meshUrl:String, textureList:Array, defaultMaterial:MaterialDefaults = null):void 
 		{
 			this.meshUrl = meshUrl;

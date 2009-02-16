@@ -3,7 +3,10 @@ package de.nulldesign.nd3d.objects
 	import de.nulldesign.nd3d.geom.UV;
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.material.Material;	
-
+	
+	/**
+	 * A plane that lies on the ground ;)
+	 */
 	public class Ground extends Mesh 
 	{
 		public function Ground(width:Number, height:Number, stepsX:uint, stepsY:uint, material:Material) 

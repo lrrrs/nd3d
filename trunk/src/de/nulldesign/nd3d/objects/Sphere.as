@@ -5,12 +5,11 @@ package de.nulldesign.nd3d.objects
 	import de.nulldesign.nd3d.material.Material;	
 
 	/**
-	 * ...
-	 * @author DefaultUser (Tools -> Custom Arguments...)
+	 * A sphere
+	 * @author Lars Gerckens (lars@nulldesign.de)
 	 */
 	public class Sphere extends Mesh 
 	{
-
 		public function Sphere(steps:uint, size:Number, mat:Material) 
 		{
 			createSphere(steps, size, mat);

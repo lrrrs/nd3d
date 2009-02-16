@@ -5,8 +5,8 @@ package de.nulldesign.nd3d.objects
 	import de.nulldesign.nd3d.material.Material;	
 
 	/**
-	 * ...
-	 * @author DefaultUser (Tools -> Custom Arguments...)
+	 * A simple cube with 12 faces
+	 * @author Lars Gerckens (lars@nulldesign.de)
 	 */
 	public class SimpleCube extends Mesh
 	{

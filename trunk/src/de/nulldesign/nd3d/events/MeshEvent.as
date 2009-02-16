@@ -5,7 +5,7 @@ package de.nulldesign.nd3d.events
 	import flash.events.Event;
 
 	/**
-	 * ...
+	 * MeshEvent dispatched by the MeshLoader
 	 * @author philippe.elsass*gmail.com
 	 */
 	public class MeshEvent extends Event 

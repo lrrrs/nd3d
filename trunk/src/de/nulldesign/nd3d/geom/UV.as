@@ -1,6 +1,9 @@
 package de.nulldesign.nd3d.geom 
 {
-
+	/**
+	 * Basic UV mapping coordinates class
+	 * @author Lars Gerckens (lars@nulldesign.de)
+	 */
 	public class UV 
 	{
 

@@ -320,12 +320,17 @@ package de.nulldesign.nd3d.renderer
 					// pixel material
 					if(curMaterial is PixelMaterial)
 					{
-						thickness = PixelMaterial(curMaterial).thickness;
-						// Every vertex in a face is drawn multiple times. Just a quick hack, needs to be optimized.
-						curStageGfx.beginFill(curMaterial.color, curMaterial.alpha);
-						curStageGfx.drawCircle(curFace.v1.screenX, curFace.v1.screenY, thickness);
-						curStageGfx.drawCircle(curFace.v2.screenX, curFace.v2.screenY, thickness);
-						curStageGfx.drawCircle(curFace.v3.screenX, curFace.v3.screenY, thickness);
+						if(curMaterial.isSprite)
+						{
+							defaultTexRenderer.render2DSprite(curStageGfx, curMaterial, curFace.v1);
+						}
+						else
+						{
+							// Every vertex in a face is drawn multiple times. Just a quick hack, needs to be optimized.
+							defaultTexRenderer.render2DSprite(curStageGfx, curMaterial, curFace.v1);
+							defaultTexRenderer.render2DSprite(curStageGfx, curMaterial, curFace.v2);
+							defaultTexRenderer.render2DSprite(curStageGfx, curMaterial, curFace.v3);
+						}
 					}
 					else if(curMaterial is LineMaterial) // render line
 					{
@@ -373,7 +378,7 @@ package de.nulldesign.nd3d.renderer
 						curStageGfx.lineTo(curFace.v1.screenX, curFace.v1.screenY);
 						curStageGfx.endFill();
 					} 
-					else if(curMaterial is BitmapMaterial || curMaterial.isSprite) // render textures and/or sprites
+					else if(curMaterial is BitmapMaterial) // render textures and/or sprites
 					{
 						curStageGfx.lineStyle();
 						

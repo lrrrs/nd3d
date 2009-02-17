@@ -31,8 +31,9 @@ package de.nulldesign.nd3d.renderer
 				var pm:PixelMaterial = material as PixelMaterial;
         
 				gfx.beginFill(pm.color, pm.alpha);
-				gfx.drawCircle(a.screenX, a.screenY, pm.thickness);
+				gfx.drawCircle(a.screenX, a.screenY, pm.thickness * a.scale);
 				gfx.endFill();
+
 				return;
 			}
       

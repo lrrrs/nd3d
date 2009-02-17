@@ -1,21 +1,97 @@
 package de.nulldesign.nd3d.renderer 
 {
-	import de.nulldesign.nd3d.material.PixelMaterial;	
+	import de.nulldesign.nd3d.geom.Vertex;
+	import de.nulldesign.nd3d.material.LineMaterial;
+	import de.nulldesign.nd3d.material.Material;
+	import de.nulldesign.nd3d.material.PixelMaterial;
+	import de.nulldesign.nd3d.material.WireMaterial;
 
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
-	import flash.display.Sprite;
-	import flash.geom.Matrix;
+	import flash.geom.Matrix;		
 
-	import de.nulldesign.nd3d.geom.Vertex;
-	import de.nulldesign.nd3d.material.Material;	
-	
 	/**
 	 * The TextureRenderer
 	 * @author Lars Gerckens (www.nulldesign.de)
 	 */
 	public class TextureRenderer
 	{
+		/**
+		 * Renders a set of lines
+		 * @param	gfx
+		 * @param	material
+		 * @param	vertexList
+		 */
+		public function renderLine(gfx:Graphics, material:LineMaterial, vertexList:Array):void
+		{
+			var v0:Vertex;
+			var v1:Vertex;
+			var length:uint = vertexList.length;
+			var thickness:Number = material.thickness;
+			var alpha:Number = material.alpha;
+      
+			gfx.lineStyle(thickness, material.color, alpha);
+      
+			for(var i:uint = 0;i < length - 1; i++)
+			{
+				v0 = vertexList[i];
+				v1 = vertexList[i + 1];
+				gfx.moveTo(v0.screenX, v0.screenY);
+				gfx.lineTo(v1.screenX, v1.screenY);
+				gfx.endFill();
+			}
+		}
+		
+		/**
+		 * Renders a vertex as a pixel
+		 * @param	gfx
+		 * @param	material
+		 * @param	a Vertex
+		 */
+		public function renderPixel(gfx:Graphics, material:PixelMaterial, a:Vertex):void
+		{
+			gfx.beginFill(material.color, material.alpha);
+			gfx.drawCircle(a.screenX, a.screenY, material.thickness * a.scale);
+			gfx.endFill();
+		}
+		/**
+		 * Renders a flat colored face
+		 * @param	wireFrameMode
+		 * @param	calculatedColor
+		 * @param	gfx
+		 * @param	material
+		 * @param	v1
+		 * @param	v2
+		 * @param	v3
+		 */
+		public function renderFlatFace(wireFrameMode:Boolean, calculatedColor:Number, gfx:Graphics, 
+										material:Material, v1:Vertex, v2:Vertex, v3:Vertex):void
+		{
+			if(wireFrameMode)
+			{
+				gfx.lineStyle(1, 0xFFFFFF, 1);
+			}
+			else
+			{
+				var wMat:WireMaterial = material as WireMaterial;
+				if(wMat)
+				{
+					gfx.lineStyle(1, material.color, material.alpha);
+					if(wMat.fillAlpha > 0) gfx.beginFill(wMat.fillColor, wMat.fillAlpha);
+				}
+				else
+				{
+					gfx.lineStyle();
+					gfx.beginFill(calculatedColor, material.alpha);
+				}
+			}
+      
+			gfx.moveTo(v1.screenX, v1.screenY);
+			gfx.lineTo(v2.screenX, v2.screenY);
+			gfx.lineTo(v3.screenX, v3.screenY);
+			gfx.lineTo(v1.screenX, v1.screenY);
+			gfx.endFill();
+		}
 
 		/**
 		 * Renders a bitmap to the screen
@@ -25,18 +101,6 @@ package de.nulldesign.nd3d.renderer
 		 */
 		public function render2DSprite(gfx:Graphics, material:Material, a:Vertex):void 
 		{
-			// render sprites as dots
-			if(material is PixelMaterial)
-			{
-				var pm:PixelMaterial = material as PixelMaterial;
-        
-				gfx.beginFill(pm.color, pm.alpha);
-				gfx.drawCircle(a.screenX, a.screenY, pm.thickness * a.scale);
-				gfx.endFill();
-
-				return;
-			}
-      
 			// render bitmap sprites
 			var textureBitmap:BitmapData = material.texture;
 			var scale:Number = a.scale;
@@ -51,6 +115,7 @@ package de.nulldesign.nd3d.renderer
 			tMat.scale(scale, scale);
 			tMat.translate(x0, y0);
 
+			gfx.lineStyle();
 			gfx.beginBitmapFill(textureBitmap, tMat, false, true);
 			gfx.moveTo(a.screenX, a.screenY);
 			gfx.moveTo(x0, y0);
@@ -132,6 +197,7 @@ package de.nulldesign.nd3d.renderer
 				}
 			}
 			
+			gfx.lineStyle();
 			gfx.beginBitmapFill(texture, tMat, false, smoothing);
 			gfx.moveTo(x0, y0);
 			gfx.lineTo(x1, y1);

@@ -1,12 +1,17 @@
 package de.nulldesign.nd3d.renderer 
 {
-	import de.nulldesign.nd3d.objects.Sprite3D;  
-	import de.nulldesign.nd3d.material.BitmapMaterial;	
 	import de.nulldesign.nd3d.events.Mouse3DEvent;
+	import de.nulldesign.nd3d.geom.Face;
+	import de.nulldesign.nd3d.geom.Vertex;
+	import de.nulldesign.nd3d.material.BitmapMaterial;
 	import de.nulldesign.nd3d.material.LineMaterial;
+	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.material.PixelMaterial;
 	import de.nulldesign.nd3d.material.WireMaterial;
-
+	import de.nulldesign.nd3d.objects.Object3D;
+	import de.nulldesign.nd3d.objects.PointCamera;
+	import de.nulldesign.nd3d.renderer.TextureRenderer;
+	
 	import flash.display.BlendMode;
 	import flash.display.DisplayObject;
 	import flash.display.Graphics;
@@ -14,14 +19,7 @@ package de.nulldesign.nd3d.renderer
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
-	import flash.utils.Dictionary;
-
-	import de.nulldesign.nd3d.geom.Face;
-	import de.nulldesign.nd3d.geom.Vertex;
-	import de.nulldesign.nd3d.material.Material;
-	import de.nulldesign.nd3d.objects.Object3D;
-	import de.nulldesign.nd3d.objects.PointCamera;
-	import de.nulldesign.nd3d.renderer.TextureRenderer;	
+	import flash.utils.Dictionary;	  
 
 	/**
 	 * The heart of the engine. The renderer takes a list of meshes, transforms the geometry into screen coordinates and draws the triangles (faces) on the screen. 
@@ -284,6 +282,7 @@ package de.nulldesign.nd3d.renderer
 			var curColor:uint;
 			var faceIndex:int = 0;
 			var thickness:Number;
+			var curRenderer:TextureRenderer;
 			
 			clearStage(drawStage);
 			clearStage(interactiveStage);
@@ -296,12 +295,14 @@ package de.nulldesign.nd3d.renderer
 			// render faces
 			for(faceIndex = 0;faceIndex < facesTotal; faceIndex++) 
 			{
-				
 				curFace = faceList[faceIndex];
 				curMaterial = curFace.material;
-
+				curRenderer = curMaterial.customRenderer || defaultTexRenderer;
+        
 				// face needs to be doublesided OR not backfacing AND not out of screen
-				if((wireFrameMode || curMaterial.doubleSided || curMaterial.isSprite || !isBackFace(curFace.v1, curFace.v2, curFace.v3)) && (curFace.v1.z3d > -cam.fl - cam.zOffset && curFace.v2.z3d > -cam.fl - cam.zOffset && curFace.v3.z3d > -cam.fl - cam.zOffset)) 
+				if ((wireFrameMode || curMaterial.doubleSided || curMaterial.isSprite || 
+					!isBackFace(curFace.v1, curFace.v2, curFace.v3)) && 
+					(curFace.v1.z3d > -cam.fl - cam.zOffset && curFace.v2.z3d > -cam.fl - cam.zOffset && curFace.v3.z3d > -cam.fl - cam.zOffset)) 
 				{
 					++facesRendered;
 				   
@@ -322,76 +323,34 @@ package de.nulldesign.nd3d.renderer
 					{
 						if(curMaterial.isSprite)
 						{
-							defaultTexRenderer.render2DSprite(curStageGfx, curMaterial, curFace.v1);
+							curRenderer.renderPixel(curStageGfx, curMaterial as PixelMaterial, curFace.v1);
 						}
 						else
 						{
 							// Every vertex in a face is drawn multiple times. Just a quick hack, needs to be optimized.
-							defaultTexRenderer.render2DSprite(curStageGfx, curMaterial, curFace.v1);
-							defaultTexRenderer.render2DSprite(curStageGfx, curMaterial, curFace.v2);
-							defaultTexRenderer.render2DSprite(curStageGfx, curMaterial, curFace.v3);
+							curRenderer.renderPixel(curStageGfx, curMaterial as PixelMaterial, curFace.v1);
+							curRenderer.renderPixel(curStageGfx, curMaterial as PixelMaterial, curFace.v2);
+							curRenderer.renderPixel(curStageGfx, curMaterial as PixelMaterial, curFace.v3);
 						}
 					}
 					else if(curMaterial is LineMaterial) // render line
 					{
-						var v0:Vertex;
-						var v1:Vertex;
-						var length:uint = curFace.vertexList.length;
-						thickness = LineMaterial(curMaterial).thickness;
-						var alpha:Number = curMaterial.alpha;
-						
-						curStageGfx.lineStyle(thickness, curColor, alpha);
-						
-						for(var i:uint = 0;i < length - 1; i++)
-						{
-							v0 = curFace.vertexList[i];
-							v1 = curFace.vertexList[i + 1];
-							curStageGfx.moveTo(v0.screenX, v0.screenY);
-							curStageGfx.lineTo(v1.screenX, v1.screenY);
-							curStageGfx.endFill();
-						}
+						curRenderer.renderLine(curStageGfx, curMaterial as LineMaterial, curFace.vertexList);
 					}
 					else if(curMaterial.texture == null || wireFrameMode || curMaterial is WireMaterial) // render solid or wire
 					{ 
-						if(wireFrameMode)
-						{
-							curStageGfx.lineStyle(1, 0xFFFFFF, 1);
-						}
-						else
-						{
-							var wMat:WireMaterial = curMaterial as WireMaterial;
-							if(wMat)
-							{
-								curStageGfx.lineStyle(1, curMaterial.color, curMaterial.alpha);
-								if(wMat.fillAlpha > 0) curStageGfx.beginFill(wMat.fillColor, wMat.fillAlpha);
-							}
-							else
-							{
-								curStageGfx.lineStyle();
-								curStageGfx.beginFill(curColor, curMaterial.alpha);
-							}
-						}
-						
-						curStageGfx.moveTo(curFace.v1.screenX, curFace.v1.screenY);
-						curStageGfx.lineTo(curFace.v2.screenX, curFace.v2.screenY);
-						curStageGfx.lineTo(curFace.v3.screenX, curFace.v3.screenY);
-						curStageGfx.lineTo(curFace.v1.screenX, curFace.v1.screenY);
-						curStageGfx.endFill();
+						curRenderer.renderFlatFace(wireFrameMode, curColor, curStageGfx, curMaterial, curFace.v1, curFace.v2, curFace.v3);
 					} 
 					else if(curMaterial is BitmapMaterial) // render textures and/or sprites
 					{
-						curStageGfx.lineStyle();
-						
 						// render texture
-						var texRenderer:TextureRenderer = curMaterial.customRenderer || defaultTexRenderer;
-						
 						if(curMaterial.isSprite) // draw normal 2d sprite
 						{ 
-							texRenderer.render2DSprite(curStageGfx, curMaterial, curFace.v1);
+							curRenderer.render2DSprite(curStageGfx, curMaterial, curFace.v1);
 						}
 						else // texture mapping
 						{ 
-							texRenderer.renderUV(curStageGfx, curMaterial, curFace.v1, curFace.v2, curFace.v3, curFace.uvMap, (curColor / curMaterial.color) + ambientColorCorrection, ambientColor);
+							curRenderer.renderUV(curStageGfx, curMaterial, curFace.v1, curFace.v2, curFace.v3, curFace.uvMap, (curColor / curMaterial.color) + ambientColorCorrection, ambientColor);
 						}
 					}					
 

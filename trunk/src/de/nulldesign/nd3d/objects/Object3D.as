@@ -139,6 +139,67 @@ package de.nulldesign.nd3d.objects
 			zPos = origin.zPos + 300 * cy * cx;
 		}
 
+		/**
+		 * Translate vertices coordinates
+		 */
+		public function translateVertices(tx:Number, ty:Number, tz:Number):void
+		{
+			for each(var curVertex:Vertex in vertexList)
+			{
+				curVertex.x += tx;
+				curVertex.y += ty;
+				curVertex.z += tz;
+			}
+		}
+
+		/**
+		 * Rotate vertices coordinates around X axis
+		 * @param	angle	In radian
+		 */
+		public function rotateVerticesX(angle:Number):void
+		{
+			for each(var curVertex:Vertex in vertexList)
+			{
+				var y1:Number = curVertex.y * Math.cos(angle) - curVertex.z * Math.sin(angle);
+				var z1:Number = curVertex.z * Math.cos(angle) + curVertex.y * Math.sin(angle);
+				
+				curVertex.y = y1;
+				curVertex.z = z1;
+			}
+		}
+
+		/**
+		 * Rotate vertices coordinates around Y axis
+		 * @param	angle	In radian
+		 */
+		public function rotateVerticesY(angle:Number):void
+		{
+			for each(var curVertex:Vertex in vertexList)
+			{
+				var x1:Number = curVertex.x * Math.cos(angle) - curVertex.z * Math.sin(angle);
+				var z1:Number = curVertex.z * Math.cos(angle) + curVertex.x * Math.sin(angle);
+				
+				curVertex.x = x1;
+				curVertex.z = z1;
+			}
+		}
+
+		/**
+		 * Rotate vertices coordinates around Z axis
+		 * @param	angle	In radian
+		 */
+		public function rotateVerticesZ(angle:Number):void
+		{
+			for each(var curVertex:Vertex in vertexList)
+			{
+				var x1:Number = curVertex.x * Math.cos(angle) - curVertex.y * Math.sin(angle);
+				var y1:Number = curVertex.y * Math.cos(angle) + curVertex.x * Math.sin(angle);
+				
+				curVertex.x = x1;
+				curVertex.y = y1;
+			}
+		}
+		
 		public function getAngles():String 
 		{
 			return "Angles: X:" + Math.round(rad2deg(angleX)) + " Y:" + Math.round(rad2deg(angleY)) + " Z: " + Math.round(rad2deg(angleZ));

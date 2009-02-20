@@ -7,8 +7,12 @@
 	import de.nulldesign.nd3d.objects.Sprite3D;
 	import de.nulldesign.nd3d.view.AbstractView;
 	import examples.customRenderer.MyPixelRenderer;
+	import flash.display.StageDisplayState;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
+	import flash.ui.Keyboard;
 	
 	/**
 	 * ...
@@ -39,6 +43,16 @@
 			}
 			
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+		}
+		
+		private function onKeyUp(evt:KeyboardEvent):void
+		{
+			if(evt.keyCode == Keyboard.SPACE)
+			{
+				stage.fullScreenSourceRect = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
+				stage.displayState = StageDisplayState.FULL_SCREEN;
+			}
 		}
 		
 		private function onMouseWheel(evt:MouseEvent):void 

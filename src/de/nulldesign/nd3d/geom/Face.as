@@ -37,6 +37,20 @@ package de.nulldesign.nd3d.geom
 			vertexList = [v1, v2, v3];
 		}
 
+		public function getNormal():Vertex
+		{
+			var ab:Vertex;
+			var ac:Vertex;
+			var n:Vertex;
+			
+			ab = new Vertex(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z);
+			ac = new Vertex(v3.x - v1.x, v3.y - v1.y, v3.z - v1.z);
+			
+			n = ac.cross(ab);
+			n.normalize();
+			return n;
+		}
+		
 		public function toString():String 
 		{
 			return "Face: " + v1 + "/" + v2 + "/" + v3 + "\n";

@@ -27,28 +27,15 @@
 			
 			// calc normal of faces
 			var f:Face;
-			var a:Vertex;
-			var b:Vertex;
-			var c:Vertex;
-			var ab:Vertex;
-			var ac:Vertex;
 			var n:Vertex;
 			var m:Vertex;
 			
 			for(var i:uint = 0; i < cube.faceList.length; i++)
 			{
 				f = cube.faceList[i];
-				a = f.v1;
-				b = f.v2;
-				c = f.v3;
-				
-				m = new Vertex((a.x + b.x + c.x) / 3, (a.y + b.y + c.y) / 3, (a.z + b.z + c.z) / 3);
-				
-				ab = new Vertex(b.x - a.x, b.y - a.y, b.z - a.z);
-				ac = new Vertex(c.x - a.x, c.y - a.y, c.z - a.z);
-				
-				n = ac.cross(ab);
-				n.normalize();
+
+				m = new Vertex((f.v1.x + f.v2.x + f.v3.x) / 3, (f.v1.y + f.v2.y + f.v3.y) / 3, (f.v1.z + f.v2.z + f.v3.z) / 3);
+				n = f.getNormal();
 				
 				n.length = 30;
 				

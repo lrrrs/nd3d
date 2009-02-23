@@ -83,6 +83,9 @@ package de.nulldesign.nd3d.renderer
 			interactiveStage.buttonMode = true;
 			interactiveStage.useHandCursor = true;
 			interactiveStage.addEventListener(MouseEvent.CLICK, interactiveMouseClick, false, 0, true);
+			interactiveStage.addEventListener(MouseEvent.MOUSE_MOVE, interactiveMouseMove, false, 0, true);
+			interactiveStage.addEventListener(MouseEvent.MOUSE_DOWN, interactiveMouseDown, false, 0, true);
+			interactiveStage.addEventListener(MouseEvent.MOUSE_UP, interactiveMouseUp, false, 0, true);
 
 			meshToStage = new Dictionary(true);
 		}
@@ -392,6 +395,30 @@ package de.nulldesign.nd3d.renderer
 			if(currentHighlightMesh)
 			{
 				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_CLICK, currentHighlightMesh, currentHighlightedFace));
+			}
+		}
+		
+		private function interactiveMouseMove(e:MouseEvent):void 
+		{
+			if(currentHighlightMesh)
+			{
+				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_MOVE, currentHighlightMesh, currentHighlightedFace));
+			}
+		}
+		
+		private function interactiveMouseUp(e:MouseEvent):void 
+		{
+			if(currentHighlightMesh)
+			{
+				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_UP, currentHighlightMesh, currentHighlightedFace));
+			}
+		}
+		
+		private function interactiveMouseDown(e:MouseEvent):void 
+		{
+			if(currentHighlightMesh)
+			{
+				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_DOWN, currentHighlightMesh, currentHighlightedFace));
 			}
 		}
 

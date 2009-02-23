@@ -44,19 +44,21 @@ package de.nulldesign.nd3d.objects
 				{
 					if(i > 0 && j > 0)
 					{
-						var uv1:Array = [new UV((i - 1) * xscaling, (j - 1) * yscaling), 
-										 new UV((i - 1) * xscaling, (j) * yscaling),
-										 new UV((i) * xscaling, (j) * yscaling)];
+						var uv1:Array = [new UV((i - 1) * xscaling, 1 - ((j - 1) * yscaling)), 
+										 new UV((i - 1) * xscaling, 1 - ((j) * yscaling)),
+										 new UV((i) * xscaling, 1 - ((j) * yscaling))];
 						
-						var uv2:Array = [new UV((i - 1) * xscaling, (j - 1) * yscaling), 
-										 new UV((i) * xscaling, (j) * yscaling),
-										 new UV((i) * xscaling, (j - 1) * yscaling)];
-										 
+						var uv2:Array = [new UV((i - 1) * xscaling, 1 - ((j - 1) * yscaling)), 
+										 new UV((i) * xscaling, 1 - ((j) * yscaling)),
+										 new UV((i) * xscaling, 1 - ((j - 1) * yscaling))];
+
 						addFace(ar[i - 1][j - 1], ar[i - 1][j], ar[i][j], material, uv1);
 						addFace(ar[i - 1][j - 1], ar[i][j], ar[i][j - 1], material, uv2);
 					}
 				}
 			}
+			
+			flipNormals();
 		}
 	}
 }

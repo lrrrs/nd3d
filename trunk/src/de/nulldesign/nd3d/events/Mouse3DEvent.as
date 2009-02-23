@@ -15,6 +15,9 @@ package de.nulldesign.nd3d.events
 		static public const MOUSE_OVER:String = "onMouse3DOver";
 		static public const MOUSE_OUT:String = "onMouse3DOut";
 		static public const MOUSE_CLICK:String = "onMouse3DClick";
+		static public const MOUSE_MOVE:String = "onMouse3DMove";
+		static public const MOUSE_DOWN:String = "onMouse3DDown";
+		static public const MOUSE_UP:String = "onMouse3DUp";
 
 		public var mesh:Object3D;
 		public var face:Face;

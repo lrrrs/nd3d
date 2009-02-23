@@ -97,6 +97,7 @@ package de.nulldesign.nd3d.objects
 
 		public function lookAtTarget(target:Object3D):void 
 		{
+			
 			var dx:Number = (target.xPos - xPos);
 			var dy:Number = (target.yPos - yPos);
 			var dz:Number = (target.zPos - zPos);
@@ -107,6 +108,7 @@ package de.nulldesign.nd3d.objects
 
 		public function lookAtDirection():void 
 		{
+			
 			var dx:Number = (direction.x - xPos);
 			var dy:Number = (direction.y - yPos);
 			var dz:Number = (direction.z - zPos);
@@ -124,9 +126,6 @@ package de.nulldesign.nd3d.objects
 
 		public function rotateAround(origin:Object3D, angleX:Number = 0, angleY:Number = 0):void 
 		{
-
-			// koords rotieren noch nicht mit?? komische bewegung wenn nase weit oben/unten
-
 			var sx:Number = Math.sin(angleX);
 			var cx:Number = Math.cos(angleX);
 			var sy:Number = Math.sin(angleY);

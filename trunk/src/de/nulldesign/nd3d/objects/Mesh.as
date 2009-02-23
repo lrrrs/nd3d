@@ -138,7 +138,6 @@ package de.nulldesign.nd3d.objects
 		 */
 		public function clone():Mesh 
 		{
-
 			var m:Mesh = new Mesh();
 
 			m.angleX = angleX;

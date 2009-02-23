@@ -97,7 +97,6 @@ package de.nulldesign.nd3d.objects
 
 		public function lookAtTarget(target:Object3D):void 
 		{
-			
 			var dx:Number = (target.xPos - xPos);
 			var dy:Number = (target.yPos - yPos);
 			var dz:Number = (target.zPos - zPos);
@@ -108,10 +107,9 @@ package de.nulldesign.nd3d.objects
 
 		public function lookAtDirection():void 
 		{
-			
-			var dx:Number = ((xPos + direction.x) - xPos);
-			var dy:Number = ((yPos + direction.y) - yPos);
-			var dz:Number = ((zPos + direction.z) - zPos);
+			var dx:Number = (direction.x - xPos);
+			var dy:Number = (direction.y - yPos);
+			var dz:Number = (direction.z - zPos);
 			
 			angleZ = -Math.atan2(-dy, Math.sqrt(dx * dx + dz * dz));
 			angleY = Math.atan2(dz, dx);

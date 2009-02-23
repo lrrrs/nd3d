@@ -10,12 +10,12 @@ package de.nulldesign.nd3d.objects
 	 */
 	public class Sphere extends Mesh 
 	{
-		public function Sphere(steps:uint, size:Number, mat:Material) 
+		public function Sphere(steps:uint, size:Number, mat:Material, hemisphereOnly:Boolean = false) 
 		{
-			createSphere(steps, size, mat);
+			createSphere(steps, size, mat, hemisphereOnly);
 		}
 
-		private function createSphere(steps:uint, size:Number, mat:Material):void
+		private function createSphere(steps:uint, size:Number, mat:Material, hemisphereOnly:Boolean):void
 		{
 			var v:Vertex;
 			var col:Array = [];
@@ -28,7 +28,8 @@ package de.nulldesign.nd3d.objects
 			var x:Number;
 			var y:Number;
 			var z:Number;
-		
+			var hSteps:int = hemisphereOnly ? (steps / 2 + 1) : steps;
+			
 			for(i = 0;i < steps + 1; i++) 
 			{
 				
@@ -37,7 +38,7 @@ package de.nulldesign.nd3d.objects
 				z = size * Math.cos(hStep * Math.PI);
 				curSize = size * Math.sin(hStep * Math.PI);
 				
-				for (j = 0;j < steps; j++) 
+				for (j = 0;j < hSteps; j++) 
 				{
 					
 					vStep = (2 * j / steps);
@@ -104,15 +105,32 @@ package de.nulldesign.nd3d.objects
 						uv4.u = 1 - uv4.u;
 						
 						// add faces
-						if(i < col.length - 1) 
+						if(hemisphereOnly)
 						{
-							addFace(v1, v2, v3, mat, [uv1, uv2, uv3]);
+							if(i < col.length - 1 && j > 0) 
+							{
+								addFace(v1, v2, v3, mat, [uv1, uv2, uv3]);
+							}
+							
+							if(i > 1 && j > 0) 
+							{
+								addFace(v1, v3, v4, mat, [uv1, uv3, uv4]);
+							}
+						}
+						else
+						{
+							if(i < col.length - 1) 
+							{
+								addFace(v1, v2, v3, mat, [uv1, uv2, uv3]);
+							}
+							
+							if(i > 1) 
+							{
+								addFace(v1, v3, v4, mat, [uv1, uv3, uv4]);
+							}
 						}
 						
-						if(i > 1) 
-						{
-							addFace(v1, v3, v4, mat, [uv1, uv3, uv4]);
-						}
+						
 					}
 				}
 			}

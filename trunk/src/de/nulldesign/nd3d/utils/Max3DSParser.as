@@ -1,31 +1,29 @@
-package de.nulldesign.nd3d.utils 
+﻿package de.nulldesign.nd3d.utils 
 {
 	import de.nulldesign.nd3d.events.MeshEvent;
 	import de.nulldesign.nd3d.geom.UV;
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.objects.Mesh;
+
 	import flash.events.EventDispatcher;
 	import flash.utils.ByteArray;
 	import flash.utils.Endian;
-	
+
 	public class Max3DSParser extends EventDispatcher implements IMeshParser
 	{
-
-	//>----- Color Types --------------------------------------------------------
+		//>----- Color Types --------------------------------------------------------
 		
 		//public const AMBIENT:String = "ambient";
 		//public const DIFFUSE:String = "diffuse";
 		//public const SPECULAR:String = "specular";
 		
 		//>----- Main Chunks --------------------------------------------------------
-		
 		public const PRIMARY:int = 0x4D4D;
 		public const EDIT3DS:int = 0x3D3D;  // Start of our actual objects
 		public const KEYF3DS:int = 0xB000;  // Start of the keyframe information
 		
 		//>----- General Chunks -----------------------------------------------------
-		
 		public const VERSION:int = 0x0002;
 		public const MESH_VERSION:int = 0x3D3E;
 		//public const KFVERSION:int = 0x0005;
@@ -38,10 +36,7 @@ package de.nulldesign.nd3d.utils
 		//public const MASTER_SCALE:int = 0x0100;
 		//public const IMAGE_FILE:int = 0x1100;
 		public const AMBIENT_LIGHT:int = 0X2100;
-		
-		
 		//>----- Object Chunks -----------------------------------------------------
-		
 		public const MESH:int = 0x4000;
 		public const MESH_OBJECT:int = 0x4100;
 		public const MESH_VERTICES:int = 0x4110;
@@ -55,9 +50,7 @@ package de.nulldesign.nd3d.utils
 		//public const HIERARCHY:int = 0x4F00;
 		
 		//>----- Material Chunks ---------------------------------------------------
-		
 		public const MATERIAL:int = 0xAFFF;
-	
 		public const MAT_NAME:int = 0xA000;
 		public const MAT_AMBIENT:int = 0xA010;
 		public const MAT_DIFFUSE:int = 0xA020;
@@ -71,7 +64,6 @@ package de.nulldesign.nd3d.utils
 		public const MAT_TEXFLNM:int = 0xA300;
 		public const OBJ_LIGHT:int = 0x4600;
 		public const OBJ_CAMERA:int = 0x4700;
-		
 		//>----- KeyFrames Chunks --------------------------------------------------
 		
 		/*public const ANIM_HEADER:int = 0xB00A;
@@ -80,23 +72,21 @@ package de.nulldesign.nd3d.utils
 		public const ANIM_POS:int = 0xB020;
 		public const ANIM_ROT:int = 0xB021;
 		public const ANIM_SCALE:int = 0xB022;	*/
-		
-		private var _matId:int=0;
-		private var _data: ByteArray;
-		internal var mesh: Mesh;
+		private var _matId:int = 0;
+		private var _data:ByteArray;
+		internal var mesh:Mesh;
 		private var _defaultMaterial:Material;
 		private var _matList:Array;
 		private var _textureExtensionReplacements:Object;
-		private var _textureMatCount:int=0;
+		private var _textureMatCount:int = 0;
 		private var _itll:int; //initialTextureListLength
-	  private var _matLookupIndex:Object;
-		
+		private var _matLookupIndex:Object;
+
 		public function Max3DSParser()	
 		{
 			_matLookupIndex = new Object();
 		}
 
-		
 		public function parseFile(fileData:ByteArray, matList:Array, defaultMaterial:MaterialDefaults = null):void 
 		{
 			_itll = matList.length;
@@ -104,12 +94,12 @@ package de.nulldesign.nd3d.utils
 		
 			_defaultMaterial = (defaultMaterial || new MaterialDefaults()).getMaterial();
 
-      mesh = new Mesh();
+			mesh = new Mesh();
 			parse(fileData);
 			
 			dispatchEvent(new MeshEvent(MeshEvent.MESH_PARSED, mesh));
 		}
-		
+
 		/**
 		 * Parse.
 		 * 
@@ -128,9 +118,8 @@ package de.nulldesign.nd3d.utils
 			var chunk:Chunk3ds = new Chunk3ds();
 			readChunk(chunk);
 			parse3DS(chunk);
-
 		}
-		
+
 		/*
 		 * Replaces a texture extension with an alternative extension.
 		 * 
@@ -139,7 +128,7 @@ package de.nulldesign.nd3d.utils
 		 */ 
 		/*public function replaceTextureExtension(originalExtension:String, preferredExtension:String="png"):void
 		{
-			_textureExtensionReplacements[originalExtension] = preferredExtension;
+		_textureExtensionReplacements[originalExtension] = preferredExtension;
 		}*/
 		
 		
@@ -156,11 +145,13 @@ package de.nulldesign.nd3d.utils
 
 			var mml:int = meshData.materials.length;
 
-			for(var c:int = 0; c < mml; c++){
+			for(var c:int = 0;c < mml; c++)
+			{
 				var mat:MaterialData = meshData.materials[c]; 
 				var mfl:int = mat.faces.length;
 
-				for(var j:int = 0; j < mfl; j++){
+				for(var j:int = 0;j < mfl; j++)
+				{
 					var faceIndx:int = mat.faces[j];
 					var f:Array = meshData.faces[faceIndx];
 				
@@ -174,24 +165,22 @@ package de.nulldesign.nd3d.utils
 					var t1:UV = hasUV ? meshData.uvs[f[1]] : new UV();
 					var t2:UV = hasUV ? meshData.uvs[f[2]] : new UV();
 				    
-				    var m:Material;
+					var m:Material;
 				   
-				    if(_matLookupIndex[mat.name]!=undefined){
-				    	m = _matList[_matLookupIndex[mat.name]];
-				    }
-				    else{
-				    	m = _defaultMaterial;
-				    }
+					if(_matLookupIndex[mat.name] != undefined)
+					{
+						m = _matList[_matLookupIndex[mat.name]];
+					}
+					else
+					{
+						m = _defaultMaterial;
+					}
 				
 					mesh.addFace(v0, v2, v1, m, [t0, t2, t1]);
-					
 				}
-					
 			}	
-			
 		}
-		
-		
+
 		/**
 		 * Read the base 3DS object.
 		 * 
@@ -218,7 +207,7 @@ package de.nulldesign.nd3d.utils
 				chunk.bytesRead += subChunk.length;
 			}
 		}
-		
+
 		/**
 		 * Read the Edit chunk
 		 * 
@@ -256,9 +245,23 @@ package de.nulldesign.nd3d.utils
 				chunk.bytesRead += subChunk.length;
 			}
 		}		
-				
-				
-		
+
+		private function checkForName(name:String, obj:*):Boolean
+		{
+			if(name != null)
+			{
+				for (var key:String in obj)
+				{
+					if (name == key)
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+			return false;
+		}
+
 		/**
 		 * Read a material chunk.
 		 * 
@@ -274,7 +277,6 @@ package de.nulldesign.nd3d.utils
 				
 			matObj.textures = new Array();
 			matObj.alpha = 1; //default
-			
 			while (chunk.bytesRead < chunk.length)
 			{				
 				readChunk(subChunk);
@@ -329,28 +331,6 @@ package de.nulldesign.nd3d.utils
 				chunk.bytesRead += subChunk.length;
 			}
 
-		
-
-       function checkForName(name:String, obj:*):Boolean
-       {
-			if(name != null)
-			{
-				outerloop: for (var key:String in obj)
-				{
-					if (matObj.name == key)
-					{
-						return true;
-						
-					}
-					
-				}
-				return false;
-			}
-			else
-			{
-				return false;
-			}
-         }
 			if(!checkForName(matObj.name, _matLookupIndex))
 			{	
 					if(matObj.textures.length)
@@ -662,7 +642,6 @@ package de.nulldesign.nd3d.utils
 			_data.position += chunk.length - chunk.bytesRead;
 			chunk.bytesRead = chunk.length;
 		}
-
 	}
 }
 

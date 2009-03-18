@@ -50,7 +50,7 @@
 			tex = new MyTexture();
 			tex.visible = true;
 			// set this to a higher value to see how the fake texture clicking is done.
-			tex.alpha = 0.5;
+			tex.alpha = 0.0;
 			addChild(tex);
 			
 			mat = new SWFMaterial(tex, true, false, false, false);

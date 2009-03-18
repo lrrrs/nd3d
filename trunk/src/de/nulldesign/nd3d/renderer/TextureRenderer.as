@@ -5,6 +5,7 @@ package de.nulldesign.nd3d.renderer
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.material.PixelMaterial;
 	import de.nulldesign.nd3d.material.WireMaterial;
+	import flash.geom.Point;
 
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
@@ -186,12 +187,12 @@ package de.nulldesign.nd3d.renderer
 			// beginBitmapFill draw bug?!
 			if(smoothing) 
 			{ 
-				var dx:Number = x1 - x0;
-				var dx2:Number = x2 - x1;
-				var dy:Number = y1 - y0;
-				var dy2:Number = y2 - y1;
-				
-				if(Math.abs(dx / dy - dx2 / dy2) < 1) 
+				var u:Point = new Point(x1 - x0, y1 - y0);
+				var v:Point = new Point(x2 - x0, y2 - y0);
+				var dot:Number = u.x * v.x + u.y * v.y;
+				var angle:Number = Math.acos(dot / (u.length * v.length)) * 180 / Math.PI;
+
+				if(angle < 5 || angle > 175) 
 				{
 					smoothing = false;
 				}

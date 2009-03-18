@@ -365,7 +365,7 @@ package de.nulldesign.nd3d.renderer
 							curRenderer.renderUV(curStageGfx, curMaterial, curFace.v1, curFace.v2, curFace.v3, curFace.uvMap, (curColor / curMaterial.color) + ambientColorCorrection, ambientColor);
 						}
 					}
-					else if(curMaterial is WireMaterial) // render solid or wire
+					else // render solid or wire
 					{ 
 						curRenderer.renderFlatFace(wireFrameMode, curColor, curStageGfx, curMaterial, curFace.v1, curFace.v2, curFace.v3);
 					}
@@ -384,6 +384,8 @@ package de.nulldesign.nd3d.renderer
 						
 							currentHighlightedFace = curFace;
 							currentHighlightMesh = curFace.meshRef;
+
+							dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_MOVE, currentHighlightMesh, currentHighlightedFace, currentHighlightUV));
 						}
 					}
 				}

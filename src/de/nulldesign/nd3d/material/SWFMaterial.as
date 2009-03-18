@@ -34,6 +34,7 @@
 				texture = new BitmapData(w, h, true, 0x00000000);
 			}
 
+			texture.fillRect(texture.rect, 0x00000000);
 			texture.draw(swf, null, null, null, null, smoothed);
 		}
 	}

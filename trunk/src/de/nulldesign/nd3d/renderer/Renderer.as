@@ -2,11 +2,13 @@ package de.nulldesign.nd3d.renderer
 {
 	import de.nulldesign.nd3d.events.Mouse3DEvent;
 	import de.nulldesign.nd3d.geom.Face;
+	import de.nulldesign.nd3d.geom.UV;
 	import de.nulldesign.nd3d.geom.Vertex;
 	import de.nulldesign.nd3d.material.BitmapMaterial;
 	import de.nulldesign.nd3d.material.LineMaterial;
 	import de.nulldesign.nd3d.material.Material;
 	import de.nulldesign.nd3d.material.PixelMaterial;
+	import de.nulldesign.nd3d.material.SWFMaterial;
 	import de.nulldesign.nd3d.material.WireMaterial;
 	import de.nulldesign.nd3d.objects.Object3D;
 	import de.nulldesign.nd3d.objects.PointCamera;
@@ -21,6 +23,13 @@ package de.nulldesign.nd3d.renderer
 	import flash.filters.BlurFilter;
 	import flash.utils.Dictionary;	  
 
+	[Event(name = "onMouse3DOver", type = "de.nulldesign.nd3d.events.Mouse3DEvent")]
+	[Event(name = "onMouse3DOut", type = "de.nulldesign.nd3d.events.Mouse3DEvent")]
+	[Event(name = "onMouse3DClick", type = "de.nulldesign.nd3d.events.Mouse3DEvent")]
+	[Event(name = "onMouse3DMove", type = "de.nulldesign.nd3d.events.Mouse3DEvent")]
+	[Event(name = "onMouse3DDown", type = "de.nulldesign.nd3d.events.Mouse3DEvent")]
+	[Event(name = "onMouse3DUp", type = "de.nulldesign.nd3d.events.Mouse3DEvent")]
+	
 	/**
 	 * The heart of the engine. The renderer takes a list of meshes, transforms the geometry into screen coordinates and draws the triangles (faces) on the screen. 
 	 * There are several options you can set:<br/><br/>
@@ -46,9 +55,9 @@ package de.nulldesign.nd3d.renderer
 	 */
 	public class Renderer extends EventDispatcher
 	{
-		private var stage:Sprite;
-		private var drawStage:Sprite;
-		private var interactiveStage:Sprite;
+		public var stage:Sprite;
+		public var drawStage:Sprite;
+		public var interactiveStage:Sprite;
 		private var defaultTexRenderer:TextureRenderer = new TextureRenderer();
 
 		public var wireFrameMode:Boolean = false;
@@ -70,6 +79,7 @@ package de.nulldesign.nd3d.renderer
 		private var lastHighlightFace:Face;
 		private var currentHighlightMesh:Object3D;
 		private var currentHighlightedFace:Face;
+		private var currentHighlightUV:UV;
 
 		/**
 		 * Constructor of class Renderer
@@ -80,8 +90,6 @@ package de.nulldesign.nd3d.renderer
 			this.stage = stage;
 			drawStage = this.stage.addChild(new Sprite()) as Sprite; // draw area
 			interactiveStage = this.stage.addChild(new Sprite()) as Sprite; // interactive overlay
-			interactiveStage.buttonMode = true;
-			interactiveStage.useHandCursor = true;
 			interactiveStage.addEventListener(MouseEvent.CLICK, interactiveMouseClick, false, 0, true);
 			interactiveStage.addEventListener(MouseEvent.MOUSE_MOVE, interactiveMouseMove, false, 0, true);
 			interactiveStage.addEventListener(MouseEvent.MOUSE_DOWN, interactiveMouseDown, false, 0, true);
@@ -286,7 +294,8 @@ package de.nulldesign.nd3d.renderer
 			var faceIndex:int = 0;
 			var thickness:Number;
 			var curRenderer:TextureRenderer;
-			
+			var pixelMat:PixelMaterial;
+
 			clearStage(drawStage);
 			clearStage(interactiveStage);
 			
@@ -321,29 +330,29 @@ package de.nulldesign.nd3d.renderer
 						curColor = curMaterial.color;
 					}
 					
-					// pixel material
-					if(curMaterial is PixelMaterial)
+					if(wireFrameMode) // wire, override all materials
+					{ 
+						curRenderer.renderFlatFace(wireFrameMode, curColor, curStageGfx, curMaterial, curFace.v1, curFace.v2, curFace.v3);
+					} 
+					else if(curMaterial is PixelMaterial)
 					{
+						pixelMat = curMaterial as PixelMaterial;
 						if(curMaterial.isSprite)
 						{
-							curRenderer.renderPixel(curStageGfx, curMaterial as PixelMaterial, curFace.v1);
+							curRenderer.renderPixel(curStageGfx, pixelMat, curFace.v1);
 						}
 						else
 						{
 							// Every vertex in a face is drawn multiple times. Just a quick hack, needs to be optimized.
-							curRenderer.renderPixel(curStageGfx, curMaterial as PixelMaterial, curFace.v1);
-							curRenderer.renderPixel(curStageGfx, curMaterial as PixelMaterial, curFace.v2);
-							curRenderer.renderPixel(curStageGfx, curMaterial as PixelMaterial, curFace.v3);
+							curRenderer.renderPixel(curStageGfx, pixelMat, curFace.v1);
+							curRenderer.renderPixel(curStageGfx, pixelMat, curFace.v2);
+							curRenderer.renderPixel(curStageGfx, pixelMat, curFace.v3);
 						}
 					}
 					else if(curMaterial is LineMaterial) // render line
 					{
 						curRenderer.renderLine(curStageGfx, curMaterial as LineMaterial, curFace.vertexList);
 					}
-					else if(curMaterial.texture == null || wireFrameMode || curMaterial is WireMaterial) // render solid or wire
-					{ 
-						curRenderer.renderFlatFace(wireFrameMode, curColor, curStageGfx, curMaterial, curFace.v1, curFace.v2, curFace.v3);
-					} 
 					else if(curMaterial is BitmapMaterial) // render textures and/or sprites
 					{
 						// render texture
@@ -355,7 +364,11 @@ package de.nulldesign.nd3d.renderer
 						{ 
 							curRenderer.renderUV(curStageGfx, curMaterial, curFace.v1, curFace.v2, curFace.v3, curFace.uvMap, (curColor / curMaterial.color) + ambientColorCorrection, ambientColor);
 						}
-					}					
+					}
+					else if(curMaterial is WireMaterial) // render solid or wire
+					{ 
+						curRenderer.renderFlatFace(wireFrameMode, curColor, curStageGfx, curMaterial, curFace.v1, curFace.v2, curFace.v3);
+					}
 
 					// check for mouse interaction
 					if(curMaterial.isInteractive || curFace.meshRef.isInteractive)
@@ -378,13 +391,13 @@ package de.nulldesign.nd3d.renderer
 			
 			if(currentHighlightedFace && currentHighlightMesh != lastHighlightMesh)
 			{
-				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_OVER, currentHighlightMesh, currentHighlightedFace));
+				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_OVER, currentHighlightMesh, currentHighlightedFace, currentHighlightUV));
 				lastHighlightMesh = currentHighlightMesh;
 				lastHighlightFace = currentHighlightedFace;
 			}
 			else if(!currentHighlightedFace && lastHighlightFace)
 			{
-				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_OUT, lastHighlightMesh, lastHighlightFace));
+				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_OUT, lastHighlightMesh, lastHighlightFace, currentHighlightUV));
 				lastHighlightFace = null;
 				lastHighlightMesh = null;
 			}
@@ -394,7 +407,7 @@ package de.nulldesign.nd3d.renderer
 		{
 			if(currentHighlightMesh)
 			{
-				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_CLICK, currentHighlightMesh, currentHighlightedFace));
+				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_CLICK, currentHighlightMesh, currentHighlightedFace, currentHighlightUV));
 			}
 		}
 		
@@ -402,7 +415,7 @@ package de.nulldesign.nd3d.renderer
 		{
 			if(currentHighlightMesh)
 			{
-				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_MOVE, currentHighlightMesh, currentHighlightedFace));
+				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_MOVE, currentHighlightMesh, currentHighlightedFace, currentHighlightUV));
 			}
 		}
 		
@@ -410,7 +423,7 @@ package de.nulldesign.nd3d.renderer
 		{
 			if(currentHighlightMesh)
 			{
-				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_UP, currentHighlightMesh, currentHighlightedFace));
+				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_UP, currentHighlightMesh, currentHighlightedFace, currentHighlightUV));
 			}
 		}
 		
@@ -418,7 +431,7 @@ package de.nulldesign.nd3d.renderer
 		{
 			if(currentHighlightMesh)
 			{
-				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_DOWN, currentHighlightMesh, currentHighlightedFace));
+				dispatchEvent(new Mouse3DEvent(Mouse3DEvent.MOUSE_DOWN, currentHighlightMesh, currentHighlightedFace, currentHighlightUV));
 			}
 		}
 
@@ -440,7 +453,22 @@ package de.nulldesign.nd3d.renderer
 			var u:Number = (dot11 * dot02 - dot01 * dot12) * invDenom;
 			var v:Number = (dot00 * dot12 - dot01 * dot02) * invDenom;
 			// Check if point is in triangle
-			return (u > 0) && (v > 0) && (u + v < 1);
+			if((u > 0) && (v > 0) && (u + v < 1))
+			{
+				// find real UV
+				var newUV1:UV = new UV((face.uvMap[2].u  - face.uvMap[0].u) * u, (face.uvMap[2].v  - face.uvMap[0].v) * u);
+				var newUV2:UV = new UV((face.uvMap[1].u  - face.uvMap[0].u) * v, (face.uvMap[1].v  - face.uvMap[0].v) * v);
+
+				currentHighlightUV = new UV(newUV1.u + newUV2.u, newUV1.v + newUV2.v);
+				currentHighlightUV.u += face.uvMap[0].u;
+				currentHighlightUV.v += face.uvMap[0].v;
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		/**
@@ -514,7 +542,6 @@ package de.nulldesign.nd3d.renderer
 		 */
 		private function getMatColor(color:Number, fv1:Vertex, fv2:Vertex, fv3:Vertex, cam:PointCamera):uint
 		{
-
 			// dynamic lighting
 			var r:uint = color >> 16;
 			var g:uint = color >> 8 & 0xFF;
@@ -545,14 +572,7 @@ package de.nulldesign.nd3d.renderer
 		 */
 		private function isBackFace(pa:Vertex, pb:Vertex, pc:Vertex):Boolean 
 		{
-			/*
-			var cax:Number = pc.screenX - pa.screenX;
-			var cay:Number = pc.screenY - pa.screenY;
-			var bcx:Number = pb.screenX - pc.screenX;
-			var bcy:Number = pb.screenY - pc.screenY;
-			return cax * bcy > cay * bcx;
-			 */
-			return (  (pc.screenX - pa.screenX) * (pb.screenY - pa.screenY) - (pc.screenY - pa.screenY) * (pb.screenX - pa.screenX) < 0);
+			return ((pc.screenX - pa.screenX) * (pb.screenY - pa.screenY) - (pc.screenY - pa.screenY) * (pb.screenX - pa.screenX) < 0);
 		}
 
 		/**
@@ -563,10 +583,7 @@ package de.nulldesign.nd3d.renderer
 
 			var za:Number = (ta.v1.z3d + ta.v2.z3d + ta.v3.z3d) / 3;
 			var zb:Number = (tb.v1.z3d + tb.v2.z3d + tb.v3.z3d) / 3;
-			/*	
-			var za:Number = (ta.v1.scale + ta.v2.scale + ta.v3.scale) / 3;
-			var zb:Number = (tb.v1.scale + tb.v2.scale + tb.v3.scale) / 3;
-			 */
+
 			return (za > zb) ? -1 : 1;
 		}
 	}

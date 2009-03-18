@@ -139,7 +139,6 @@ package de.nulldesign.nd3d.renderer
 		 */
 		public function renderUV(gfx:Graphics, material:Material, a:Vertex, b:Vertex, c:Vertex, uvMap:Array, colorFactor:Number, ambientColor:uint):void 
 		{
-			
 			var x0:Number = a.screenX;
 			var y0:Number = a.screenY;
 			var x1:Number = b.screenX;
@@ -148,7 +147,8 @@ package de.nulldesign.nd3d.renderer
 			var y2:Number = c.screenY;
 			
 			var texture:BitmapData = material.texture;
-			
+			if(!texture) return;
+
 			var w:Number = texture.width;
 			var h:Number = texture.height;
 				

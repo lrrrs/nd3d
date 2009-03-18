@@ -1,8 +1,10 @@
 package de.nulldesign.nd3d.events 
 {
 	import de.nulldesign.nd3d.geom.Face;
+	import de.nulldesign.nd3d.geom.UV;
 	import de.nulldesign.nd3d.objects.Mesh;
 	import de.nulldesign.nd3d.objects.Object3D;
+	import flash.events.MouseEvent;
 
 	import flash.events.Event;
 
@@ -21,12 +23,14 @@ package de.nulldesign.nd3d.events
 
 		public var mesh:Object3D;
 		public var face:Face;
+		public var uv:UV;
 
-		public function Mouse3DEvent(type:String, mesh:Object3D, face:Face) 
+		public function Mouse3DEvent(type:String, mesh:Object3D, face:Face, uv:UV) 
 		{
 			super(type);
 			this.mesh = mesh;
 			this.face = face;
+			this.uv = uv;
 		}
 	}
 }

@@ -18,7 +18,7 @@ package de.nulldesign.nd3d.geom
 
 		public function toString():String 
 		{
-			return "UV: " + u + "/" + v;
+			return "UV: " + u + " / " + v;
 		}
 
 		public function clone():UV 

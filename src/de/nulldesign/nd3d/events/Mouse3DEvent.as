@@ -21,8 +21,19 @@ package de.nulldesign.nd3d.events
 		static public const MOUSE_DOWN:String = "onMouse3DDown";
 		static public const MOUSE_UP:String = "onMouse3DUp";
 
+		/**
+		 * Holds the current clicked mesh
+         */
 		public var mesh:Object3D;
+		
+		/**
+		 * Holds the current clicked face
+         */
 		public var face:Face;
+		
+		/**
+		 * Holds the UV coordinates of the clickposition on the texture. Use these coordinates to find the exact click location on your texture.
+         */
 		public var uv:UV;
 
 		public function Mouse3DEvent(type:String, mesh:Object3D, face:Face, uv:UV) 

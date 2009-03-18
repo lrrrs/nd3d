@@ -4,7 +4,7 @@
 	import flash.display.MovieClip;
 	
 	/**
-	 * ...
+	 * The SWFMaterial can hold a SWF and renders it to the texture. You have to manually call 'update' (in the renderloop for example) to update the texture
 	 * @author Lars Gerckens (lars@nulldesign.de)
 	 */
 	public class SWFMaterial extends BitmapMaterial

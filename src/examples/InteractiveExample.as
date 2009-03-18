@@ -88,7 +88,7 @@ package examples
 		private function onRenderScene(evt:Event):void 
 		{
 			renderer.render(renderList, cam);
-			
+
 			(renderList[0] as Object3D).angleX += 0.01;
 			(renderList[0] as Object3D).angleY += 0.01;
 			

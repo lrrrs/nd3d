@@ -371,7 +371,7 @@ package de.nulldesign.nd3d.renderer
 					}
 
 					// check for mouse interaction
-					if(curMaterial.isInteractive || curFace.meshRef.isInteractive)
+					if(!currentHighlightedFace && (curMaterial.isInteractive || curFace.meshRef.isInteractive))
 					{
 						if(checkMouse(curFace))
 						{

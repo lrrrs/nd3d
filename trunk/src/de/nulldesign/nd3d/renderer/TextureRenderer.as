@@ -51,6 +51,7 @@ package de.nulldesign.nd3d.renderer
 		 */
 		public function renderPixel(gfx:Graphics, material:PixelMaterial, a:Vertex):void
 		{
+			gfx.lineStyle();
 			gfx.beginFill(material.color, material.alpha);
 			gfx.drawCircle(a.screenX, a.screenY, material.thickness * a.scale);
 			gfx.endFill();
